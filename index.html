@@ -337,6 +337,22 @@ h1,h2,h3{font-family:var(--display);line-height:1.08;margin:0}
 .fix{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin-top:.8rem}
 .fix input{width:6.5ch;height:44px;border-radius:12px;border:3px solid var(--line);background:var(--surface-2);text-align:center;font-family:var(--display);font-weight:700;font-size:1.2rem}
 .yr-src{font-size:.82rem;color:var(--muted);margin:.5rem 0 0}
+/* mix sliders */
+.mix{display:grid;gap:1.1rem}
+.mtop{display:flex;justify-content:space-between;align-items:baseline;gap:.8rem;margin-bottom:.45rem}
+.mtop label{font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mtop output{flex:none;font-size:.9rem;color:var(--muted);font-variant-numeric:tabular-nums}
+input.pct{
+  -webkit-appearance:none;appearance:none;width:100%;height:16px;margin:0;border-radius:8px;border:3px solid var(--line);cursor:pointer;
+  background:linear-gradient(to right,var(--bubble) 0 var(--v),var(--surface-2) var(--v) 100%);
+}
+input.pct::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:30px;height:30px;border-radius:50%;background:var(--sun);border:3px solid var(--line);box-shadow:2px 3px 0 var(--shadow)}
+input.pct::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:var(--sun);border:3px solid var(--line);box-shadow:2px 3px 0 var(--shadow)}
+input.pct:focus-visible{outline:3px solid var(--sky);outline-offset:4px}
+.decksum{margin-top:1.2rem;padding:.8rem 1rem;border-radius:14px;border:2px dashed var(--line);background:var(--surface-2);display:grid;gap:.25rem}
+.decksum b{font-family:var(--display);font-weight:600;font-size:1.15rem}
+.decksum span{font-size:.9rem;color:var(--muted)}
+.decksum .warn{color:var(--bubble);font-weight:600}
 
 </style>
 </head>
@@ -633,15 +649,40 @@ function fits(tl,i,y){const L=tl[i-1],R=tl[i];return(L===undefined||yearOf(L)<=y
 function sortedIndex(tl,y){const i=tl.findIndex(id=>yearOf(id)>y);return i<0?tl.length:i}
 function insertSorted(tl,id){tl.splice(sortedIndex(tl,yearOf(id)),0,id)}
 
+function pctOf(p){return p&&typeof p.pct==="number"?p.pct:100}
+function estOf(p){const pc=pctOf(p);if(!pc)return 0;return p.total!=null?Math.max(1,Math.round(p.total*pc/100)):null}
+function deckEstimate(){
+  let n=0,unknown=false;
+  Object.values(S.setup.picked).forEach(p=>{const e=estOf(p);if(e===null)unknown=true;else n+=e});
+  return{n,unknown};
+}
+function mixSummary(){
+  const {n,unknown}=deckEstimate(),players=S.setup.players.length,need=players+10;
+  let h=`<b>Deck: about ${n}${unknown?"+":""} songs</b>`;
+  if(!unknown&&n<need)h+=`<span class="warn">That's too few. You need at least ${need} songs for ${players} players.</span>`;
+  else if(!unknown&&n<players*cfg.goal)h+=`<span>The deck may run out before anyone reaches ${cfg.goal} cards. That's fine: the longest timeline wins then.</span>`;
+  else h+=`<span>Duplicates across playlists are removed, so the final deck can be a little smaller.</span>`;
+  return h;
+}
+function startLabel(){
+  const act=Object.values(S.setup.picked).filter(p=>pctOf(p)>0);
+  if(!act.length)return{on:false,text:Object.keys(S.setup.picked).length?"Turn up at least one playlist":"Pick a playlist to start"};
+  const {n,unknown}=deckEstimate();
+  return{on:true,text:`Start game with about ${n}${unknown?"+":""} songs`};
+}
+function mixOut(p){const e=estOf(p);return `${pctOf(p)}%`+(p.total!=null?`, ${e} of ${p.total} songs`:"")}
 async function buildSongs(){
-  const ids=Object.keys(S.setup.picked);
+  const ids=Object.keys(S.setup.picked).filter(id=>pctOf(S.setup.picked[id])>0);
   const songs={},seen=new Set();
   for(let i=0;i<ids.length;i++){
     const pl=S.setup.picked[ids[i]];
     S.busy=`Reading “${pl.name}” (${i+1} of ${ids.length})`;render();
-    const tr=await readTracks(ids[i]);
-    tr.forEach(t=>{
-      if(!t.sy||songs[t.id])return;
+    const own={};
+    (await readTracks(ids[i])).forEach(t=>{if(t.sy&&!own[t.id])own[t.id]=t});
+    const all=shuffle(Object.values(own));
+    const take=all.slice(0,Math.max(1,Math.round(all.length*pctOf(pl)/100)));
+    take.forEach(t=>{
+      if(songs[t.id])return;
       const k=norm(cleanTitle(t.t))+"|"+norm(t.a1);if(seen.has(k))return;
       seen.add(k);songs[t.id]=t;
     });
@@ -726,7 +767,7 @@ const A={
   },
   addPlayer(){if(S.setup.players.length<8)S.setup.players.push({name:""})},
   rmPlayer(d){if(S.setup.players.length>2)S.setup.players.splice(+d.i,1)},
-  togglePl(d){const p=(S.playlists||[]).find(x=>x.id===d.id)||S.setup.picked[d.id];if(!p)return;if(S.setup.picked[d.id])delete S.setup.picked[d.id];else S.setup.picked[d.id]={id:p.id,name:p.name,total:p.total}},
+  togglePl(d){const p=(S.playlists||[]).find(x=>x.id===d.id)||S.setup.picked[d.id];if(!p)return;if(S.setup.picked[d.id])delete S.setup.picked[d.id];else S.setup.picked[d.id]={id:p.id,name:p.name,total:p.total,pct:100}},
   async addLink(){
     const inp=document.getElementById("pllink"),id=parsePlaylistId(inp&&inp.value);
     if(!id){S.error="Paste a Spotify playlist link, like https://open.spotify.com/playlist/…";return}
@@ -736,13 +777,20 @@ const A={
       const own=p.owner&&S.me&&p.owner.id===S.me.id;
       if(!own&&!p.collaborative)throw new Error(`“${p.name}” belongs to someone else, and Spotify only lets this game read playlists you made or collaborate on. Ask the owner to invite you as a collaborator, or copy the songs into your own playlist.`);
       const total=(p.items&&p.items.total)||(p.tracks&&p.tracks.total)||null;
-      S.setup.picked[id]={id,name:p.name,total};
+      S.setup.picked[id]={id,name:p.name,total,pct:100};
       if(S.playlists&&!S.playlists.some(x=>x.id===id))S.playlists.unshift({id,name:p.name,total,readable:true,img:p.images&&p.images.length?p.images[p.images.length-1].url:null});
     }finally{S.busy=null}
   },
   goal(d){cfg.goal=+d.v;saveCfg()},
+  balance(){
+    const ps=Object.values(S.setup.picked).filter(p=>p.total);
+    if(!ps.length)return;
+    const target=Math.min(...ps.map(p=>p.total));
+    ps.forEach(p=>{p.pct=Math.max(1,Math.min(100,Math.round(target/p.total*100)))});
+  },
+  allFull(){Object.values(S.setup.picked).forEach(p=>{p.pct=100})},
   async start(){
-    if(!Object.keys(S.setup.picked).length){S.error="Pick at least one playlist.";return}
+    if(!startLabel().on){S.error="Pick at least one playlist and set it above 0%.";return}
     askMotion();
     try{const songs=await buildSongs();await newGame(songs,S.setup.players)}
     finally{S.busy=null}
@@ -863,6 +911,25 @@ function vSettings(){
       <button class="btn btn-small" data-act="logout">Log out</button></div>
     <button class="btn btn-primary wide" data-act="closeSettings">Done</button>`;
 }
+function mixPanel(){
+  const ps=Object.values(S.setup.picked);
+  if(!ps.length)return "";
+  const rows=ps.map(p=>{const v=pctOf(p);return `<div class="mixrow">
+      <div class="mtop"><label for="mix-${esc(p.id)}">${esc(p.name)}</label><output id="mo-${esc(p.id)}" for="mix-${esc(p.id)}">${mixOut(p)}</output></div>
+      <input type="range" class="pct" id="mix-${esc(p.id)}" data-pct="${esc(p.id)}" min="0" max="100" step="1" value="${v}" style="--v:${v}%">
+    </div>`}).join("");
+  const canBalance=ps.filter(p=>p.total).length>1;
+  return `<div class="panel sticker"><h2>Mix</h2>
+    <p class="muted" style="margin:0 0 1rem">How much of each playlist goes into the deck. Songs are picked at random.</p>
+    <div class="mix">${rows}</div>
+    <div class="row-gap" style="margin-top:1.1rem">
+      ${canBalance?`<button class="btn btn-small btn-sun" data-act="balance">Balance</button>`:""}
+      <button class="btn btn-small" data-act="allFull">All at 100%</button>
+    </div>
+    ${canBalance?`<p class="hint">Balance gives every playlist about the same number of songs, so a huge playlist doesn't drown out a small one.</p>`:""}
+    <div class="decksum" id="decksum">${mixSummary()}</div>
+  </div>`;
+}
 function vSetup(){
   const st=S.setup;
   const players=st.players.map((p,i)=>`<div class="prow">
@@ -872,8 +939,7 @@ function vSetup(){
     </div>`).join("");
   const pls=(S.playlists||[]).filter(p=>p.readable);
   const hidden=(S.playlists||[]).length-pls.length;
-  const picked=Object.keys(st.picked).length;
-  const approx=Object.values(st.picked).reduce((a,p)=>a+(p.total||0),0);
+  const sl=startLabel();
   const plHtml=pls.length?pls.map(p=>`<button class="pl" data-act="togglePl" data-id="${esc(p.id)}" aria-pressed="${!!st.picked[p.id]}">
       ${p.img?`<img src="${esc(p.img)}" alt="" loading="lazy">`:`<span class="ph"></span>`}
       <span class="txt"><b>${esc(p.name)}</b><span>${p.total!=null?p.total+" songs":""}${p.own?"":p.total!=null?", collaborative":"Collaborative"}</span></span>
@@ -888,12 +954,13 @@ function vSetup(){
     <div class="panel sticker"><h2>Playlists</h2>
       <p class="muted" style="margin:0 0 .9rem">Pick one or more. They're merged into one shuffled deck, with duplicates removed.</p>
       <div class="plist">${plHtml}</div>
-      <p class="hint">${hidden?`${hidden} followed playlist${hidden===1?"":"s"} made by other people ${hidden===1?"is":"are"} hidden because Spotify won't share their songs with this game. `:""}To use a friend's playlist, they invite you as a collaborator first.</p>
+      <p class="hint">${hidden?`${hidden} followed playlist${hidden===1?"":"s"} made by other people ${hidden===1?"is":"are"} hidden because Spotify won't share their songs with this game. `:""}To use a friend's playlist, they invite you as a collaborator, or you copy its songs into a playlist of your own.</p>
       <div class="row-gap" style="margin-top:.9rem"><input class="field" id="pllink" placeholder="Paste a playlist link" style="flex:1;min-width:200px" autocomplete="off"><button class="btn btn-small" data-act="addLink">Add</button></div>
     </div>
+    ${mixPanel()}
     <div class="panel sticker"><h2>Play songs on</h2>${devicePicker()}</div>
     <div class="panel sticker"><h2>Cards to win</h2><div class="opts cols4">${goals}</div></div>
-    <button class="btn btn-primary wide" data-act="start" ${picked?"":"disabled"}>${picked?`Start game with about ${approx} songs`:"Pick a playlist to start"}</button>`;
+    <button class="btn btn-primary wide" id="startbtn" data-act="start" ${sl.on?"":"disabled"}>${sl.text}</button>`;
 }
 function scoreboard(){
   const g=G();
@@ -1087,7 +1154,18 @@ app.addEventListener("click",async e=>{
   try{await fn(b.dataset)}catch(err){S.busy=null;S.error=err&&err.message?err.message:"Something went wrong. Try again."}
   finally{running=false;render()}
 });
-app.addEventListener("input",e=>{const i=e.target.dataset.name;if(i===undefined)return;S.setup.players[+i].name=e.target.value;ls.set(K.setup,S.setup)});
+app.addEventListener("input",e=>{
+  const el=e.target;
+  if(el.dataset.pct!==undefined){
+    const p=S.setup.picked[el.dataset.pct];if(!p)return;
+    p.pct=+el.value;el.style.setProperty("--v",p.pct+"%");
+    const o=document.getElementById("mo-"+p.id);if(o)o.textContent=mixOut(p);
+    const ds=document.getElementById("decksum");if(ds)ds.innerHTML=mixSummary();
+    const sb=document.getElementById("startbtn");if(sb){const sl=startLabel();sb.textContent=sl.text;sb.disabled=!sl.on}
+    ls.set(K.setup,S.setup);return;
+  }
+  const i=el.dataset.name;if(i===undefined)return;S.setup.players[+i].name=el.value;ls.set(K.setup,S.setup);
+});
 
 (async function init(){
   render();

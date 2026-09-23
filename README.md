@@ -58,7 +58,19 @@ Spotify only lets this game read:
 - **Playlists the host made.**
 - **Playlists the host was invited to as a collaborator.**
 
-To use a friend's playlist, they open it in Spotify and choose **Invite collaborators**, and the host accepts. The easier option is to make one collaborative "Game night" playlist that everyone adds songs to.
+Following or saving a friend's playlist isn't enough. To use a friend's playlist, do one of these:
+
+- **Collaborator invite:** the friend opens their playlist in Spotify, chooses **Invite collaborators** and sends the link to the host, who accepts.
+- **Copy:** the host adds all the songs from the friend's playlist to a new playlist of their own.
+
+### Mixing playlists
+
+After you tick your playlists, the **Mix** panel shows a slider for each one. The slider sets how much of that playlist goes into the deck, from 0 to 100%, and the songs are picked at random.
+
+- **Balance** sets the sliders so every playlist gives about the same number of songs. That way a 400-song playlist doesn't drown out a 30-song one.
+- **All at 100%** puts everything back.
+
+The total at the bottom shows roughly how big the deck will be, and warns you if it's too small for the number of players.
 
 ## Release years
 
