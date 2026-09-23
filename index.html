@@ -378,7 +378,7 @@ const API="https://api.spotify.com/v1", ACC="https://accounts.spotify.com";
 const SCOPES="user-read-private playlist-read-private playlist-read-collaborative user-read-playback-state user-modify-playback-state";
 const K={cfg:"jk-cfg",tok:"jk-tok",ver:"jk-pkce",state:"jk-state",game:"jk-game",years:"jk-years",setup:"jk-setup"};
 const PCOL=["var(--sky)","var(--bubble)","var(--grape)","var(--blaze)","var(--mint)","var(--indigo)","var(--sun)","var(--lime)"];
-const MAX_TOKENS=5, START_TOKENS=2, COST={skip:1,juke:2,buy:3};
+const MAX_TOKENS=5, START_TOKENS=2, COST={skip:1,juke:1};
 const REDIRECT=location.origin+location.pathname;
 
 const ls={
@@ -734,7 +734,7 @@ function resolve(){
 }
 function verdict(){
   const g=G(),P=g.players[g.turn],r=g.result,s=g.songs[g.current],y=yearOf(g.current),J=g.juker!==null?g.players[g.juker]:null;
-  if(r.ok)return{kind:"good",ico:"✓",title:`${P.name} nailed it`,body:`${cleanTitle(s.t)} is from ${y}. The card stays on ${P.name}'s timeline.`+(J?` ${J.name}'s Juke missed, so those tokens are gone.`:"")};
+  if(r.ok)return{kind:"good",ico:"✓",title:`${P.name} nailed it`,body:`${cleanTitle(s.t)} is from ${y}. The card stays on ${P.name}'s timeline.`+(J?` ${J.name}'s Juke missed, so that token is gone.`:"")};
   if(r.jukeOk)return{kind:"steal",ico:"!",title:`${J.name} juked it`,body:`${cleanTitle(s.t)} is from ${y}. ${P.name} had the wrong spot and ${J.name} had the right one, so the card goes to ${J.name}.`};
   return{kind:"bad",ico:"✕",title:"Wrong spot",body:`${cleanTitle(s.t)} came out in ${y}. The card is out of the game.`+(J?` ${J.name}'s Juke missed too.`:"")};
 }
@@ -801,14 +801,6 @@ const A={
   async pause(){await pauseMusic()},
   async resumeSong(){await resumeMusic()},
   async replay(){await playCurrent()},
-  async buy(){
-    const g=G(),P=g.players[g.turn];if(P.tokens<COST.buy)return;
-    if(!g.deck.length){endByDeck();return}
-    const id=g.deck[g.deck.length-1];
-    if(!years[id]){S.busy="Checking the release year";render();await checkYear(g.songs[id]);S.busy=null}
-    g.deck.pop();P.tokens-=COST.buy;insertSorted(P.timeline,id);g.note={bought:id};SFX.coin();prefetch();
-    if(P.timeline.length>=g.goal){g.winner=g.turn;g.endReason="goal";S.screen="win";SFX.win()}
-  },
   async skip(){
     const g=G(),P=g.players[g.turn];if(P.tokens<COST.skip)return;
     P.tokens-=COST.skip;pauseMusic();
@@ -993,7 +985,7 @@ function timeline(mode){
     tl.forEach((id,i)=>{if(!r.ok&&r.ghostAt===i)h+=ghost();const isNew=r.ok&&id===g.current;h+=cardRow(id,isNew?"new":"",isNew?"New":"")});
     if(!r.ok&&r.ghostAt===tl.length)h+=ghost();
   }else{
-    tl.forEach((id,i)=>{const b=g.note&&g.note.bought===id;h+=slot(i)+cardRow(id,b?"new":"",b?"Bought":"")});
+    tl.forEach((id,i)=>{h+=slot(i)+cardRow(id)});
     h+=slot(tl.length);
   }
   return h+"</div>";
@@ -1026,13 +1018,10 @@ function cabinet(){
 function vGame(){
   const g=G(),P=g.players[g.turn];let body="";
   if(g.phase==="intro"){
-    const b=g.note&&g.note.bought!==undefined?g.songs[g.note.bought]:null;
     body=`<div class="turn sticker" style="--pc:${P.color}">
       <h2>${esc(P.name)}'s turn</h2>
       <p>${P.timeline.length} of ${g.goal} cards, ${P.tokens} token${P.tokens===1?"":"s"}. ${g.deck.length} songs left in the deck.</p>
-      ${b?`<div class="toast">Bought ${esc(cleanTitle(b.t))} (${yearOf(g.note.bought)}). It went straight onto your timeline.</div>`:""}
-      <div class="acts"><button class="btn btn-primary" data-act="drawSong">Draw a song</button>
-      <button class="btn btn-sun" data-act="buy" ${P.tokens<COST.buy?"disabled":""}>Buy a card for 3 tokens</button></div>
+      <div class="acts"><button class="btn btn-primary" data-act="drawSong">Draw a song</button></div>
     </div>
     <p class="say">${esc(P.name)}'s timeline</p>${timeline("view")}`;
   }else if(g.phase==="flip"){
@@ -1059,7 +1048,7 @@ function vGame(){
     const el=g.players.map((p,i)=>({p,i})).filter(o=>o.i!==g.turn&&o.p.tokens>=COST.juke);
     body=`${cabinet()}
       <div class="juke sticker"><h2>Anyone want to Juke?</h2>
-        <p>Think ${esc(P.name)} got it wrong? A Juke costs 2 tokens. Pick where it really goes. If ${esc(P.name)} is wrong and you're right, you steal the card.</p>
+        <p>Think ${esc(P.name)} got it wrong? A Juke costs 1 token. Pick where it really goes. If ${esc(P.name)} is wrong and you're right, you steal the card.</p>
         <div class="jukers">${el.map(o=>`<button class="btn btn-small jbtn" style="--pc:${o.p.color}" data-act="jukeBy" data-i="${o.i}">${esc(o.p.name)} jukes</button>`).join("")}</div>
       </div>${timeline("juke")}
       <div class="sticky-act"><button class="btn btn-primary" data-act="reveal">No Juke, reveal it</button></div>`;
@@ -1110,8 +1099,7 @@ function openRules(){
       <li>Pick the phone up again and place the song on your timeline: before, between or after your cards. <b>Right spot, you keep it.</b> Wrong spot, it's out.</li>
       <li>Name the artist and title out loud for <b>+1 token</b>. You can hold up to 5.</li>
       <li><b>Skip</b> (1 token): swap the song for a new one.</li>
-      <li><b>Juke</b> (2 tokens): after someone locks in, another player can pick a different spot. If the placer is wrong and the juker is right, the juker steals the card.</li>
-      <li><b>Buy a card</b> (3 tokens): a free card goes straight onto your timeline.</li>
+      <li><b>Juke</b> (1 token): after someone locks in, another player can pick a different spot. If the placer is wrong and the juker is right, the juker steals the card.</li>
       <li>Songs from the same year fit on either side of each other. The year is when the song first came out, not the remaster.</li>
       <li>First to the target number of cards wins.</li>
     </ol><button class="btn btn-primary wide" data-close="1">Got it</button></div></div>`;
