@@ -709,7 +709,7 @@ async function drawNext(){
   const id=g.deck[g.deck.length-1];
   if(!years[id]){S.busy="Checking the release year";render();await checkYear(g.songs[id]);S.busy=null}
   g.deck.pop();
-  Object.assign(g,{current:id,pick:null,juker:null,jukePick:null,result:null,named:false,playing:false,count:0,fixing:false,snap:null});
+  Object.assign(g,{current:id,pick:null,juker:null,jukePick:null,result:null,named:false,playing:false,count:0,fixing:false,snap:null,peek:false});
   prefetch();return true;
 }
 function endByDeck(){
@@ -823,6 +823,7 @@ const A={
   named(){const g=G(),P=g.players[g.turn];if(g.named||P.tokens>=MAX_TOKENS)return;P.tokens++;g.named=true;SFX.coin()},
   fixOpen(){G().fixing=true},
   fixCancel(){G().fixing=false},
+  peek(){G().peek=!G().peek},
   fixSave(){
     const g=G(),v=parseInt(document.getElementById("fixy").value,10),now=new Date().getFullYear();
     if(!(v>=1900&&v<=now)){S.error=`Enter a year between 1900 and ${now}.`;return}
@@ -1004,6 +1005,7 @@ function cabinet(){
     tools=`<div class="cab-tools">
       ${g.playing?`<button class="btn btn-ghost btn-small" data-act="pause">Pause</button>`:`<button class="btn btn-sun btn-small" data-act="resumeSong">Play</button>`}
       <button class="btn btn-ghost btn-small" data-act="replay">Restart song</button>
+      <button class="btn btn-ghost btn-small" data-act="peek" aria-pressed="${!!g.peek}">${g.peek?"Hide title":"Show title"}</button>
       ${g.phase==="guess"?`<button class="btn btn-ghost btn-small" data-act="skip" ${P.tokens<COST.skip?"disabled":""}>Skip song <span class="coinrow" aria-label="costs 1 token"><i></i></span></button>`:""}
     </div>`;
   }
@@ -1014,7 +1016,7 @@ function cabinet(){
       <div class="cab-info">
         <div class="cab-label"><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>${rev?"Revealed":g.playing?"Now playing":"Paused"}</div>
         ${rev?`<div class="cab-title">${esc(cleanTitle(s.t))}</div><div class="cab-artist">${esc(s.a)}</div><a class="sp" href="https://open.spotify.com/track/${esc(s.id)}" target="_blank" rel="noopener">Open in Spotify</a>`
-             :`<div class="hidden-song">Mystery song</div><div class="cab-artist">Title and artist hidden</div>`}
+             :g.peek?`<div class="cab-title">${esc(cleanTitle(s.t))}</div><div class="cab-artist">${esc(s.a)}</div>`:`<div class="hidden-song">Mystery song</div><div class="cab-artist">Title and artist hidden</div>`}
       </div>
       <div class="year-badge ${rev?"pop":""}">${rev?y:"?"}</div>
     </div>${tools}
