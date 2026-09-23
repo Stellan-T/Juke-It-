@@ -353,6 +353,13 @@ input.pct:focus-visible{outline:3px solid var(--sky);outline-offset:4px}
 .decksum b{font-family:var(--display);font-weight:600;font-size:1.15rem}
 .decksum span{font-size:.9rem;color:var(--muted)}
 .decksum .warn{color:var(--bubble);font-weight:600}
+/* language picker */
+.langpick{display:inline-flex;gap:0;margin:1.6rem auto 0;border:3px solid var(--line);border-radius:999px;overflow:hidden;box-shadow:3px 4px 0 var(--shadow);background:var(--surface)}
+.center-col .langpick{margin:0 auto 1.2rem}
+.panel .langpick{margin:0}
+.lp{border:0;background:transparent;padding:.55rem 1.1rem;font-family:var(--display);font-weight:600;font-size:1rem;cursor:pointer;min-height:44px;color:var(--text)}
+.lp+.lp{border-left:3px solid var(--line)}
+.lp[aria-pressed="true"]{background:var(--sun);color:var(--ink)}
 
 </style>
 </head>
@@ -394,6 +401,152 @@ function say(m){const l=document.getElementById("live");l.textContent="";setTime
 let cfg=Object.assign({clientId:DEFAULT_CLIENT_ID,muted:false,device:null,deviceName:null,intro:0,goal:10},ls.get(K.cfg,{}));
 if(!cfg.clientId&&DEFAULT_CLIENT_ID)cfg.clientId=DEFAULT_CLIENT_ID;
 const saveCfg=()=>ls.set(K.cfg,cfg);
+/* =====================================================================
+   Languages: English and Dutch
+   ===================================================================== */
+const L={
+en:{
+  loginCancelled:"Spotify login was cancelled.",loginFailed:e=>"Spotify login failed: "+e,loginMismatch:"The login check didn't match. Log in again.",
+  loginFirst:"Log in with Spotify first.",tokenFail:s=>`Spotify login failed (${s})`,noNet:"Can't reach Spotify. Check the internet connection.",spErr:s=>"Spotify error "+s,
+  plRefused:"Spotify won't share that playlist. Only playlists you made yourself, or ones you were invited to as a collaborator, can be used.",
+  noDevice:"Spotify can't find the phone to play on. Open the Spotify app, play and pause any song, then go to Settings and pick the device again.",
+  noPremium:"Spotify refused to play. Controlling playback needs Spotify Premium on the logged-in account.",
+  songPlaying:"Song is playing",
+  tooFew:(n,p)=>`That's too few. You need at least ${n} songs for ${p} players.`,
+  mayRunOut:g=>`The deck may run out before anyone reaches ${g} cards. That's fine: the longest timeline wins then.`,
+  dupNote:"Duplicates across playlists are removed, so the final deck can be a little smaller.",
+  deckAbout:n=>`Deck: about ${n} songs`,turnUp:"Turn up at least one playlist",pickPl:"Pick a playlist to start",startWith:n=>`Start game with about ${n} songs`,
+  mixOut:(p,e,t)=>`${p}%`+(t!=null?`, ${e} of ${t} songs`:""),
+  onlyFound:(n,need,p)=>`Only ${n} songs found. Pick more playlists: you need at least ${need} songs for ${p} players.`,
+  reading:(nm,i,n)=>`Reading “${nm}” (${i} of ${n})`,checkingYears:(i,n)=>`Checking release years (${i} of ${n})`,checkingYear:"Checking the release year",
+  goodT:p=>`${p} nailed it`,goodB:(t,y,p,j)=>`${t} is from ${y}. The card stays on ${p}'s timeline.`+(j?` ${j}'s Juke missed, so that token is gone.`:""),
+  stealT:j=>`${j} juked it`,stealB:(t,y,p,j)=>`${t} is from ${y}. ${p} had the wrong spot and ${j} had the right one, so the card goes to ${j}.`,
+  badT:"Wrong spot",badB:(t,y,j)=>`${t} came out in ${y}. The card is out of the game.`+(j?` ${j}'s Juke missed too.`:""),
+  connecting:"Connecting to Spotify",badClientId:"That doesn't look like a Client ID. It's the 32-character code on your app's page in the Spotify developer dashboard.",
+  copyFail:"Copy didn't work here. Select the address and copy it by hand.",lookingDevices:"Looking for devices",loadingPl:"Loading your playlists",checkingPl:"Checking that playlist",
+  pasteLink:"Paste a Spotify playlist link, like https://open.spotify.com/playlist/…",
+  notYours:n=>`“${n}” belongs to someone else, and Spotify only lets this game read playlists you made or collaborate on. Ask the owner to invite you as a collaborator, or copy the songs into your own playlist.`,
+  needPl:"Pick at least one playlist and set it above 0%.",yearRange:n=>`Enter a year between 1900 and ${n}.`,generic:"Something went wrong. Try again.",
+  mainMenu:"Main menu",howTo:"How to play",settings:"Settings",soundOn:"Turn sound effects on",soundOff:"Turn sound effects off",ok:"OK",language:"Language",
+  cIntro:"Spotify edition. Connect the host's Spotify account to play songs from your own playlists.",
+  addrH:"1. Your app's address",addrP:"Add this exact address as a Redirect URI in your Spotify app's settings.",copied:"Copied",copy:"Copy",
+  cidH:"2. Client ID",cidP:"From your app's page in the Spotify developer dashboard. It's saved on this device.",cidPh:"32-character Client ID",
+  loginBtn:"Log in with Spotify",loginHint:"Only accounts you added under User Management in the dashboard can log in (up to 5).",
+  tag:"Hear a song, guess when it came out, and build the longest timeline.",resume:"Resume game",newGame:"New game",
+  playingThrough:(n,d)=>`Playing through ${n}'s account${d?` on ${d}`:""}.`,
+  playingNow:", playing now",noDevices:"No devices found. Open the Spotify app on the phone you'll play on, start any song and pause it, then refresh.",refreshDev:"Refresh devices",
+  playOn:"Play songs on",playOnHint:"Pick the phone that goes face-down. Turn off Autoplay in Spotify's settings so it doesn't carry on with other songs.",
+  startEach:"Start each song",fromStart:"From the start",introsIncl:"Intros included",skipIntro:"Skip the intro",start30:"Start 30 seconds in",
+  account:"Spotify account",loggedAs:n=>`Logged in as ${n}.`,unknown:"unknown",logout:"Log out",done:"Done",
+  mixP:"How much of each playlist goes into the deck. Songs are picked at random.",balance:"Balance",allFull:"All at 100%",
+  balanceHint:"Balance gives every playlist about the same number of songs, so a huge playlist doesn't drown out a small one.",
+  player:n=>`Player ${n}`,nameOf:n=>`Name of player ${n}`,removeP:n=>`Remove player ${n}`,songsN:n=>`${n} songs`,collabSuffix:", collaborative",collab:"Collaborative",
+  noOwnPl:"No playlists of your own yet. Make one in Spotify, or paste a collaborative playlist link below.",cards:"cards",setupTitle:"Set up your game",players:"Players",
+  addPlayer:"Add player",maxPlayers:"That's the maximum of 8 players.",plP:"Pick one or more. They're merged into one shuffled deck, with duplicates removed.",
+  hiddenPl:n=>`${n} followed playlist${n===1?"":"s"} made by other people ${n===1?"is":"are"} hidden because Spotify won't share their songs with this game. `,
+  friendHint:"To use a friend's playlist, they invite you as a collaborator, or you copy its songs into a playlist of your own.",
+  pastePh:"Paste a playlist link",add:"Add",cardsToWin:"Cards to win",scores:"Scores",cardsOf:(n,g)=>`${n}/${g} cards`,tokensN:n=>`${n} tokens`,
+  placeHere:"Place here",before:y=>`Before ${y}`,after:y=>`After ${y}`,between:(a,b)=>`Between ${a} and ${b}`,guessOf:n=>`${n}'s guess`,jukeOf:n=>`${n}'s Juke`,
+  stolen:"Stolen",out:"Out",newTag:"New",pause:"Pause",play:"Play",restart:"Restart song",hideTitle:"Hide title",showTitle:"Show title",skipSong:"Skip song",costs1:"costs 1 token",
+  revealed:"Revealed",nowPlaying:"Now playing",paused:"Paused",openSp:"Open in Spotify",mystery:"Mystery song",hiddenTA:"Title and artist hidden",
+  mbNote:y=>`Year from MusicBrainz. Spotify listed ${y}, which is probably a re-release.`,
+  turnOf:n=>`${n}'s turn`,turnInfo:(c,g,t,d)=>`${c} of ${g} cards, ${t} token${t===1?"":"s"}. ${d} songs left in the deck.`,draw:"Draw a song",timelineOf:n=>`${n}'s timeline`,
+  putDown:"Put it down now",startsAtZero:"The song starts at zero.",sensorReady:"Flip sensor ready",sensorLooking:"Looking for the flip sensor",sensorNone:"No flip sensor on this device",
+  flipH:"Flip the phone face-down",readyH:"Get ready to put it down",flipP:"The song starts as soon as the screen touches the table. Nobody sees what's playing.",
+  readyP:"Tap the countdown, then put the phone face-down before it hits zero.",countdownBtn:"Play after a 3-second countdown",playNow:"Play now (for a speaker across the room)",
+  whereFit:n=>`${n}, where does it fit?`,guessSub:"Tap a gap on your timeline, then lock it in. Name the artist and title out loud for a bonus token.",lock:"Lock it in",
+  jukeH:"Anyone want to Juke?",jukeP:n=>`Think ${n} got it wrong? A Juke costs 1 token. Pick where it really goes. If ${n} is wrong and you're right, you steal the card.`,
+  jukes:n=>`${n} jukes`,noJuke:"No Juke, reveal it",whereReally:n=>`${n}, where does it really go?`,diffGap:n=>`Tap a different gap on ${n}'s timeline.`,
+  cancelJuke:"Cancel Juke",lockJuke:"Lock in the Juke",namedDone:"+1 token for naming it.",pouchFull:n=>`${n}'s token pouch is full (5).`,namedBtn:n=>`${n} named it: +1 token`,
+  realYear:"Real year",saveRecheck:"Save and re-check",cancel:"Cancel",yearWrong:"Year wrong? Fix it",seeWinner:"See who won",nextTurn:n=>`Next turn: ${n}`,
+  whyDeck:n=>`The deck ran out, and ${n} had the longest timeline.`,whyGoal:g=>`First to ${g} cards.`,wins:n=>`${n} wins!`,cardsN:n=>`${n} card${n===1?"":"s"}`,
+  winningTl:n=>`${n}'s winning timeline`,rematch:"Rematch",loading:"Loading",gotIt:"Got it",
+  rules:[
+    "Everyone starts with <b>one song card</b> face up and <b>2 tokens</b>.",
+    "On your turn, tap Draw a song and <b>put the phone face-down</b>. The song starts playing, and nobody can see what it is.",
+    "Pick the phone up again and place the song on your timeline: before, between or after your cards. <b>Right spot, you keep it.</b> Wrong spot, it's out.",
+    "Name the artist and title out loud for <b>+1 token</b>. You can hold up to 5.",
+    "<b>Skip</b> (1 token): swap the song for a new one.",
+    "<b>Juke</b> (1 token): after someone locks in, another player can pick a different spot. If the placer is wrong and the juker is right, the juker steals the card.",
+    "Songs from the same year fit on either side of each other. The year is when the song first came out, not the remaster.",
+    "First to the target number of cards wins."
+  ]
+},
+nl:{
+  loginCancelled:"Inloggen bij Spotify is geannuleerd.",loginFailed:e=>"Inloggen bij Spotify is mislukt: "+e,loginMismatch:"De inlogcontrole klopte niet. Log opnieuw in.",
+  loginFirst:"Log eerst in met Spotify.",tokenFail:s=>`Inloggen bij Spotify is mislukt (${s})`,noNet:"Spotify is niet bereikbaar. Controleer de internetverbinding.",spErr:s=>"Spotify-fout "+s,
+  plRefused:"Spotify deelt die playlist niet. Je kunt alleen playlists gebruiken die je zelf hebt gemaakt, of waarvoor je als samenwerker bent uitgenodigd.",
+  noDevice:"Spotify kan de telefoon om op af te spelen niet vinden. Open de Spotify-app, speel een nummer af en pauzeer het, en kies het apparaat daarna opnieuw bij Instellingen.",
+  noPremium:"Spotify weigert af te spelen. Om het afspelen te bedienen is Spotify Premium nodig op het ingelogde account.",
+  songPlaying:"Het nummer speelt",
+  tooFew:(n,p)=>`Dat is te weinig. Je hebt minstens ${n} nummers nodig voor ${p} spelers.`,
+  mayRunOut:g=>`De stapel kan op raken voordat iemand ${g} kaarten heeft. Geen probleem: dan wint de langste tijdlijn.`,
+  dupNote:"Dubbele nummers uit verschillende playlists worden eruit gehaald, dus de stapel kan iets kleiner uitvallen.",
+  deckAbout:n=>`Stapel: ongeveer ${n} nummers`,turnUp:"Zet minstens één playlist hoger dan 0%",pickPl:"Kies een playlist om te beginnen",startWith:n=>`Start het spel met ongeveer ${n} nummers`,
+  mixOut:(p,e,t)=>`${p}%`+(t!=null?`, ${e} van ${t} nummers`:""),
+  onlyFound:(n,need,p)=>`Maar ${n} nummers gevonden. Kies meer playlists: je hebt minstens ${need} nummers nodig voor ${p} spelers.`,
+  reading:(nm,i,n)=>`“${nm}” wordt gelezen (${i} van ${n})`,checkingYears:(i,n)=>`Jaartallen controleren (${i} van ${n})`,checkingYear:"Jaartal controleren",
+  goodT:p=>`${p} heeft 'm!`,goodB:(t,y,p,j)=>`${t} is van ${y}. De kaart blijft op de tijdlijn van ${p}.`+(j?` De Juke van ${j} mist, dus dat token is weg.`:""),
+  stealT:j=>`${j} heeft gejuket!`,stealB:(t,y,p,j)=>`${t} is van ${y}. ${p} lag verkeerd en ${j} goed, dus de kaart gaat naar ${j}.`,
+  badT:"Verkeerde plek",badB:(t,y,j)=>`${t} kwam uit in ${y}. De kaart ligt uit het spel.`+(j?` De Juke van ${j} mist ook.`:""),
+  connecting:"Verbinden met Spotify",badClientId:"Dat lijkt geen Client ID. Het is de code van 32 tekens op de pagina van je app in het Spotify developer dashboard.",
+  copyFail:"Kopiëren werkte hier niet. Selecteer het adres en kopieer het zelf.",lookingDevices:"Apparaten zoeken",loadingPl:"Je playlists laden",checkingPl:"Playlist controleren",
+  pasteLink:"Plak een link naar een Spotify-playlist, zoals https://open.spotify.com/playlist/…",
+  notYours:n=>`“${n}” is van iemand anders, en Spotify laat dit spel alleen playlists lezen die je zelf hebt gemaakt of waaraan je samenwerkt. Vraag de eigenaar je uit te nodigen als samenwerker, of kopieer de nummers naar een eigen playlist.`,
+  needPl:"Kies minstens één playlist en zet die hoger dan 0%.",yearRange:n=>`Vul een jaar in tussen 1900 en ${n}.`,generic:"Er ging iets mis. Probeer het opnieuw.",
+  mainMenu:"Hoofdmenu",howTo:"Zo speel je",settings:"Instellingen",soundOn:"Geluidseffecten aanzetten",soundOff:"Geluidseffecten uitzetten",ok:"OK",language:"Taal",
+  cIntro:"Spotify-editie. Koppel het Spotify-account van de host om nummers uit je eigen playlists te spelen.",
+  addrH:"1. Het adres van je app",addrP:"Voeg precies dit adres toe als Redirect URI in de instellingen van je Spotify-app.",copied:"Gekopieerd",copy:"Kopieer",
+  cidH:"2. Client ID",cidP:"Van de pagina van je app in het Spotify developer dashboard. Hij wordt op dit apparaat bewaard.",cidPh:"Client ID van 32 tekens",
+  loginBtn:"Inloggen met Spotify",loginHint:"Alleen accounts die je bij User Management in het dashboard hebt toegevoegd kunnen inloggen (maximaal 5).",
+  tag:"Hoor een nummer, raad wanneer het uitkwam en bouw de langste tijdlijn.",resume:"Verder spelen",newGame:"Nieuw spel",
+  playingThrough:(n,d)=>`Speelt via het account van ${n}${d?` op ${d}`:""}.`,
+  playingNow:", speelt nu",noDevices:"Geen apparaten gevonden. Open de Spotify-app op de telefoon waarop je speelt, start een nummer en pauzeer het, en ververs daarna.",refreshDev:"Apparaten verversen",
+  playOn:"Nummers afspelen op",playOnHint:"Kies de telefoon die op z'n scherm gaat liggen. Zet Autoplay uit in de instellingen van Spotify, zodat er niet vanzelf andere nummers volgen.",
+  startEach:"Elk nummer starten",fromStart:"Vanaf het begin",introsIncl:"Met intro",skipIntro:"Intro overslaan",start30:"Start na 30 seconden",
+  account:"Spotify-account",loggedAs:n=>`Ingelogd als ${n}.`,unknown:"onbekend",logout:"Uitloggen",done:"Klaar",
+  mixP:"Hoeveel van elke playlist in de stapel komt. De nummers worden willekeurig gekozen.",balance:"Gelijk verdelen",allFull:"Alles op 100%",
+  balanceHint:"Gelijk verdelen geeft elke playlist ongeveer evenveel nummers, zodat een enorme playlist een kleine niet wegdrukt.",
+  player:n=>`Speler ${n}`,nameOf:n=>`Naam van speler ${n}`,removeP:n=>`Speler ${n} verwijderen`,songsN:n=>`${n} nummers`,collabSuffix:", samenwerking",collab:"Samenwerking",
+  noOwnPl:"Nog geen eigen playlists. Maak er een in Spotify, of plak hieronder een link naar een playlist waaraan je samenwerkt.",cards:"kaarten",setupTitle:"Spel instellen",players:"Spelers",
+  addPlayer:"Speler toevoegen",maxPlayers:"Dat is het maximum van 8 spelers.",plP:"Kies er een of meer. Ze worden samengevoegd tot één geschudde stapel, zonder dubbele nummers.",
+  hiddenPl:n=>`${n} gevolgde playlist${n===1?"":"s"} van anderen ${n===1?"wordt":"worden"} verborgen, omdat Spotify de nummers daarvan niet met dit spel deelt. `,
+  friendHint:"Wil je de playlist van een vriend gebruiken? Laat je uitnodigen als samenwerker, of kopieer de nummers naar een eigen playlist.",
+  pastePh:"Plak een playlistlink",add:"Toevoegen",cardsToWin:"Kaarten om te winnen",scores:"Scores",cardsOf:(n,g)=>`${n}/${g} kaarten`,tokensN:n=>`${n} tokens`,
+  placeHere:"Leg hier",before:y=>`Vóór ${y}`,after:y=>`Na ${y}`,between:(a,b)=>`Tussen ${a} en ${b}`,guessOf:n=>`Gok van ${n}`,jukeOf:n=>`Juke van ${n}`,
+  stolen:"Gestolen",out:"Uit",newTag:"Nieuw",pause:"Pauze",play:"Afspelen",restart:"Opnieuw starten",hideTitle:"Titel verbergen",showTitle:"Titel tonen",skipSong:"Nummer overslaan",costs1:"kost 1 token",
+  revealed:"Onthuld",nowPlaying:"Speelt nu",paused:"Gepauzeerd",openSp:"Open in Spotify",mystery:"Mysterienummer",hiddenTA:"Titel en artiest verborgen",
+  mbNote:y=>`Jaartal van MusicBrainz. Spotify gaf ${y}, waarschijnlijk een heruitgave.`,
+  turnOf:n=>`${n} is aan de beurt`,turnInfo:(c,g,t,d)=>`${c} van ${g} kaarten, ${t} token${t===1?"":"s"}. Nog ${d} nummers in de stapel.`,draw:"Trek een nummer",timelineOf:n=>`Tijdlijn van ${n}`,
+  putDown:"Leg 'm nu neer",startsAtZero:"Het nummer start bij nul.",sensorReady:"Omdraaisensor klaar",sensorLooking:"Omdraaisensor zoeken",sensorNone:"Geen omdraaisensor op dit apparaat",
+  flipH:"Leg de telefoon op z'n scherm",readyH:"Klaar om 'm neer te leggen",flipP:"Het nummer start zodra het scherm de tafel raakt. Niemand ziet wat er speelt.",
+  readyP:"Tik op aftellen en leg de telefoon op z'n scherm voordat het nul is.",countdownBtn:"Afspelen na 3 seconden aftellen",playNow:"Nu afspelen (voor een speaker verderop)",
+  whereFit:n=>`${n}, waar past deze?`,guessSub:"Tik op een plek in je tijdlijn en zet 'm vast. Noem de artiest en titel hardop voor een extra token.",lock:"Vastzetten",
+  jukeH:"Wil iemand Juken?",jukeP:n=>`Denk je dat ${n} ernaast zit? Een Juke kost 1 token. Kies waar 'ie echt hoort. Zit ${n} fout en jij goed, dan steel je de kaart.`,
+  jukes:n=>`${n} juket`,noJuke:"Geen Juke, onthullen",whereReally:n=>`${n}, waar hoort 'ie echt?`,diffGap:n=>`Tik op een andere plek in de tijdlijn van ${n}.`,
+  cancelJuke:"Juke annuleren",lockJuke:"Juke vastzetten",namedDone:"+1 token voor het noemen.",pouchFull:n=>`${n} heeft het maximum van 5 tokens.`,namedBtn:n=>`${n} noemde 'm: +1 token`,
+  realYear:"Echt jaartal",saveRecheck:"Opslaan en opnieuw checken",cancel:"Annuleren",yearWrong:"Jaartal fout? Pas het aan",seeWinner:"Bekijk wie er won",nextTurn:n=>`Volgende beurt: ${n}`,
+  whyDeck:n=>`De stapel is op, en ${n} had de langste tijdlijn.`,whyGoal:g=>`Als eerste ${g} kaarten.`,wins:n=>`${n} wint!`,cardsN:n=>`${n} kaart${n===1?"":"en"}`,
+  winningTl:n=>`De winnende tijdlijn van ${n}`,rematch:"Revanche",loading:"Laden",gotIt:"Begrepen",
+  rules:[
+    "Iedereen begint met <b>één nummerkaart</b> open en <b>2 tokens</b>.",
+    "Tik in jouw beurt op Trek een nummer en <b>leg de telefoon op z'n scherm</b>. Het nummer begint te spelen en niemand kan zien wat het is.",
+    "Pak de telefoon weer op en leg het nummer in je tijdlijn: ervoor, ertussen of erna. <b>Goede plek? Dan houd je 'm.</b> Verkeerde plek? Dan ligt 'ie eruit.",
+    "Noem de artiest en titel hardop voor <b>+1 token</b>. Je kunt er maximaal 5 hebben.",
+    "<b>Overslaan</b> (1 token): ruil het nummer in voor een nieuw nummer.",
+    "<b>Juke</b> (1 token): als iemand zijn plek heeft vastgezet, mag een andere speler een andere plek kiezen. Zit de speler fout en de juker goed, dan steelt de juker de kaart.",
+    "Nummers uit hetzelfde jaar passen aan beide kanten van elkaar. Het jaartal is wanneer het nummer voor het eerst uitkwam, niet de remaster.",
+    "Wie als eerste het doelaantal kaarten heeft, wint."
+  ]
+}};
+if(!cfg.lang)cfg.lang=/^nl\b/i.test(navigator.language||"")?"nl":"en";
+function t(k,...a){const d=L[cfg.lang]||L.en;const v=d[k]!==undefined?d[k]:L.en[k];return typeof v==="function"?v(...a):v}
+function langPicker(){
+  return `<div class="langpick" role="group" aria-label="${t("language")}">
+    <button class="lp" data-act="lang" data-v="en" lang="en" aria-pressed="${cfg.lang==="en"}">English</button>
+    <button class="lp" data-act="lang" data-v="nl" lang="nl" aria-pressed="${cfg.lang==="nl"}">Nederlands</button></div>`;
+}
+
 let tok=ls.get(K.tok,null);
 let years=ls.get(K.years,{});
 const S={
@@ -422,7 +575,7 @@ async function tokenReq(params){
   const j=await r.json().catch(()=>({}));
   if(!r.ok){
     if(params.grant_type==="refresh_token"){tok=null;ls.del(K.tok);S.screen="connect"}
-    throw new Error(j.error_description||j.error||("Spotify login failed ("+r.status+")"));
+    throw new Error(j.error_description||j.error||t("tokenFail",r.status));
   }
   tok={access:j.access_token,refresh:j.refresh_token||(tok&&tok.refresh),exp:Date.now()+(j.expires_in-60)*1000};
   ls.set(K.tok,tok);
@@ -431,13 +584,13 @@ async function handleRedirect(){
   const q=new URLSearchParams(location.search);
   if(!q.has("code")&&!q.has("error"))return;
   history.replaceState(null,"",REDIRECT);
-  if(q.get("error"))throw new Error(q.get("error")==="access_denied"?"Spotify login was cancelled.":"Spotify login failed: "+q.get("error"));
-  if(q.get("state")!==ls.get(K.state))throw new Error("The login check didn't match. Log in again.");
+  if(q.get("error"))throw new Error(q.get("error")==="access_denied"?t("loginCancelled"):t("loginFailed",q.get("error")));
+  if(q.get("state")!==ls.get(K.state))throw new Error(t("loginMismatch"));
   await tokenReq({grant_type:"authorization_code",code:q.get("code"),redirect_uri:REDIRECT,client_id:cfg.clientId,code_verifier:ls.get(K.ver)});
 }
 let refreshing=null;
 async function ensureToken(){
-  if(!tok){S.screen="connect";throw new Error("Log in with Spotify first.")}
+  if(!tok){S.screen="connect";throw new Error(t("loginFirst"))}
   if(Date.now()<tok.exp)return;
   refreshing=refreshing||tokenReq({grant_type:"refresh_token",refresh_token:tok.refresh,client_id:cfg.clientId}).finally(()=>{refreshing=null});
   await refreshing;
@@ -450,12 +603,12 @@ async function api(path,opt={},retry=true){
   if(opt.body)headers["Content-Type"]="application/json";
   let r;
   try{r=await fetch(url,{method:opt.method||"GET",headers,body:opt.body?JSON.stringify(opt.body):undefined})}
-  catch(e){throw new Error("Can't reach Spotify. Check the internet connection.")}
+  catch(e){throw new Error(t("noNet"))}
   if(r.status===401&&retry){tok.exp=0;return api(path,opt,false)}
   if(r.status===429&&retry){await sleep(Math.min(((+r.headers.get("Retry-After"))||3)*1000,15000));return api(path,opt,false)}
   if(r.status===204||r.status===202)return null;
   const txt=await r.text();let j=null;try{j=txt?JSON.parse(txt):null}catch(e){}
-  if(!r.ok){const e=j&&j.error;throw new ApiErr(r.status,(e&&e.message)||("Spotify error "+r.status),e&&e.reason)}
+  if(!r.ok){const e=j&&j.error;throw new ApiErr(r.status,(e&&e.message)||t("spErr",r.status),e&&e.reason)}
   return j;
 }
 
@@ -487,7 +640,7 @@ async function readTracks(id){
   while(url){
     let j;
     try{j=await api(url)}
-    catch(e){if(e.status===403||e.status===404)throw new Error("Spotify won't share that playlist. Only playlists you made yourself, or ones you were invited to as a collaborator, can be used.");throw e}
+    catch(e){if(e.status===403||e.status===404)throw new Error(t("plRefused"));throw e}
     (j.items||[]).forEach(e=>{
       const t=e&&(e.item||e.track);
       if(!t||t.type!=="track"||t.is_local||!t.id||t.is_playable===false)return;
@@ -562,8 +715,8 @@ async function playCurrent(){
   const g=G(),s=g.songs[g.current];
   try{await api("/me/player/play"+devQ(),{method:"PUT",body:{uris:[s.uri],position_ms:cfg.intro||0}})}
   catch(e){
-    if(e.status===404)throw new Error("Spotify can't find the phone to play on. Open the Spotify app, play and pause any song, then go to Settings and pick the device again.");
-    if(e.status===403)throw new Error("Spotify refused to play. Controlling playback needs Spotify Premium on the logged-in account.");
+    if(e.status===404)throw new Error(t("noDevice"));
+    if(e.status===403)throw new Error(t("noPremium"));
     throw e;
   }
   g.playing=true;
@@ -604,7 +757,7 @@ document.addEventListener("visibilitychange",()=>{if(document.visibilityState===
 
 async function startSong(){
   if(ori.firing)return;ori.firing=true;
-  try{await playCurrent();G().phase="guess";say("Song is playing")}
+  try{await playCurrent();G().phase="guess";say(t("songPlaying"))}
   catch(e){S.error=e.message}
   finally{ori.firing=false;render()}
 }
@@ -658,25 +811,25 @@ function deckEstimate(){
 }
 function mixSummary(){
   const {n,unknown}=deckEstimate(),players=S.setup.players.length,need=players+10;
-  let h=`<b>Deck: about ${n}${unknown?"+":""} songs</b>`;
-  if(!unknown&&n<need)h+=`<span class="warn">That's too few. You need at least ${need} songs for ${players} players.</span>`;
-  else if(!unknown&&n<players*cfg.goal)h+=`<span>The deck may run out before anyone reaches ${cfg.goal} cards. That's fine: the longest timeline wins then.</span>`;
-  else h+=`<span>Duplicates across playlists are removed, so the final deck can be a little smaller.</span>`;
+  let h=`<b>${t("deckAbout",n+(unknown?"+":""))}</b>`;
+  if(!unknown&&n<need)h+=`<span class="warn">${t("tooFew",need,players)}</span>`;
+  else if(!unknown&&n<players*cfg.goal)h+=`<span>${t("mayRunOut",cfg.goal)}</span>`;
+  else h+=`<span>${t("dupNote")}</span>`;
   return h;
 }
 function startLabel(){
   const act=Object.values(S.setup.picked).filter(p=>pctOf(p)>0);
-  if(!act.length)return{on:false,text:Object.keys(S.setup.picked).length?"Turn up at least one playlist":"Pick a playlist to start"};
+  if(!act.length)return{on:false,text:Object.keys(S.setup.picked).length?t("turnUp"):t("pickPl")};
   const {n,unknown}=deckEstimate();
-  return{on:true,text:`Start game with about ${n}${unknown?"+":""} songs`};
+  return{on:true,text:t("startWith",n+(unknown?"+":""))};
 }
-function mixOut(p){const e=estOf(p);return `${pctOf(p)}%`+(p.total!=null?`, ${e} of ${p.total} songs`:"")}
+function mixOut(p){return t("mixOut",pctOf(p),estOf(p),p.total)}
 async function buildSongs(){
   const ids=Object.keys(S.setup.picked).filter(id=>pctOf(S.setup.picked[id])>0);
   const songs={},seen=new Set();
   for(let i=0;i<ids.length;i++){
     const pl=S.setup.picked[ids[i]];
-    S.busy=`Reading “${pl.name}” (${i+1} of ${ids.length})`;render();
+    S.busy=t("reading",pl.name,i+1,ids.length);render();
     const own={};
     (await readTracks(ids[i])).forEach(t=>{if(t.sy&&!own[t.id])own[t.id]=t});
     const all=shuffle(Object.values(own));
@@ -690,15 +843,15 @@ async function buildSongs(){
   return songs;
 }
 async function newGame(songs,playersIn){
-  const players=playersIn.map((p,i)=>({name:(p.name||"").trim()||`Player ${i+1}`,color:PCOL[i%PCOL.length],timeline:[],tokens:START_TOKENS}));
+  const players=playersIn.map((p,i)=>({name:(p.name||"").trim()||t("player",i+1),color:PCOL[i%PCOL.length],timeline:[],tokens:START_TOKENS}));
   const deck=shuffle(Object.keys(songs));
   const need=players.length+10;
-  if(deck.length<need)throw new Error(`Only ${deck.length} songs found. Pick more playlists: you need at least ${need} songs for ${players.length} players.`);
+  if(deck.length<need)throw new Error(t("onlyFound",deck.length,need,players.length));
   S.game={songs,players,deck,turn:Math.floor(Math.random()*players.length),goal:cfg.goal,
     phase:"intro",current:null,pick:null,juker:null,jukePick:null,result:null,named:false,note:null,winner:null,endReason:null,playing:false,count:0,fixing:false,snap:null};
   const g=S.game;
   for(let i=0;i<players.length;i++){
-    S.busy=`Checking release years (${i+1} of ${players.length})`;render();
+    S.busy=t("checkingYears",i+1,players.length);render();
     const id=g.deck.pop();await checkYear(g.songs[id]);players[i].timeline=[id];
   }
   S.busy=null;S.screen="game";wake();prefetch();SFX.good();
@@ -707,7 +860,7 @@ async function drawNext(){
   const g=G();
   if(!g.deck.length){endByDeck();return false}
   const id=g.deck[g.deck.length-1];
-  if(!years[id]){S.busy="Checking the release year";render();await checkYear(g.songs[id]);S.busy=null}
+  if(!years[id]){S.busy=t("checkingYear");render();await checkYear(g.songs[id]);S.busy=null}
   g.deck.pop();
   Object.assign(g,{current:id,pick:null,juker:null,jukePick:null,result:null,named:false,playing:false,count:0,fixing:false,snap:null,peek:false});
   prefetch();return true;
@@ -733,10 +886,10 @@ function resolve(){
   say(verdict().title);
 }
 function verdict(){
-  const g=G(),P=g.players[g.turn],r=g.result,s=g.songs[g.current],y=yearOf(g.current),J=g.juker!==null?g.players[g.juker]:null;
-  if(r.ok)return{kind:"good",ico:"✓",title:`${P.name} nailed it`,body:`${cleanTitle(s.t)} is from ${y}. The card stays on ${P.name}'s timeline.`+(J?` ${J.name}'s Juke missed, so that token is gone.`:"")};
-  if(r.jukeOk)return{kind:"steal",ico:"!",title:`${J.name} juked it`,body:`${cleanTitle(s.t)} is from ${y}. ${P.name} had the wrong spot and ${J.name} had the right one, so the card goes to ${J.name}.`};
-  return{kind:"bad",ico:"✕",title:"Wrong spot",body:`${cleanTitle(s.t)} came out in ${y}. The card is out of the game.`+(J?` ${J.name}'s Juke missed too.`:"")};
+  const g=G(),P=g.players[g.turn],r=g.result,s=g.songs[g.current],y=yearOf(g.current),J=g.juker!==null?g.players[g.juker]:null,ti=cleanTitle(s.t);
+  if(r.ok)return{kind:"good",ico:"✓",title:t("goodT",P.name),body:t("goodB",ti,y,P.name,J&&J.name)};
+  if(r.jukeOk)return{kind:"steal",ico:"!",title:t("stealT",J.name),body:t("stealB",ti,y,P.name,J.name)};
+  return{kind:"bad",ico:"✕",title:t("badT"),body:t("badB",ti,y,J&&J.name)};
 }
 
 /* =====================================================================
@@ -745,24 +898,25 @@ function verdict(){
 const A={
   async boot(){
     if(!cfg.clientId||!tok){S.screen="connect";return}
-    S.busy="Connecting to Spotify";render();
+    S.busy=t("connecting");render();
     await loadMe();S.busy=null;S.screen="home";
   },
   saveClient(){const v=document.getElementById("cid").value.trim();cfg.clientId=v;saveCfg()},
-  async login(){A.saveClient();if(!/^[a-f0-9]{32}$/i.test(cfg.clientId)){S.error="That doesn't look like a Client ID. It's the 32-character code on your app's page in the Spotify developer dashboard.";return}await login()},
-  async copyUri(){try{await navigator.clipboard.writeText(REDIRECT);S.error=null;S.copied=true}catch(e){S.error="Copy didn't work here. Select the address and copy it by hand."}},
+  async login(){A.saveClient();if(!/^[a-f0-9]{32}$/i.test(cfg.clientId)){S.error=t("badClientId");return}await login()},
+  async copyUri(){try{await navigator.clipboard.writeText(REDIRECT);S.error=null;S.copied=true}catch(e){S.error=t("copyFail")}},
   logout(){tok=null;ls.del(K.tok);S.me=null;S.screen="connect"},
   home(){S.screen=S.me?"home":"connect"},
   rules(){openRules()},
   mute(){cfg.muted=!cfg.muted;saveCfg()},
-  async settings(){S.back=S.screen;S.screen="settings";S.busy="Looking for devices";render();try{await loadDevices()}finally{S.busy=null}},
+  lang(d){cfg.lang=d.v==='nl'?'nl':'en';saveCfg()},
+  async settings(){S.back=S.screen;S.screen="settings";S.busy=t("lookingDevices");render();try{await loadDevices()}finally{S.busy=null}},
   closeSettings(){S.screen=S.back==="settings"?"home":S.back},
-  async refreshDevices(){S.busy="Looking for devices";render();try{await loadDevices()}finally{S.busy=null}},
+  async refreshDevices(){S.busy=t("lookingDevices");render();try{await loadDevices()}finally{S.busy=null}},
   device(d){const dv=(S.devices||[]).find(x=>x.id===d.v);cfg.device=d.v;cfg.deviceName=dv?dv.name:null;saveCfg()},
   intro(d){cfg.intro=+d.v;saveCfg()},
   resume(){const g=G();S.screen=g.winner!==null&&g.phase!=="reveal"?"win":"game";wake()},
   async toSetup(){
-    S.screen="setup";S.busy="Loading your playlists";render();
+    S.screen="setup";S.busy=t("loadingPl");render();
     try{await loadPlaylists();await loadDevices()}finally{S.busy=null}
   },
   addPlayer(){if(S.setup.players.length<8)S.setup.players.push({name:""})},
@@ -770,12 +924,12 @@ const A={
   togglePl(d){const p=(S.playlists||[]).find(x=>x.id===d.id)||S.setup.picked[d.id];if(!p)return;if(S.setup.picked[d.id])delete S.setup.picked[d.id];else S.setup.picked[d.id]={id:p.id,name:p.name,total:p.total,pct:100}},
   async addLink(){
     const inp=document.getElementById("pllink"),id=parsePlaylistId(inp&&inp.value);
-    if(!id){S.error="Paste a Spotify playlist link, like https://open.spotify.com/playlist/…";return}
-    S.busy="Checking that playlist";render();
+    if(!id){S.error=t("pasteLink");return}
+    S.busy=t("checkingPl");render();
     try{
       const p=await api(`/playlists/${id}`);
       const own=p.owner&&S.me&&p.owner.id===S.me.id;
-      if(!own&&!p.collaborative)throw new Error(`“${p.name}” belongs to someone else, and Spotify only lets this game read playlists you made or collaborate on. Ask the owner to invite you as a collaborator, or copy the songs into your own playlist.`);
+      if(!own&&!p.collaborative)throw new Error(t("notYours",p.name));
       const total=(p.items&&p.items.total)||(p.tracks&&p.tracks.total)||null;
       S.setup.picked[id]={id,name:p.name,total,pct:100};
       if(S.playlists&&!S.playlists.some(x=>x.id===id))S.playlists.unshift({id,name:p.name,total,readable:true,img:p.images&&p.images.length?p.images[p.images.length-1].url:null});
@@ -790,7 +944,7 @@ const A={
   },
   allFull(){Object.values(S.setup.picked).forEach(p=>{p.pct=100})},
   async start(){
-    if(!startLabel().on){S.error="Pick at least one playlist and set it above 0%.";return}
+    if(!startLabel().on){S.error=t("needPl");return}
     askMotion();
     try{const songs=await buildSongs();await newGame(songs,S.setup.players)}
     finally{S.busy=null}
@@ -818,7 +972,7 @@ const A={
   peek(){G().peek=!G().peek},
   fixSave(){
     const g=G(),v=parseInt(document.getElementById("fixy").value,10),now=new Date().getFullYear();
-    if(!(v>=1900&&v<=now)){S.error=`Enter a year between 1900 and ${now}.`;return}
+    if(!(v>=1900&&v<=now)){S.error=t("yearRange",now);return}
     years[g.current]={y:v,src:"you"};ls.set(K.years,years);
     g.players=JSON.parse(g.snap);resolve();
   },
@@ -844,65 +998,68 @@ const ICON={
 };
 function topbar(){
   return `<div class="top">
-    <button class="brand" data-act="home" aria-label="Main menu"><img src="${JB}" alt="">Juke it!</button>
+    <button class="brand" data-act="home" aria-label="${t("mainMenu")}"><img src="${JB}" alt="">Juke it!</button>
     <span class="sp"></span>
-    <button class="iconbtn" data-act="rules" aria-label="How to play">${ICON.help}</button>
-    ${S.me?`<button class="iconbtn" data-act="settings" aria-label="Settings">${ICON.gear}</button>`:""}
-    <button class="iconbtn" data-act="mute" aria-label="${cfg.muted?"Turn sound effects on":"Turn sound effects off"}">${cfg.muted?ICON.muted:ICON.sound}</button>
-  </div>${S.error?`<div class="err" role="alert"><p>${esc(S.error)}</p><button data-act="dismiss">OK</button></div>`:""}`;
+    <button class="iconbtn" data-act="rules" aria-label="${t("howTo")}">${ICON.help}</button>
+    ${S.me?`<button class="iconbtn" data-act="settings" aria-label="${t("settings")}">${ICON.gear}</button>`:""}
+    <button class="iconbtn" data-act="mute" aria-label="${cfg.muted?t("soundOn"):t("soundOff")}">${cfg.muted?ICON.muted:ICON.sound}</button>
+  </div>${S.error?`<div class="err" role="alert"><p>${esc(S.error)}</p><button data-act="dismiss">${t("ok")}</button></div>`:""}`;
 }
 function coins(n){let h='<span class="coinrow" aria-hidden="true">';for(let i=0;i<MAX_TOKENS;i++)h+=`<i class="${i<n?"":"off"}"></i>`;return h+"</span>"}
 
 function vConnect(){
   return `${topbar()}<div class="center-col">
     <img class="logo" src="${LOGO}" alt="Juke it!">
-    <p class="who">Spotify edition. Connect the host's Spotify account to play songs from your own playlists.</p>
+    ${langPicker()}
+    <p class="who">${t("cIntro")}</p>
     <div class="form sticker">
-      <h2>1. Your app's address</h2>
-      <p>Add this exact address as a Redirect URI in your Spotify app's settings.</p>
-      <div class="codebox"><code>${esc(REDIRECT)}</code><button class="btn btn-small" data-act="copyUri">${S.copied?"Copied":"Copy"}</button></div>
+      <h2>${t("addrH")}</h2>
+      <p>${t("addrP")}</p>
+      <div class="codebox"><code>${esc(REDIRECT)}</code><button class="btn btn-small" data-act="copyUri">${S.copied?t("copied"):t("copy")}</button></div>
     </div>
     <div class="form sticker">
-      <h2>2. Client ID</h2>
-      <p>From your app's page in the Spotify developer dashboard. It's saved on this device.</p>
-      <input class="field" id="cid" value="${esc(cfg.clientId)}" placeholder="32-character Client ID" autocomplete="off" spellcheck="false">
+      <h2>${t("cidH")}</h2>
+      <p>${t("cidP")}</p>
+      <input class="field" id="cid" value="${esc(cfg.clientId)}" placeholder="${t("cidPh")}" autocomplete="off" spellcheck="false">
     </div>
-    <button class="btn btn-primary wide" data-act="login">Log in with Spotify</button>
-    <p class="hint">Only accounts you added under User Management in the dashboard can log in (up to 5).</p>
+    <button class="btn btn-primary wide" data-act="login">${t("loginBtn")}</button>
+    <p class="hint">${t("loginHint")}</p>
   </div>`;
 }
 function vHome(){
   const can=S.game&&S.game.players;
   return `${topbar()}<div class="home" style="min-height:auto">
     <img class="logo" src="${LOGO}" alt="Juke it!">
-    <p class="tag">Hear a song, guess when it came out, and build the longest timeline.</p>
+    <p class="tag">${t("tag")}</p>
     <div class="stack">
-      ${can?`<button class="btn btn-primary" data-act="resume">Resume game</button>`:""}
-      <button class="btn ${can?"":"btn-primary"}" data-act="toSetup">New game</button>
-      <button class="btn btn-sun" data-act="rules">How to play</button>
+      ${can?`<button class="btn btn-primary" data-act="resume">${t("resume")}</button>`:""}
+      <button class="btn ${can?"":"btn-primary"}" data-act="toSetup">${t("newGame")}</button>
+      <button class="btn btn-sun" data-act="rules">${t("howTo")}</button>
     </div>
-    <p class="fine">Playing through ${esc((S.me&&(S.me.display_name||S.me.id))||"Spotify")}'s account${cfg.deviceName?` on ${esc(cfg.deviceName)}`:""}.</p>
+    ${langPicker()}
+    <p class="fine">${t("playingThrough",esc((S.me&&(S.me.display_name||S.me.id))||"Spotify"),cfg.deviceName?esc(cfg.deviceName):null)}</p>
   </div>`;
 }
 function devicePicker(){
   const ds=S.devices||[];
-  const list=ds.length?ds.map(d=>`<button class="opt" data-act="device" data-v="${esc(d.id)}" aria-pressed="${cfg.device===d.id}"><b>${esc(d.name)}</b><span>${esc(d.type)}${d.is_active?", playing now":""}</span></button>`).join("")
-    :`<p class="muted" style="margin:0">No devices found. Open the Spotify app on the phone you'll play on, start any song and pause it, then refresh.</p>`;
-  return `<div class="dev">${list}</div><div class="row-gap" style="margin-top:.8rem"><button class="btn btn-small" data-act="refreshDevices">Refresh devices</button></div>`;
+  const list=ds.length?ds.map(d=>`<button class="opt" data-act="device" data-v="${esc(d.id)}" aria-pressed="${cfg.device===d.id}"><b>${esc(d.name)}</b><span>${esc(d.type)}${d.is_active?t("playingNow"):""}</span></button>`).join("")
+    :`<p class="muted" style="margin:0">${t("noDevices")}</p>`;
+  return `<div class="dev">${list}</div><div class="row-gap" style="margin-top:.8rem"><button class="btn btn-small" data-act="refreshDevices">${t("refreshDev")}</button></div>`;
 }
 function vSettings(){
   return `${topbar()}
-    <h1 class="page-title">Settings</h1>
-    <div class="panel sticker"><h2>Play songs on</h2>${devicePicker()}
-      <p class="hint">Pick the phone that goes face-down. Turn off Autoplay in Spotify's settings so it doesn't carry on with other songs.</p></div>
-    <div class="panel sticker"><h2>Start each song</h2><div class="opts" style="grid-template-columns:1fr 1fr">
-      <button class="opt" data-act="intro" data-v="0" aria-pressed="${!cfg.intro}"><b>From the start</b><span>Intros included</span></button>
-      <button class="opt" data-act="intro" data-v="30000" aria-pressed="${cfg.intro===30000}"><b>Skip the intro</b><span>Start 30 seconds in</span></button>
+    <h1 class="page-title">${t("settings")}</h1>
+    <div class="panel sticker"><h2>${t("language")}</h2>${langPicker()}</div>
+    <div class="panel sticker"><h2>${t("playOn")}</h2>${devicePicker()}
+      <p class="hint">${t("playOnHint")}</p></div>
+    <div class="panel sticker"><h2>${t("startEach")}</h2><div class="opts" style="grid-template-columns:1fr 1fr">
+      <button class="opt" data-act="intro" data-v="0" aria-pressed="${!cfg.intro}"><b>${t("fromStart")}</b><span>${t("introsIncl")}</span></button>
+      <button class="opt" data-act="intro" data-v="30000" aria-pressed="${cfg.intro===30000}"><b>${t("skipIntro")}</b><span>${t("start30")}</span></button>
     </div></div>
-    <div class="panel sticker"><h2>Spotify account</h2>
-      <p class="muted" style="margin:0 0 .9rem">Logged in as ${esc((S.me&&(S.me.display_name||S.me.id))||"unknown")}.</p>
-      <button class="btn btn-small" data-act="logout">Log out</button></div>
-    <button class="btn btn-primary wide" data-act="closeSettings">Done</button>`;
+    <div class="panel sticker"><h2>${t("account")}</h2>
+      <p class="muted" style="margin:0 0 .9rem">${t("loggedAs",esc((S.me&&(S.me.display_name||S.me.id))||t("unknown")))}</p>
+      <button class="btn btn-small" data-act="logout">${t("logout")}</button></div>
+    <button class="btn btn-primary wide" data-act="closeSettings">${t("done")}</button>`;
 }
 function mixPanel(){
   const ps=Object.values(S.setup.picked);
@@ -913,13 +1070,13 @@ function mixPanel(){
     </div>`}).join("");
   const canBalance=ps.filter(p=>p.total).length>1;
   return `<div class="panel sticker"><h2>Mix</h2>
-    <p class="muted" style="margin:0 0 1rem">How much of each playlist goes into the deck. Songs are picked at random.</p>
+    <p class="muted" style="margin:0 0 1rem">${t("mixP")}</p>
     <div class="mix">${rows}</div>
     <div class="row-gap" style="margin-top:1.1rem">
-      ${canBalance?`<button class="btn btn-small btn-sun" data-act="balance">Balance</button>`:""}
-      <button class="btn btn-small" data-act="allFull">All at 100%</button>
+      ${canBalance?`<button class="btn btn-small btn-sun" data-act="balance">${t("balance")}</button>`:""}
+      <button class="btn btn-small" data-act="allFull">${t("allFull")}</button>
     </div>
-    ${canBalance?`<p class="hint">Balance gives every playlist about the same number of songs, so a huge playlist doesn't drown out a small one.</p>`:""}
+    ${canBalance?`<p class="hint">${t("balanceHint")}</p>`:""}
     <div class="decksum" id="decksum">${mixSummary()}</div>
   </div>`;
 }
@@ -927,62 +1084,62 @@ function vSetup(){
   const st=S.setup;
   const players=st.players.map((p,i)=>`<div class="prow">
       <span class="pdot" style="background:${PCOL[i%PCOL.length]}"></span>
-      <input data-name="${i}" value="${esc(p.name)}" placeholder="Player ${i+1}" maxlength="16" aria-label="Name of player ${i+1}" autocomplete="off">
-      ${st.players.length>2?`<button class="rm" data-act="rmPlayer" data-i="${i}" aria-label="Remove player ${i+1}">×</button>`:""}
+      <input data-name="${i}" value="${esc(p.name)}" placeholder="${t("player",i+1)}" maxlength="16" aria-label="${t("nameOf",i+1)}" autocomplete="off">
+      ${st.players.length>2?`<button class="rm" data-act="rmPlayer" data-i="${i}" aria-label="${t("removeP",i+1)}">×</button>`:""}
     </div>`).join("");
   const pls=(S.playlists||[]).filter(p=>p.readable);
   const hidden=(S.playlists||[]).length-pls.length;
   const sl=startLabel();
   const plHtml=pls.length?pls.map(p=>`<button class="pl" data-act="togglePl" data-id="${esc(p.id)}" aria-pressed="${!!st.picked[p.id]}">
       ${p.img?`<img src="${esc(p.img)}" alt="" loading="lazy">`:`<span class="ph"></span>`}
-      <span class="txt"><b>${esc(p.name)}</b><span>${p.total!=null?p.total+" songs":""}${p.own?"":p.total!=null?", collaborative":"Collaborative"}</span></span>
+      <span class="txt"><b>${esc(p.name)}</b><span>${p.total!=null?t("songsN",p.total):""}${p.own?"":p.total!=null?t("collabSuffix"):t("collab")}</span></span>
       <span class="tick" aria-hidden="true">${st.picked[p.id]?"✓":""}</span></button>`).join("")
-    :`<p class="muted" style="margin:0">No playlists of your own yet. Make one in Spotify, or paste a collaborative playlist link below.</p>`;
-  const goals=[5,7,10,15].map(n=>`<button class="opt center" data-act="goal" data-v="${n}" aria-pressed="${cfg.goal===n}"><b>${n}</b><span>cards</span></button>`).join("");
+    :`<p class="muted" style="margin:0">${t("noOwnPl")}</p>`;
+  const goals=[5,7,10,15].map(n=>`<button class="opt center" data-act="goal" data-v="${n}" aria-pressed="${cfg.goal===n}"><b>${n}</b><span>${t("cards")}</span></button>`).join("");
   return `${topbar()}
-    <h1 class="page-title">Set up your game</h1>
-    <div class="panel sticker"><h2>Players</h2>${players}
-      ${st.players.length<8?`<button class="btn btn-small" data-act="addPlayer">Add player</button>`:`<p class="muted" style="margin:.4rem 0 0">That's the maximum of 8 players.</p>`}
+    <h1 class="page-title">${t("setupTitle")}</h1>
+    <div class="panel sticker"><h2>${t("players")}</h2>${players}
+      ${st.players.length<8?`<button class="btn btn-small" data-act="addPlayer">${t("addPlayer")}</button>`:`<p class="muted" style="margin:.4rem 0 0">${t("maxPlayers")}</p>`}
     </div>
     <div class="panel sticker"><h2>Playlists</h2>
-      <p class="muted" style="margin:0 0 .9rem">Pick one or more. They're merged into one shuffled deck, with duplicates removed.</p>
+      <p class="muted" style="margin:0 0 .9rem">${t("plP")}</p>
       <div class="plist">${plHtml}</div>
-      <p class="hint">${hidden?`${hidden} followed playlist${hidden===1?"":"s"} made by other people ${hidden===1?"is":"are"} hidden because Spotify won't share their songs with this game. `:""}To use a friend's playlist, they invite you as a collaborator, or you copy its songs into a playlist of your own.</p>
-      <div class="row-gap" style="margin-top:.9rem"><input class="field" id="pllink" placeholder="Paste a playlist link" style="flex:1;min-width:200px" autocomplete="off"><button class="btn btn-small" data-act="addLink">Add</button></div>
+      <p class="hint">${hidden?t("hiddenPl",hidden):""}${t("friendHint")}</p>
+      <div class="row-gap" style="margin-top:.9rem"><input class="field" id="pllink" placeholder="${t("pastePh")}" style="flex:1;min-width:200px" autocomplete="off"><button class="btn btn-small" data-act="addLink">${t("add")}</button></div>
     </div>
     ${mixPanel()}
-    <div class="panel sticker"><h2>Play songs on</h2>${devicePicker()}</div>
-    <div class="panel sticker"><h2>Cards to win</h2><div class="opts cols4">${goals}</div></div>
+    <div class="panel sticker"><h2>${t("playOn")}</h2>${devicePicker()}</div>
+    <div class="panel sticker"><h2>${t("cardsToWin")}</h2><div class="opts cols4">${goals}</div></div>
     <button class="btn btn-primary wide" id="startbtn" data-act="start" ${sl.on?"":"disabled"}>${sl.text}</button>`;
 }
 function scoreboard(){
   const g=G();
-  return `<div class="board" aria-label="Scores">${g.players.map((p,i)=>`<div class="chip ${i===g.turn?"on":""}" style="--pc:${p.color}">
-      <span class="nm"><i></i>${esc(p.name)}</span><span class="st">${p.timeline.length}/${g.goal} cards</span>
+  return `<div class="board" aria-label="${t("scores")}">${g.players.map((p,i)=>`<div class="chip ${i===g.turn?"on":""}" style="--pc:${p.color}">
+      <span class="nm"><i></i>${esc(p.name)}</span><span class="st">${t("cardsOf",p.timeline.length,g.goal)}</span>
       <span class="meter"><b style="width:${Math.min(100,p.timeline.length/g.goal*100)}%"></b></span>
-      <span class="st">${coins(p.tokens)}<span class="sr">${p.tokens} tokens</span></span></div>`).join("")}</div>`;
+      <span class="st">${coins(p.tokens)}<span class="sr">${t("tokensN",p.tokens)}</span></span></div>`).join("")}</div>`;
 }
 function decadeColor(y){if(y<1970)return"var(--sky)";if(y<1980)return"var(--grape)";if(y<1990)return"var(--bubble)";if(y<2000)return"var(--sun)";if(y<2010)return"var(--blaze)";if(y<2020)return"var(--mint)";return"var(--indigo)"}
 function cardRow(id,cls,tag){
   const s=G().songs[id],y=yearOf(id);
   return `<div class="card ${cls||""}" style="--dc:${decadeColor(y)}"><span class="yr">${y}</span><span class="tx"><b>${esc(cleanTitle(s.t))}</b><span>${esc(s.a)}</span></span>${tag?`<span class="tag">${tag}</span>`:""}</div>`;
 }
-function slotLabel(tl,i){if(!tl.length)return"Place here";if(i===0)return`Before ${yearOf(tl[0])}`;if(i===tl.length)return`After ${yearOf(tl[tl.length-1])}`;return`Between ${yearOf(tl[i-1])} and ${yearOf(tl[i])}`}
+function slotLabel(tl,i){if(!tl.length)return t("placeHere");if(i===0)return t("before",yearOf(tl[0]));if(i===tl.length)return t("after",yearOf(tl[tl.length-1]));return t("between",yearOf(tl[i-1]),yearOf(tl[i]))}
 function timeline(mode){
   const g=G(),P=g.players[g.turn],tl=P.timeline;let h='<div class="tl">';
   const slot=i=>{
-    if(mode==="guess"){const sel=g.pick===i;return `<button class="slot ${sel?"sel":""}" data-act="pick" data-i="${i}" aria-pressed="${sel}" aria-label="${slotLabel(tl,i)}">${sel?`<span class="mini-vinyl"></span>${esc(P.name)}'s guess`:slotLabel(tl,i)}</button>`}
+    if(mode==="guess"){const sel=g.pick===i;return `<button class="slot ${sel?"sel":""}" data-act="pick" data-i="${i}" aria-pressed="${sel}" aria-label="${slotLabel(tl,i)}">${sel?`<span class="mini-vinyl"></span>${t("guessOf",esc(P.name))}`:slotLabel(tl,i)}</button>`}
     if(mode==="jukePick"){
-      if(i===g.pick)return `<div class="slot lock">${esc(P.name)}'s guess</div>`;
+      if(i===g.pick)return `<div class="slot lock">${t("guessOf",esc(P.name))}</div>`;
       const sel=g.jukePick===i,J=g.players[g.juker];
-      return `<button class="slot juke ${sel?"sel":""}" data-act="pick" data-i="${i}" aria-pressed="${sel}" aria-label="${slotLabel(tl,i)}">${sel?`<span class="mini-vinyl"></span>${esc(J.name)}'s Juke`:slotLabel(tl,i)}</button>`;
+      return `<button class="slot juke ${sel?"sel":""}" data-act="pick" data-i="${i}" aria-pressed="${sel}" aria-label="${slotLabel(tl,i)}">${sel?`<span class="mini-vinyl"></span>${t("jukeOf",esc(J.name))}`:slotLabel(tl,i)}</button>`;
     }
-    if(mode==="juke"&&i===g.pick)return `<div class="slot lock">${esc(P.name)}'s guess</div>`;
+    if(mode==="juke"&&i===g.pick)return `<div class="slot lock">${t("guessOf",esc(P.name))}</div>`;
     return "";
   };
   if(mode==="reveal"){
-    const r=g.result,ghost=()=>cardRow(g.current,"miss",r.jukeOk?"Stolen":"Out");
-    tl.forEach((id,i)=>{if(!r.ok&&r.ghostAt===i)h+=ghost();const isNew=r.ok&&id===g.current;h+=cardRow(id,isNew?"new":"",isNew?"New":"")});
+    const r=g.result,ghost=()=>cardRow(g.current,"miss",r.jukeOk?t("stolen"):t("out"));
+    tl.forEach((id,i)=>{if(!r.ok&&r.ghostAt===i)h+=ghost();const isNew=r.ok&&id===g.current;h+=cardRow(id,isNew?"new":"",isNew?t("newTag"):"")});
     if(!r.ok&&r.ghostAt===tl.length)h+=ghost();
   }else{
     tl.forEach((id,i)=>{h+=slot(i)+cardRow(id)});
@@ -995,10 +1152,10 @@ function cabinet(){
   let tools="";
   if(!rev){
     tools=`<div class="cab-tools">
-      ${g.playing?`<button class="btn btn-ghost btn-small" data-act="pause">Pause</button>`:`<button class="btn btn-sun btn-small" data-act="resumeSong">Play</button>`}
-      <button class="btn btn-ghost btn-small" data-act="replay">Restart song</button>
-      <button class="btn btn-ghost btn-small" data-act="peek" aria-pressed="${!!g.peek}">${g.peek?"Hide title":"Show title"}</button>
-      ${g.phase==="guess"?`<button class="btn btn-ghost btn-small" data-act="skip" ${P.tokens<COST.skip?"disabled":""}>Skip song <span class="coinrow" aria-label="costs 1 token"><i></i></span></button>`:""}
+      ${g.playing?`<button class="btn btn-ghost btn-small" data-act="pause">${t("pause")}</button>`:`<button class="btn btn-sun btn-small" data-act="resumeSong">${t("play")}</button>`}
+      <button class="btn btn-ghost btn-small" data-act="replay">${t("restart")}</button>
+      <button class="btn btn-ghost btn-small" data-act="peek" aria-pressed="${!!g.peek}">${g.peek?t("hideTitle"):t("showTitle")}</button>
+      ${g.phase==="guess"?`<button class="btn btn-ghost btn-small" data-act="skip" ${P.tokens<COST.skip?"disabled":""}>${t("skipSong")} <span class="coinrow" aria-label="${t("costs1")}"><i></i></span></button>`:""}
     </div>`;
   }
   const src=years[g.current]&&years[g.current].src;
@@ -1006,103 +1163,95 @@ function cabinet(){
     <div class="cab-row">
       ${rev&&s.img?`<img class="art" src="${esc(s.img)}" alt="">`:`<div class="vinyl" aria-hidden="true"></div>`}
       <div class="cab-info">
-        <div class="cab-label"><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>${rev?"Revealed":g.playing?"Now playing":"Paused"}</div>
-        ${rev?`<div class="cab-title">${esc(cleanTitle(s.t))}</div><div class="cab-artist">${esc(s.a)}</div><a class="sp" href="https://open.spotify.com/track/${esc(s.id)}" target="_blank" rel="noopener">Open in Spotify</a>`
-             :g.peek?`<div class="cab-title">${esc(cleanTitle(s.t))}</div><div class="cab-artist">${esc(s.a)}</div>`:`<div class="hidden-song">Mystery song</div><div class="cab-artist">Title and artist hidden</div>`}
+        <div class="cab-label"><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>${rev?t("revealed"):g.playing?t("nowPlaying"):t("paused")}</div>
+        ${rev?`<div class="cab-title">${esc(cleanTitle(s.t))}</div><div class="cab-artist">${esc(s.a)}</div><a class="sp" href="https://open.spotify.com/track/${esc(s.id)}" target="_blank" rel="noopener">${t("openSp")}</a>`
+             :g.peek?`<div class="cab-title">${esc(cleanTitle(s.t))}</div><div class="cab-artist">${esc(s.a)}</div>`:`<div class="hidden-song">${t("mystery")}</div><div class="cab-artist">${t("hiddenTA")}</div>`}
       </div>
       <div class="year-badge ${rev?"pop":""}">${rev?y:"?"}</div>
     </div>${tools}
-    ${rev&&src==="musicbrainz"?`<p class="dj-note">Year from MusicBrainz. Spotify listed ${s.sy}, which is probably a re-release.</p>`:""}
+    ${rev&&src==="musicbrainz"?`<p class="dj-note">${t("mbNote",s.sy)}</p>`:""}
   </div>`;
 }
 function vGame(){
-  const g=G(),P=g.players[g.turn];let body="";
+  const g=G(),P=g.players[g.turn],pn=esc(P.name);let body="";
   if(g.phase==="intro"){
     body=`<div class="turn sticker" style="--pc:${P.color}">
-      <h2>${esc(P.name)}'s turn</h2>
-      <p>${P.timeline.length} of ${g.goal} cards, ${P.tokens} token${P.tokens===1?"":"s"}. ${g.deck.length} songs left in the deck.</p>
-      <div class="acts"><button class="btn btn-primary" data-act="drawSong">Draw a song</button></div>
+      <h2>${t("turnOf",pn)}</h2>
+      <p>${t("turnInfo",P.timeline.length,g.goal,P.tokens,g.deck.length)}</p>
+      <div class="acts"><button class="btn btn-primary" data-act="drawSong">${t("draw")}</button></div>
     </div>
-    <p class="say">${esc(P.name)}'s timeline</p>${timeline("view")}`;
+    <p class="say">${t("timelineOf",pn)}</p>${timeline("view")}`;
   }else if(g.phase==="flip"){
     const sensor=ori.ok,waiting=!ori.ok&&ori.listening&&Date.now()-(g.flipAt||0)<2500;
     body=`<div class="flip sticker" style="--pc:${P.color}">
-      ${g.count?`<h2>Put it down now</h2><div class="count" aria-live="assertive">${g.count}</div><p>The song starts at zero.</p>`:`
-      <span class="sensor ${sensor?"":"off"}"><i></i>${sensor?"Flip sensor ready":waiting?"Looking for the flip sensor":"No flip sensor on this device"}</span>
+      ${g.count?`<h2>${t("putDown")}</h2><div class="count" aria-live="assertive">${g.count}</div><p>${t("startsAtZero")}</p>`:`
+      <span class="sensor ${sensor?"":"off"}"><i></i>${sensor?t("sensorReady"):waiting?t("sensorLooking"):t("sensorNone")}</span>
       <div class="phone3d" aria-hidden="true"><div class="phone"></div></div>
-      <h2>${sensor?"Flip the phone face-down":"Get ready to put it down"}</h2>
-      <p>${sensor?"The song starts as soon as the screen touches the table. Nobody sees what's playing.":"Tap the countdown, then put the phone face-down before it hits zero."}</p>
+      <h2>${sensor?t("flipH"):t("readyH")}</h2>
+      <p>${sensor?t("flipP"):t("readyP")}</p>
       <div class="acts">
-        <button class="btn ${sensor?"":"btn-primary"}" data-act="countdown">Play after a 3-second countdown</button>
-        <button class="link" data-act="playNow">Play now (for a speaker across the room)</button>
+        <button class="btn ${sensor?"":"btn-primary"}" data-act="countdown">${t("countdownBtn")}</button>
+        <button class="link" data-act="playNow">${t("playNow")}</button>
       </div>`}
     </div>
-    <p class="say">${esc(P.name)}'s timeline</p>${timeline("view")}`;
+    <p class="say">${t("timelineOf",pn)}</p>${timeline("view")}`;
   }else if(g.phase==="guess"){
     body=`${cabinet()}
-      <p class="say">${esc(P.name)}, where does it fit?</p>
-      <p class="sub">Tap a gap on your timeline, then lock it in. Name the artist and title out loud for a bonus token.</p>
+      <p class="say">${t("whereFit",pn)}</p>
+      <p class="sub">${t("guessSub")}</p>
       ${timeline("guess")}
-      <div class="sticky-act"><button class="btn btn-primary" data-act="lock" ${g.pick===null?"disabled":""}>Lock it in</button></div>`;
+      <div class="sticky-act"><button class="btn btn-primary" data-act="lock" ${g.pick===null?"disabled":""}>${t("lock")}</button></div>`;
   }else if(g.phase==="juke"){
     const el=g.players.map((p,i)=>({p,i})).filter(o=>o.i!==g.turn&&o.p.tokens>=COST.juke);
     body=`${cabinet()}
-      <div class="juke sticker"><h2>Anyone want to Juke?</h2>
-        <p>Think ${esc(P.name)} got it wrong? A Juke costs 1 token. Pick where it really goes. If ${esc(P.name)} is wrong and you're right, you steal the card.</p>
-        <div class="jukers">${el.map(o=>`<button class="btn btn-small jbtn" style="--pc:${o.p.color}" data-act="jukeBy" data-i="${o.i}">${esc(o.p.name)} jukes</button>`).join("")}</div>
+      <div class="juke sticker"><h2>${t("jukeH")}</h2>
+        <p>${t("jukeP",pn)}</p>
+        <div class="jukers">${el.map(o=>`<button class="btn btn-small jbtn" style="--pc:${o.p.color}" data-act="jukeBy" data-i="${o.i}">${t("jukes",esc(o.p.name))}</button>`).join("")}</div>
       </div>${timeline("juke")}
-      <div class="sticky-act"><button class="btn btn-primary" data-act="reveal">No Juke, reveal it</button></div>`;
+      <div class="sticky-act"><button class="btn btn-primary" data-act="reveal">${t("noJuke")}</button></div>`;
   }else if(g.phase==="jukePick"){
     const J=g.players[g.juker];
     body=`${cabinet()}
-      <p class="say">${esc(J.name)}, where does it really go?</p><p class="sub">Tap a different gap on ${esc(P.name)}'s timeline.</p>
+      <p class="say">${t("whereReally",esc(J.name))}</p><p class="sub">${t("diffGap",pn)}</p>
       ${timeline("jukePick")}
-      <div class="sticky-act"><button class="btn" data-act="cancelJuke">Cancel Juke</button><button class="btn btn-primary" data-act="lockJuke" ${g.jukePick===null?"disabled":""}>Lock in the Juke</button></div>`;
+      <div class="sticky-act"><button class="btn" data-act="cancelJuke">${t("cancelJuke")}</button><button class="btn btn-primary" data-act="lockJuke" ${g.jukePick===null?"disabled":""}>${t("lockJuke")}</button></div>`;
   }else if(g.phase==="reveal"){
     const v=verdict(),full=P.tokens>=MAX_TOKENS,nextName=g.players[(g.turn+1)%g.players.length].name;
     body=`${cabinet()}
       <div class="verdict sticker ${v.kind}"><span class="ico" aria-hidden="true">${v.ico}</span>
         <div><h2>${esc(v.title)}</h2><p>${esc(v.body)}</p>
-          <div class="bonus">${g.named?`<span class="muted">+1 token for naming it.</span>`:full?`<span class="muted">${esc(P.name)}'s token pouch is full (5).</span>`:`<button class="btn btn-small btn-sun" data-act="named">${esc(P.name)} named it: +1 token</button>`}</div>
-          ${g.fixing?`<div class="fix"><label for="fixy">Real year</label><input id="fixy" inputmode="numeric" maxlength="4" value="${yearOf(g.current)}"><button class="btn btn-small" data-act="fixSave">Save and re-check</button><button class="link" data-act="fixCancel">Cancel</button></div>`
-                    :`<p class="yr-src"><button class="link" style="padding:0" data-act="fixOpen">Year wrong? Fix it</button></p>`}
+          <div class="bonus">${g.named?`<span class="muted">${t("namedDone")}</span>`:full?`<span class="muted">${t("pouchFull",pn)}</span>`:`<button class="btn btn-small btn-sun" data-act="named">${t("namedBtn",pn)}</button>`}</div>
+          ${g.fixing?`<div class="fix"><label for="fixy">${t("realYear")}</label><input id="fixy" inputmode="numeric" maxlength="4" value="${yearOf(g.current)}"><button class="btn btn-small" data-act="fixSave">${t("saveRecheck")}</button><button class="link" data-act="fixCancel">${t("cancel")}</button></div>`
+                    :`<p class="yr-src"><button class="link" style="padding:0" data-act="fixOpen">${t("yearWrong")}</button></p>`}
         </div></div>
-      <p class="say">${esc(P.name)}'s timeline</p>${timeline("reveal")}
-      <div class="sticky-act"><button class="btn btn-primary" data-act="next">${g.winner!==null?"See who won":`Next turn: ${esc(nextName)}`}</button></div>`;
+      <p class="say">${t("timelineOf",pn)}</p>${timeline("reveal")}
+      <div class="sticky-act"><button class="btn btn-primary" data-act="next">${g.winner!==null?t("seeWinner"):t("nextTurn",esc(nextName))}</button></div>`;
   }
   return topbar()+scoreboard()+body;
 }
 function vWin(){
-  const g=G(),W=g.players[g.winner];
+  const g=G(),W=g.players[g.winner],wn=esc(W.name);
   const order=g.players.map((p,i)=>({p,i})).sort((a,b)=>b.p.timeline.length-a.p.timeline.length||b.p.tokens-a.p.tokens);
-  const why=g.endReason==="deck"?`The deck ran out, and ${esc(W.name)} had the longest timeline.`:`First to ${g.goal} cards.`;
+  const why=g.endReason==="deck"?t("whyDeck",wn):t("whyGoal",g.goal);
   return `${topbar()}<div class="win" style="--pc:${W.color}">
     <div class="trophy" aria-hidden="true"><svg viewBox="0 0 24 24" width="64" height="64" fill="#fff" stroke="#1C1848" stroke-width="1.6" stroke-linejoin="round"><path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5z"/><circle cx="12" cy="15" r="1.6" fill="#F2437F"/></svg></div>
-    <h1>${esc(W.name)} wins!</h1><p class="why">${why}</p>
-    <ol class="standings sticker" style="list-style:none">${order.map((o,k)=>`<li style="--pc:${o.p.color}"><span class="pl">${k+1}</span><span class="n"><i></i>${esc(o.p.name)}</span><span>${o.p.timeline.length} card${o.p.timeline.length===1?"":"s"}</span></li>`).join("")}</ol>
-    <h3>${esc(W.name)}'s winning timeline</h3>
+    <h1>${t("wins",wn)}</h1><p class="why">${why}</p>
+    <ol class="standings sticker" style="list-style:none">${order.map((o,k)=>`<li style="--pc:${o.p.color}"><span class="pl">${k+1}</span><span class="n"><i></i>${esc(o.p.name)}</span><span>${t("cardsN",o.p.timeline.length)}</span></li>`).join("")}</ol>
+    <h3>${t("winningTl",wn)}</h3>
     <div class="tl">${W.timeline.map(id=>cardRow(id)).join("")}</div>
-    <div class="acts"><button class="btn btn-primary" data-act="rematch">Rematch</button><button class="btn" data-act="quit">Main menu</button></div>
+    <div class="acts"><button class="btn btn-primary" data-act="rematch">${t("rematch")}</button><button class="btn" data-act="quit">${t("mainMenu")}</button></div>
   </div>`;
 }
-function vLoading(){return `<div class="busy"><div><div class="vinyl"></div><p>Loading</p></div></div>`}
+function vLoading(){return `<div class="busy"><div><div class="vinyl"></div><p>${t("loading")}</p></div></div>`}
 
 /* =====================================================================
    Rules sheet + confetti
    ===================================================================== */
 function openRules(){
   const el=document.getElementById("sheet");
-  el.innerHTML=`<div class="sheet-wrap" data-close="1"><div class="sheet sticker" role="dialog" aria-modal="true" aria-labelledby="rt">
-    <h2 id="rt">How to play</h2><ol>
-      <li>Everyone starts with <b>one song card</b> face up and <b>2 tokens</b>.</li>
-      <li>On your turn, tap Draw a song and <b>put the phone face-down</b>. The song starts playing, and nobody can see what it is.</li>
-      <li>Pick the phone up again and place the song on your timeline: before, between or after your cards. <b>Right spot, you keep it.</b> Wrong spot, it's out.</li>
-      <li>Name the artist and title out loud for <b>+1 token</b>. You can hold up to 5.</li>
-      <li><b>Skip</b> (1 token): swap the song for a new one.</li>
-      <li><b>Juke</b> (1 token): after someone locks in, another player can pick a different spot. If the placer is wrong and the juker is right, the juker steals the card.</li>
-      <li>Songs from the same year fit on either side of each other. The year is when the song first came out, not the remaster.</li>
-      <li>First to the target number of cards wins.</li>
-    </ol><button class="btn btn-primary wide" data-close="1">Got it</button></div></div>`;
+  el.innerHTML=`<div class="sheet-wrap" data-close="1"><div class="sheet sticker" role="dialog" aria-modal="true" aria-labelledby="rt" lang="${cfg.lang}">
+    <h2 id="rt">${t("howTo")}</h2><ol>${t("rules").map(r=>`<li>${r}</li>`).join("")}</ol>
+    <button class="btn btn-primary wide" data-close="1">${t("gotIt")}</button></div></div>`;
   el.querySelector(".sheet .btn").focus();
 }
 document.getElementById("sheet").addEventListener("click",e=>{if(e.target.dataset&&e.target.dataset.close)document.getElementById("sheet").innerHTML=""});
@@ -1125,6 +1274,7 @@ function confetti(){
 const app=document.getElementById("app");
 let lastKey="";
 function render(){
+  document.documentElement.lang=cfg.lang;
   const g=G();
   if((S.screen==="game"||S.screen==="win")&&!g)S.screen=S.me?"home":"connect";
   const v={connect:vConnect,home:vHome,settings:vSettings,setup:vSetup,game:vGame,win:vWin,loading:vLoading}[S.screen]||vHome;
@@ -1141,7 +1291,7 @@ app.addEventListener("click",async e=>{
   if(b.dataset.act!=="dismiss")S.error=null;
   if(b.dataset.act!=="copyUri")S.copied=false;
   running=true;
-  try{await fn(b.dataset)}catch(err){S.busy=null;S.error=err&&err.message?err.message:"Something went wrong. Try again."}
+  try{await fn(b.dataset)}catch(err){S.busy=null;S.error=err&&err.message?err.message:t("generic")}
   finally{running=false;render()}
 });
 app.addEventListener("input",e=>{
