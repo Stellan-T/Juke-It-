@@ -258,7 +258,7 @@ h1,h2,h3{font-family:var(--display);line-height:1.08;margin:0}
 .standings{text-align:left;padding:.6rem 1rem;margin:0 0 2rem}
 .standings li{display:flex;align-items:center;gap:.7rem;padding:.55rem 0;border-bottom:2px dashed color-mix(in srgb,var(--line) 25%,transparent)}
 .standings li:last-child{border-bottom:0}
-.standings .pl{font-family:var(--display);font-weight:700;width:1.6rem;text-align:center}
+.standings .rank{font-family:var(--display);font-weight:700;width:1.6rem;text-align:center}
 .standings .n{flex:1;font-weight:600;display:flex;align-items:center;gap:.5rem}
 .standings .n i{width:12px;height:12px;border-radius:50%;background:var(--pc);border:2px solid var(--line)}
 .win .tl{text-align:left}
@@ -380,6 +380,65 @@ input.pct:focus-visible{outline:3px solid var(--sky);outline-offset:4px}
 .award::before{content:"";position:absolute;inset:0 0 auto 0;height:8px;background:var(--ac);border-bottom:3px solid var(--line)}
 .aw-h{display:inline-block;margin-top:.5rem;font-family:var(--display);font-weight:700;font-size:1.1rem}
 .award p{margin:.25rem 0 0;color:var(--muted);font-size:.95rem}
+/* ---- multiplayer ---- */
+.code-in{text-transform:uppercase;letter-spacing:.3em;font-family:var(--display);font-weight:700;font-size:1.4rem;text-align:center}
+.lobby-join{display:flex;gap:1.2rem;align-items:center}
+.qr{flex:none;width:150px;aspect-ratio:1;border-radius:14px;border:3px solid var(--line);background:#fff;overflow:hidden;box-shadow:3px 4px 0 var(--shadow)}
+.qr svg{display:block;width:100%;height:100%}
+.qr:empty{background:repeating-linear-gradient(45deg,#fff 0 8px,#eee 8px 16px)}
+.bigcode{font-family:var(--display);font-weight:700;font-size:clamp(2.6rem,11vw,3.6rem);letter-spacing:.14em;line-height:1;color:var(--text);text-shadow:3px 3px 0 var(--bubble);margin:.2rem 0}
+@media (max-width:420px){.lobby-join{flex-direction:column;text-align:center}.qr{width:180px}}
+.plchips{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center}
+.panel .plchips{justify-content:flex-start}
+.plchip{display:inline-flex;align-items:center;gap:.45rem;padding:.4rem .5rem .4rem .8rem;border-radius:999px;border:3px solid var(--line);background:var(--surface);font-weight:600;box-shadow:2px 3px 0 var(--shadow);min-height:44px}
+.plchip i{width:12px;height:12px;border-radius:50%;background:var(--pc);border:2px solid var(--line)}
+.plchip em{font-style:normal;font-size:.78rem;font-weight:600;padding:.05rem .45rem;border-radius:999px;background:var(--sun);color:var(--ink);border:2px solid var(--line)}
+.plchip .kick{width:30px;height:30px;border-radius:50%;border:2px solid var(--line);background:var(--surface-2);cursor:pointer;font-size:1.1rem;line-height:1;margin-left:.2rem}
+.plchip:not(:has(.kick)){padding-right:.9rem}
+.chip .nm em.me{font-style:normal;font-size:.72rem;padding:0 .35rem;border-radius:999px;background:var(--sun);color:var(--ink);border:2px solid var(--line);text-shadow:none}
+.jcount{display:inline-grid;place-items:center;min-width:2.2rem;height:2.2rem;padding:0 .4rem;border-radius:999px;background:var(--bubble);color:#fff;border:3px solid var(--line);font-size:1.2rem;vertical-align:middle;margin-left:.3rem}
+.spect{margin:.2rem 0 1rem;padding:.6rem .9rem;border-radius:12px;border:2px dashed var(--line);background:var(--surface-2);font-size:.95rem}
+.hostpanel{margin-top:2.4rem}
+.hostpanel h2{font-size:1.2rem}
+.hostpanel code{font-size:.82rem;overflow-wrap:anywhere}
+.code-inline{font-family:var(--display);letter-spacing:.12em}
+.board-start{min-height:100vh;display:flex;flex-direction:column;justify-content:center}
+/* TV board */
+body.boardmode .app{max-width:none;padding:0 clamp(1rem,3vw,3rem) 2rem}
+.bview{min-height:100vh}
+.blobby{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;text-align:center;padding:2rem 0}
+.blobby .logo{width:min(34vw,440px)}
+.bjoin{display:flex;gap:2rem;align-items:center;padding:1.5rem 2rem;text-align:left}
+.bjoin .qr{width:min(24vw,260px)}
+.bjoin p{margin:0;color:var(--muted);font-size:1.3rem}
+.bjoin .bigcode{font-size:clamp(3.5rem,8vw,6.5rem)}
+.burl{font-size:1.1rem!important;word-break:break-all}
+.bwait{font-size:1.3rem;color:var(--muted);margin:0}
+.bgame{display:grid;grid-template-columns:minmax(200px,20%) 1fr;gap:clamp(1rem,3vw,3rem);padding-top:1.5rem;align-items:start}
+.bside .board{flex-direction:column;overflow:visible;margin:0;padding:0}
+.bside .chip{min-width:0;padding:.6rem .8rem}
+.bside .chip .nm{font-size:1.1rem;max-width:none}
+.bcode-mini{margin-top:1.2rem;color:var(--muted);font-size:1.1rem}
+.bcode-mini b{font-family:var(--display);letter-spacing:.12em;color:var(--text)}
+.bstatus{font-size:clamp(2rem,4vw,3.4rem);margin:0 0 1rem;text-shadow:3px 3px 0 var(--pc)}
+.bmain .cab{max-width:900px}
+.bmain .cab .vinyl,.bmain .cab .art{width:clamp(96px,11vw,150px);height:auto;aspect-ratio:1}
+.bmain .cab-title{font-size:clamp(1.8rem,3.4vw,2.8rem)}
+.bmain .year-badge{font-size:clamp(2.2rem,4vw,3.6rem)}
+.bverdict{font-size:1.4rem;color:var(--muted);margin:-.4rem 0 1.4rem;max-width:60ch}
+.bmain .say{font-size:1.6rem}
+.bmain .tl{flex-direction:row;flex-wrap:wrap;align-items:stretch;gap:.8rem}
+.bmain .card{width:clamp(170px,15vw,230px);flex-direction:column;align-items:flex-start;gap:.4rem;padding:.6rem .7rem}
+.bmain .card .yr{font-size:1.8rem}
+.bmain .card .tx b,.bmain .card .tx span{white-space:normal}
+.bmain .card .tag{margin-left:0}
+.bmain .slot{height:auto;min-height:110px;width:auto;padding:0 1rem;writing-mode:horizontal-tb}
+.bmain .slot.lock{min-width:130px}
+.bwin .win{max-width:980px;margin:0 auto}
+.bwin .awards{grid-template-columns:repeat(3,1fr)}
+@media (max-width:900px){.bgame{grid-template-columns:1fr}.bside .board{flex-direction:row;overflow-x:auto}}
+
+.bmain .cab a.sp{display:none}
 
 </style>
 </head>
@@ -403,7 +462,7 @@ const DEFAULT_CLIENT_ID = "";
 /* ===================================================================== */
 const API="https://api.spotify.com/v1", ACC="https://accounts.spotify.com";
 const SCOPES="user-read-private playlist-read-private playlist-read-collaborative user-read-playback-state user-modify-playback-state";
-const K={cfg:"jk-cfg",tok:"jk-tok",ver:"jk-pkce",state:"jk-state",game:"jk-game",years:"jk-years",setup:"jk-setup"};
+const K={cfg:"jk-cfg",tok:"jk-tok",ver:"jk-pkce",state:"jk-state",game:"jk-game",years:"jk-years",setup:"jk-setup",room:"jk-room",join:"jk-join"};
 const PCOL=["var(--sky)","var(--bubble)","var(--grape)","var(--blaze)","var(--mint)","var(--indigo)","var(--sun)","var(--lime)"];
 const MAX_TOKENS=5, START_TOKENS=2, COST={skip:1,juke:1};
 const REDIRECT=location.origin+location.pathname;
@@ -489,6 +548,22 @@ en:{
   aMiss:"Biggest miss",aMissV:(n,off,ti,y)=>`${n} was ${off} year${off===1?"":"s"} off with ${ti} (${y}).`,
   aOld:"Oldest song",aOldV:(ti,a,y)=>`${ti} by ${a}, from ${y}.`,
   aPl:"Most played playlist",aPlV:(l,n)=>`${l}, with ${n} song${n===1?"":"s"}.`,
+  fbFail:"Can't connect to the game server. Check the internet connection.",openingRoom:"Opening the lobby",roomFail:"Couldn't create a game. Try again.",host:"Host",
+  need2:"You need at least 2 players",noRoom:"There's no game with that code. Check the code with the host.",needName:"Enter your name first.",
+  joinH:"Join a game",joinP:"Enter the code from the host's screen and your name.",codePh:"Code, like KWPZ",namePh:"Your name",joinBtn:"Join",
+  asBoard:"Use this screen as the TV board instead",hostInstead:"Hosting a game? Log in with Spotify",
+  lobbyH:"Lobby",joinCode:"Game code",scanJoin:"Scan the QR code to join, or open the game and enter the code.",
+  boardH:"The TV board",boardP:"Open this link on the TV's browser or on a laptop connected to the TV:",boardAlt:c=>`Or open the game on the TV, choose "Join a friend's game", enter ${c} and pick "Use this screen as the TV board".`,
+  inLobby:n=>`${n} player${n===1?"":"s"} in the lobby`,startGame:"Start the game",endGame:"End the game",roomClosed:"The host ended the game.",
+  removed:"The host removed you from the game.",youreIn:n=>`You're in${n?`, ${n}`:""}!`,waitStart:"Waiting for the host to start the game.",leave:"Leave the game",
+  spectating:"This game started before you joined, so you're watching.",yourTurn:"Your turn",waitDraw:n=>`Waiting for ${n} to draw a song.`,drawFor:n=>`Draw for ${n}`,
+  placing:n=>`${n} is placing the song…`,jukePm:n=>`Think ${n} got it wrong? Juke for 1 token and pick where it really goes.`,jukeBtn:"Juke!",passBtn:"No Juke",
+  waitJukes:"Waiting to see if anyone Jukes…",passed:"You passed. Waiting for the others…",noTokJuke:"No tokens left to Juke with.",
+  jukePicking:n=>`${n} Jukes! Picking a spot…`,waitNext:n=>`Waiting for ${n} to continue.`,hostH:"Host controls",boardLink:"Board link",
+  startBoard:"Start the board",startBoardHint:"Tap once so the TV can play sounds and stays on.",joinAt:"Join with code",code:"Code",hostTag:"host",you:"you",remove:"Remove",
+  winWait:"The host can start a rematch.",roomGone:"That game has ended, so it can't be resumed.",joinLink:"Join a friend's game",
+  playHow:"How are you playing?",pLocal:"One phone",pLocalD:"Pass it around the table",pPhones:"Own phones",pPhonesD:"Everyone plays on their own phone",
+  pTv:"TV + phones",pTvD:"The board on the TV, everyone plays on their phone",yourName:"Your name",yourNameHint:"The others join once you open the lobby.",openRoom:"Open the lobby",
   rules:[
     "Everyone starts with <b>one song card</b> face up and <b>2 tokens</b>.",
     "On your turn, tap Draw a song and <b>put the phone face-down</b>. The song starts playing, and nobody can see what it is.",
@@ -564,6 +639,22 @@ nl:{
   aMiss:"Grootste misser",aMissV:(n,off,ti,y)=>`${n} zat ${off} jaar ernaast met ${ti} (${y}).`,
   aOld:"Oudste nummer",aOldV:(ti,a,y)=>`${ti} van ${a}, uit ${y}.`,
   aPl:"Meest gespeelde playlist",aPlV:(l,n)=>`${l}, met ${n} nummer${n===1?"":"s"}.`,
+  fbFail:"Kan geen verbinding maken met de spelserver. Controleer de internetverbinding.",openingRoom:"Lobby openen",roomFail:"Kon geen spel aanmaken. Probeer het opnieuw.",host:"Host",
+  need2:"Je hebt minstens 2 spelers nodig",noRoom:"Er is geen spel met die code. Check de code bij de host.",needName:"Vul eerst je naam in.",
+  joinH:"Meedoen met een spel",joinP:"Vul de code van het scherm van de host in, en je naam.",codePh:"Code, bijvoorbeeld KWPZ",namePh:"Jouw naam",joinBtn:"Meedoen",
+  asBoard:"Gebruik dit scherm liever als het tv-bord",hostInstead:"Host je zelf? Log in met Spotify",
+  lobbyH:"Lobby",joinCode:"Spelcode",scanJoin:"Scan de QR-code om mee te doen, of open het spel en vul de code in.",
+  boardH:"Het bord op de tv",boardP:"Open deze link in de browser van de tv, of op een laptop die op de tv is aangesloten:",boardAlt:c=>`Of open het spel op de tv, kies "Meedoen met een vriend", vul ${c} in en kies "Gebruik dit scherm liever als het tv-bord".`,
+  inLobby:n=>`${n} speler${n===1?"":"s"} in de lobby`,startGame:"Start het spel",endGame:"Stop het spel",roomClosed:"De host heeft het spel gestopt.",
+  removed:"De host heeft je uit het spel gehaald.",youreIn:n=>`Je doet mee${n?`, ${n}`:""}!`,waitStart:"Wachten tot de host het spel start.",leave:"Verlaat het spel",
+  spectating:"Dit spel begon voordat jij meedeed, dus je kijkt mee.",yourTurn:"Jij bent aan de beurt",waitDraw:n=>`Wachten tot ${n} een nummer trekt.`,drawFor:n=>`Trek voor ${n}`,
+  placing:n=>`${n} legt het nummer…`,jukePm:n=>`Denk je dat ${n} ernaast zit? Juke voor 1 token en kies waar 'ie echt hoort.`,jukeBtn:"Juke!",passBtn:"Geen Juke",
+  waitJukes:"Even kijken of iemand gaat Juken…",passed:"Je past. Wachten op de rest…",noTokJuke:"Geen tokens meer om mee te Juken.",
+  jukePicking:n=>`${n} jukete! Kiest een plek…`,waitNext:n=>`Wachten tot ${n} verdergaat.`,hostH:"Host-bediening",boardLink:"Bordlink",
+  startBoard:"Start het bord",startBoardHint:"Tik één keer zodat de tv geluid kan maken en aan blijft.",joinAt:"Doe mee met code",code:"Code",hostTag:"host",you:"jij",remove:"Verwijder",
+  winWait:"De host kan een revanche starten.",roomGone:"Dat spel is afgelopen, dus je kunt het niet hervatten.",joinLink:"Meedoen met een vriend",
+  playHow:"Hoe spelen jullie?",pLocal:"Eén telefoon",pLocalD:"Geef 'm door aan tafel",pPhones:"Eigen telefoons",pPhonesD:"Iedereen speelt op z'n eigen telefoon",
+  pTv:"Tv + telefoons",pTvD:"Het bord op de tv, iedereen speelt op z'n telefoon",yourName:"Jouw naam",yourNameHint:"De anderen doen mee zodra je de lobby opent.",openRoom:"Open de lobby",
   rules:[
     "Iedereen begint met <b>één nummerkaart</b> open en <b>2 tokens</b>.",
     "Tik in jouw beurt op Trek een nummer en <b>leg de telefoon op z'n scherm</b>. Het nummer begint te spelen en niemand kan zien wat het is.",
@@ -591,7 +682,7 @@ const S={
   game:ls.get(K.game,null),
   back:"home"
 };
-const G=()=>S.game;
+function G(){return isClient()?clientG():S.game}
 function saveGame(){ls.set(K.game,S.game);ls.set(K.setup,S.setup)}
 
 /* =====================================================================
@@ -740,7 +831,7 @@ function checkYear(song){
   mbChain=p.then(()=>sleep(1100),()=>sleep(1100));
   return p;
 }
-function yearOf(id){const g=G();return(years[id]&&years[id].y)||(g&&g.songs[id]&&g.songs[id].sy)||0}
+function yearOf(id){const g=G();if(isClient()){const s=g&&g.songs[id];return s?s.y:0}return(years[id]&&years[id].y)||(g&&g.songs[id]&&g.songs[id].sy)||0}
 function prefetch(){const g=G();if(!g)return;g.deck.slice(-3).reverse().forEach(id=>checkYear(g.songs[id]))}
 
 /* =====================================================================
@@ -822,7 +913,7 @@ function tones(seq){
       o.connect(g).connect(ac.destination);o.start(now+t);o.stop(now+t+d+.05)});
   }catch(e){}
 }
-const SFX={
+const SFX_RAW={
   tap:()=>tones([[660,0,.07]]),
   good:()=>tones([[523,0,.14],[659,.09,.14],[784,.18,.3]]),
   bad:()=>tones([[196,0,.25,"sawtooth",.07],[147,.16,.4,"sawtooth",.07]]),
@@ -831,6 +922,7 @@ const SFX={
   win:()=>tones([[523,0,.15],[659,.13,.15],[784,.26,.15],[1047,.39,.5],[784,.55,.12],[1047,.66,.6]]),
   drumroll:ms=>drumroll(ms),crash:()=>crash(),airhorn:()=>airhorn()
 };
+const SFX={};Object.keys(SFX_RAW).forEach(k=>{SFX[k]=(...a)=>{if(isHost()&&S.room.mode==="tv"&&S.room.started)sendFx(k,a);else if(!isClient())SFX_RAW[k](...a)}});
 function audio(){if(cfg.muted)return null;try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();if(ac.state==="suspended")ac.resume();return ac}catch(e){return null}}
 let noiseBuf=null;
 function noise(a){if(noiseBuf)return noiseBuf;noiseBuf=a.createBuffer(1,a.sampleRate,a.sampleRate);const d=noiseBuf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;return noiseBuf}
@@ -883,6 +975,7 @@ function mixSummary(){
 }
 function startLabel(){
   const act=Object.values(S.setup.picked).filter(p=>pctOf(p)>0);
+  if(act.length&&(cfg.play||"local")!=="local")return{on:true,text:t("openRoom")};
   if(!act.length)return{on:false,text:Object.keys(S.setup.picked).length?t("turnUp"):t("pickPl")};
   const {n,unknown}=deckEstimate();
   return{on:true,text:t("startWith",n+(unknown?"+":""))};
@@ -910,7 +1003,7 @@ async function buildSongs(){
 }
 function newStats(n){const z=()=>Array(n).fill(0);return{att:z(),ok:z(),streak:z(),best:z(),jukes:z(),steals:z(),named:z(),miss:null,played:[]}}
 async function newGame(songs,playersIn){
-  const players=playersIn.map((p,i)=>({name:(p.name||"").trim()||t("player",i+1),color:PCOL[i%PCOL.length],timeline:[],tokens:START_TOKENS}));
+  const players=playersIn.map((p,i)=>({uid:p.uid||null,name:(p.name||"").trim()||t("player",i+1),color:PCOL[i%PCOL.length],timeline:[],tokens:START_TOKENS}));
   const deck=shuffle(Object.keys(songs));
   const need=players.length+10;
   if(deck.length<need)throw new Error(t("onlyFound",deck.length,need,players.length));
@@ -958,7 +1051,7 @@ function resolve(){
   const w=g.players.findIndex(p=>p.timeline.length>=g.goal);
   g.winner=w>=0?w:null;g.endReason=w>=0?"goal":null;
 }
-function snapPlayers(){const g=G();try{return JSON.parse(g.snap).players}catch(e){return g.players}}
+function snapPlayers(){const g=G();if(isClient())return g.players;try{return JSON.parse(g.snap).players}catch(e){return g.players}}
 let susTimer=null;
 function startReveal(){
   const g=G();resolve();g.suspense=true;SFX.drumroll(1700);
@@ -982,6 +1075,21 @@ function verdict(){
    ===================================================================== */
 const A={
   async boot(){
+    const q=new URLSearchParams(location.search),jc=q.get("join"),bc=q.get("board");
+    if(jc||bc){
+      history.replaceState(null,"",REDIRECT);
+      if(bc){await joinRoom(bc,null,"board");return}
+      const saved=ls.get(K.join,null);
+      S.joinPrefill={code:jc.toUpperCase(),name:saved&&saved.name||""};S.screen="join";return;
+    }
+    const sj=ls.get(K.join,null);
+    if(sj&&sj.code&&!(S.game&&S.game.roomCode)){
+      try{
+        await fbInit();const meta=(await fb.m.get(R(`rooms/${sj.code}/meta`))).val();
+        if(meta&&Date.now()-(meta.created||0)<12*3600e3){await joinRoom(sj.code,sj.name,sj.role||"player");return}
+      }catch(e){}
+      ls.del(K.join);
+    }
     if(!cfg.clientId||!tok){S.screen="connect";return}
     S.busy=t("connecting");render();
     await loadMe();S.busy=null;S.screen="home";
@@ -999,7 +1107,13 @@ const A={
   async refreshDevices(){S.busy=t("lookingDevices");render();try{await loadDevices()}finally{S.busy=null}},
   device(d){const dv=(S.devices||[]).find(x=>x.id===d.v);cfg.device=d.v;cfg.deviceName=dv?dv.name:null;saveCfg()},
   intro(d){cfg.intro=+d.v;saveCfg()},
-  resume(){const g=G();S.screen=g.winner!==null&&g.phase!=="reveal"?"win":"game";wake()},
+  async resume(){
+    const g=G();
+    if(g.roomCode&&!isHost()){
+      if(!(await roomReattach())){S.game=null;ls.del(K.game);ls.del(K.room);S.error=t("roomGone");S.screen="home";return}
+    }
+    S.screen=g.winner!==null&&g.phase!=="reveal"?"win":"game";wake();
+  },
   async toSetup(){
     S.screen="setup";S.busy=t("loadingPl");render();
     try{await loadPlaylists();await loadDevices()}finally{S.busy=null}
@@ -1030,6 +1144,7 @@ const A={
   allFull(){Object.values(S.setup.picked).forEach(p=>{p.pct=100})},
   async start(){
     if(!startLabel().on){S.error=t("needPl");return}
+    if((cfg.play||"local")!=="local"){try{await openRoom()}finally{S.busy=null}return}
     askMotion();
     try{const songs=await buildSongs();await newGame(songs,S.setup.players)}
     finally{S.busy=null}
@@ -1065,12 +1180,318 @@ const A={
     const g=G();pauseMusic();
     if(g.winner!==null){S.screen="win";SFX.win();return}
     g.turn=(g.turn+1)%g.players.length;
-    Object.assign(g,{phase:"intro",current:null,pick:null,juker:null,jukePick:null,result:null,note:null,playing:false,count:0,fixing:false,snap:null});
+    Object.assign(g,{phase:"intro",current:null,pick:null,juker:null,jukePick:null,result:null,note:null,playing:false,count:0,fixing:false,snap:null,peek:false,passes:{},jukeLeft:0});
   },
-  async rematch(){const g=G();await newGame(g.songs,g.players.map(p=>({name:p.name})))},
-  quit(){pauseMusic();S.game=null;ls.del(K.game);S.screen="home"},
+  async rematch(){
+    const g=G();
+    if(isHost()){
+      const r=S.room;r.started=false;r.pubCards={};r.lastPub="";
+      try{await fb.m.remove(R(`rooms/${r.code}/cards`))}catch(e){}
+      await newGame(g.songs,g.players.map(p=>({name:p.name,uid:p.uid})));
+      S.game.roomCode=r.code;r.started=true;schedulePublish();return;
+    }
+    await newGame(g.songs,g.players.map(p=>({name:p.name})));
+  },
+  async quit(){pauseMusic();if(isHost())await endRoom();S.game=null;ls.del(K.game);S.screen="home"},
+  playMode(d){cfg.play=d.v;saveCfg()},
+  toJoin(){S.joinPrefill=S.joinPrefill||{name:(ls.get(K.join,null)||{}).name||cfg.myName||""};S.screen="join"},
+  toConnect(){S.screen="connect"},
+  async join(){
+    const code=(document.getElementById("jcode").value||"").trim().toUpperCase(),name=(document.getElementById("jname").value||"").trim();
+    S.joinPrefill={code,name};
+    try{await joinRoom(code,name,"player")}finally{S.busy=null}
+  },
+  async joinBoard(){
+    const code=(document.getElementById("jcode").value||"").trim().toUpperCase();
+    S.joinPrefill=Object.assign({},S.joinPrefill,{code});
+    try{await joinRoom(code,null,"board")}finally{S.busy=null}
+  },
+  arm(){S.room.armed=true;audio();wake()},
+  async leave(){
+    const r=S.room;
+    if(r&&fb&&r.role==="player"&&!r.pub&&!r.removed){try{await fb.m.remove(R(`rooms/${r.code}/players/${fb.uid}`))}catch(e){}}
+    unsubAll();S.room=null;ls.del(K.join);S.screen=S.me?"home":"connect";
+  },
+  async lobbyStart(){await roomStart()},
+  async kick(d){if(isHost()&&d.uid!==fb.uid)await fb.m.remove(R(`rooms/${S.room.code}/players/${d.uid}`))},
+  async copyBoard(){try{await navigator.clipboard.writeText(roomUrl("board",S.room.code));S.copied=true}catch(e){S.error=t("copyFail")}},
+  async endRoom(){pauseMusic();await endRoom();S.game=null;ls.del(K.game);S.screen=S.me?"home":"connect"},
+  async m(d){const data={};if(d.i!==undefined)data.i=+d.i;await sendAction(d.t,data)},
   dismiss(){S.error=null}
 };
+
+/* =====================================================================
+   Multiplayer with Firebase: TV board and/or everyone on their own phone
+   ===================================================================== */
+const FB_CONFIG={
+  apiKey:"AIzaSyCIYtMwjRopMUrrU-dFetdJ4S5PS5U5maU",
+  authDomain:"juke-it-e7aab.firebaseapp.com",
+  databaseURL:"https://juke-it-e7aab-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId:"juke-it-e7aab",
+  storageBucket:"juke-it-e7aab.firebasestorage.app",
+  messagingSenderId:"335189011062",
+  appId:"1:335189011062:web:ee08feb4206912f52f8d57"
+};
+const FB_BASE="https://www.gstatic.com/firebasejs/12.13.0/";
+const QR_SRC="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js";
+const JUKE_SECS=10;
+let fb=null,fbLoading=null;
+async function fbInit(){
+  if(fb)return fb;
+  if(!fbLoading)fbLoading=(async()=>{
+    try{
+      const [appM,authM,dbM]=await Promise.all([import(FB_BASE+"firebase-app.js"),import(FB_BASE+"firebase-auth.js"),import(FB_BASE+"firebase-database.js")]);
+      const app=appM.initializeApp(FB_CONFIG);
+      const auth=authM.getAuth(app);
+      const cred=await authM.signInAnonymously(auth);
+      fb={db:dbM.getDatabase(app),uid:cred.user.uid,m:dbM};
+      return fb;
+    }catch(e){fbLoading=null;console.warn(e);throw new Error(t("fbFail"))}
+  })();
+  return fbLoading;
+}
+const R=p=>fb.m.ref(fb.db,p);
+const clean=o=>JSON.parse(JSON.stringify(o,(k,v)=>v===undefined?null:v));
+const toArr=v=>Array.isArray(v)?v:v&&typeof v==="object"?Object.keys(v).sort((a,b)=>a-b).map(k=>v[k]):[];
+function isClient(){return !!(S.room&&S.room.role!=="host")}
+function isHost(){return !!(S.room&&S.room.role==="host")}
+function roomUrl(kind,code){return `${REDIRECT}?${kind}=${code}`}
+function makeCode(){const a="ABCDEFGHJKLMNPQRSTUVWXYZ";let s="";for(let i=0;i<4;i++)s+=a[Math.floor(Math.random()*a.length)];return s}
+function M(type,extra){return `data-act="m" data-t="${type}"${extra||""}`}
+function myIndex(){const g=G();return g&&fb?g.players.findIndex(p=>p.uid===fb.uid):-1}
+function unsubAll(){const r=S.room;if(r&&r.unsub){r.unsub.forEach(u=>{try{u()}catch(e){}});r.unsub=[]}}
+
+/* ---- QR codes ---- */
+let qrLoading=null;
+function loadQR(){
+  if(window.qrcode)return Promise.resolve();
+  if(!qrLoading)qrLoading=new Promise(res=>{const s=document.createElement("script");s.src=QR_SRC;s.onload=()=>{res();render()};s.onerror=()=>res();document.head.appendChild(s)});
+  return qrLoading;
+}
+function qrSvg(text){
+  if(!window.qrcode){loadQR();return ""}
+  try{const q=window.qrcode(0,"M");q.addData(text);q.make();return q.createSvgTag({cellSize:6,margin:2,scalable:true,alt:text})}catch(e){return ""}
+}
+
+/* ---- client side: read the public game state ---- */
+function normPub(p){
+  if(!p)return null;
+  const o=Object.assign({pick:null,juker:null,jukePick:null,result:null,winner:null,endReason:null,cur:null,peek:null,passes:{},jukeLeft:0,
+    playing:false,named:false,suspense:false,deckLeft:0,screen:"game",stats:null},p);
+  o.players=toArr(o.players).map(pl=>Object.assign({tokens:0,name:"?",color:"var(--sky)"},pl,{timeline:toArr(pl.timeline)}));
+  if(o.stats){const n=o.players.length;["att","ok","streak","best","jukes","steals","named"].forEach(k=>{const a=toArr(o.stats[k]);while(a.length<n)a.push(0);o.stats[k]=a});o.stats.played=toArr(o.stats.played)}
+  return o;
+}
+function clientG(){
+  const r=S.room,p=r&&r.pub;if(!p)return null;
+  if(r.memo&&r.memo.ver===r.ver)return r.memo.g;
+  const songs={};
+  Object.entries(r.cards||{}).forEach(([id,c])=>{songs[id]={id,t:c.t||"",a:c.a||"",y:c.y||0,sy:c.y||0,img:c.img||null,src:toArr(c.src)}});
+  songs._cur={id:"_cur",t:p.peek?p.peek.t:"",a:p.peek?p.peek.a:"",y:0,sy:0,src:[]};
+  const g=Object.assign({},p,{songs,deck:{length:p.deckLeft||0},current:p.cur,snap:null});
+  r.memo={ver:r.ver,g};return g;
+}
+
+/* ---- host side: publish the public game state ---- */
+function cardInfo(id){const g=S.game,s=g.songs[id];return{t:cleanTitle(s.t),a:s.a,y:yearOf(id),img:s.img||null,src:s.src||[]}}
+function pubState(){
+  const g=S.game,sus=g.phase==="reveal"&&!!g.suspense;
+  let snap=null;if(sus){try{snap=JSON.parse(g.snap)}catch(e){}}
+  const players=((snap&&snap.players)||g.players).map(p=>({uid:p.uid,name:p.name,color:p.color,timeline:p.timeline,tokens:p.tokens}));
+  const s=g.current?g.songs[g.current]:null;
+  return{
+    screen:S.screen==="win"?"win":"game",phase:g.phase,turn:g.turn,goal:g.goal,deckLeft:g.deck.length,
+    pick:g.pick,juker:g.juker,jukePick:g.jukePick,suspense:sus,
+    result:sus?null:g.result,winner:sus?null:g.winner,endReason:sus?null:g.endReason,
+    cur:g.current?(g.phase==="reveal"&&!sus?g.current:"_cur"):null,
+    peek:g.peek&&s&&g.phase!=="reveal"?{t:cleanTitle(s.t),a:s.a}:null,
+    playing:!!g.playing,named:!!g.named,passes:g.passes||{},jukeLeft:g.jukeLeft||0,
+    stats:(snap&&snap.stats)||g.stats||null,players
+  };
+}
+let pubTimer=null,pubBusy=false,pubAgain=false;
+function schedulePublish(){clearTimeout(pubTimer);pubTimer=setTimeout(publishNow,30)}
+async function publishNow(){
+  const r=S.room,g=S.game;if(!isHost()||!g||!fb||!r.started)return;
+  if(pubBusy){pubAgain=true;return}
+  pubBusy=true;
+  try{
+    const sus=g.phase==="reveal"&&!!g.suspense,need=new Set();
+    let pl=g.players;if(sus){try{pl=JSON.parse(g.snap).players}catch(e){}}
+    pl.forEach(p=>p.timeline.forEach(id=>need.add(id)));
+    const st=(sus?(JSON.parse(g.snap||"{}").stats):g.stats)||null;
+    if(st){(st.played||[]).forEach(id=>need.add(id));if(st.miss)need.add(st.miss.id)}
+    if(g.current){if(g.phase==="reveal"&&!sus)need.add(g.current);else need.delete(g.current)}
+    const upd={};
+    need.forEach(id=>{if(!g.songs[id])return;const c=cardInfo(id),k=JSON.stringify(c);if(r.pubCards[id]!==k){upd[id]=c;r.pubCards[id]=k}});
+    if(Object.keys(upd).length)await fb.m.update(R(`rooms/${r.code}/cards`),clean(upd));
+    const state=clean(pubState()),k=JSON.stringify(state);
+    if(k!==r.lastPub){r.lastPub=k;await fb.m.set(R(`rooms/${r.code}/state`),state)}
+  }catch(e){console.warn("publish failed",e)}
+  finally{pubBusy=false;if(pubAgain){pubAgain=false;schedulePublish()}}
+}
+let fxN=0;
+function sendFx(name,args){if(!isHost()||!fb)return;fxN++;fb.m.set(R(`rooms/${S.room.code}/fx`),clean({n:Date.now()+"-"+fxN,name,args:args||[]})).catch(()=>{})}
+
+/* ---- host: open a lobby ---- */
+async function openRoom(){
+  const songs=await buildSongs();
+  S.busy=t("openingRoom");render();
+  await fbInit();
+  const prev=ls.get(K.room,null);
+  if(prev&&prev.code){try{await fb.m.remove(R(`rooms/${prev.code}`))}catch(e){}}
+  let code=null;
+  for(let i=0;i<8&&!code;i++){
+    const c=makeCode();
+    const snap=await fb.m.get(R(`rooms/${c}/meta`));
+    if(!snap.exists()){await fb.m.set(R(`rooms/${c}/meta`),{host:fb.uid,created:Date.now(),mode:cfg.play});code=c}
+  }
+  if(!code)throw new Error(t("roomFail"));
+  await fb.m.set(R(`rooms/${code}/players/${fb.uid}`),{name:(cfg.myName||"").trim()||t("host"),t:Date.now()});
+  S.room={code,role:"host",mode:cfg.play,players:{},songs,unsub:[],pubCards:{},lastPub:"",started:false};
+  ls.set(K.room,{code,mode:cfg.play});
+  hostSubscribe();loadQR();
+  S.busy=null;S.screen="lobby";wake();
+}
+let actQ=Promise.resolve();
+function hostSubscribe(){
+  const r=S.room;unsubAll();
+  r.unsub.push(fb.m.onValue(R(`rooms/${r.code}/players`),snap=>{r.players=snap.val()||{};if(S.screen==="lobby")render()}));
+  r.unsub.push(fb.m.onChildAdded(R(`rooms/${r.code}/actions`),snap=>{
+    const a=snap.val(),key=snap.key;
+    actQ=actQ.then(async()=>{
+      try{if(a&&a.uid)await hostHandle(a.uid,a.type,a.d||{})}catch(e){console.warn(e)}
+      try{await fb.m.remove(R(`rooms/${r.code}/actions/${key}`))}catch(e){}
+    });
+  }));
+}
+async function roomStart(){
+  const r=S.room;
+  const list=Object.entries(r.players||{}).sort((a,b)=>(a[1].t||0)-(b[1].t||0)).map(([uid,p])=>({uid,name:p.name}));
+  if(list.length<2)throw new Error(t("need2"));
+  try{await fb.m.remove(R(`rooms/${r.code}/cards`))}catch(e){}
+  r.pubCards={};r.lastPub="";
+  await newGame(r.songs,list);
+  S.game.roomCode=r.code;r.started=true;schedulePublish();
+}
+async function roomReattach(){
+  const saved=ls.get(K.room,null),g=S.game;
+  if(!saved||!g||g.roomCode!==saved.code)return false;
+  S.busy=t("connecting");render();
+  await fbInit();
+  const meta=(await fb.m.get(R(`rooms/${saved.code}/meta`))).val();
+  S.busy=null;
+  if(!meta||meta.host!==fb.uid)return false;
+  S.room={code:saved.code,role:"host",mode:saved.mode||meta.mode,players:{},songs:g.songs,unsub:[],pubCards:{},lastPub:"",started:true};
+  hostSubscribe();schedulePublish();return true;
+}
+async function endRoom(){
+  const r=S.room;unsubAll();clearInterval(jukeTimer);
+  if(r&&fb&&isHost()){try{await fb.m.remove(R(`rooms/${r.code}`))}catch(e){}}
+  ls.del(K.room);S.room=null;
+}
+
+/* ---- host: the Juke window ---- */
+let jukeTimer=null;
+function openJukeWindow(){
+  const g=S.game;clearInterval(jukeTimer);
+  const any=g.players.some((p,i)=>i!==g.turn&&p.tokens>=COST.juke);
+  if(!any){startReveal();return}
+  g.phase="juke";g.passes={};g.juker=null;g.jukePick=null;g.jukeLeft=JUKE_SECS;
+  jukeTimer=setInterval(()=>{
+    const g2=S.game;if(!g2||g2.phase!=="juke"){clearInterval(jukeTimer);return}
+    g2.jukeLeft--;
+    if(g2.jukeLeft<=0){clearInterval(jukeTimer);startReveal()}
+    render();
+  },1000);
+}
+function allPassed(g){return g.players.every((p,i)=>i===g.turn||p.tokens<COST.juke||(g.passes&&g.passes[i]))}
+
+/* ---- host: handle an action from any player (or from the host) ---- */
+async function hostHandle(uid,type,d){
+  const g=S.game;if(!g||S.screen!=="game")return;
+  const idx=g.players.findIndex(p=>p.uid===uid),host=fb&&uid===fb.uid,mine=idx===g.turn,ctl=mine||host;
+  switch(type){
+    case "draw":
+      if(g.phase!=="intro"||!ctl)return;
+      g.note=null;
+      if(await drawNext()){g.phase="guess";try{await playCurrent()}catch(e){S.error=e.message}}
+      break;
+    case "pick":
+      if(g.phase==="guess"&&ctl)g.pick=+d.i;
+      else if(g.phase==="jukePick"&&idx===g.juker)g.jukePick=+d.i;
+      break;
+    case "lock":
+      if(g.phase==="guess"&&ctl&&g.pick!==null)openJukeWindow();
+      break;
+    case "juke":
+      if(g.phase!=="juke"||idx<0||idx===g.turn||g.juker!==null||g.players[idx].tokens<COST.juke)return;
+      clearInterval(jukeTimer);g.juker=idx;g.jukePick=null;g.phase="jukePick";SFX.airhorn();
+      break;
+    case "pass":
+      if(g.phase!=="juke"||idx<0)return;
+      g.passes=g.passes||{};g.passes[idx]=true;
+      if(allPassed(g)){clearInterval(jukeTimer);startReveal()}
+      break;
+    case "lockJuke":
+      if(g.phase!=="jukePick"||idx!==g.juker||g.jukePick===null)return;
+      g.players[idx].tokens-=COST.juke;startReveal();
+      break;
+    case "cancelJuke":
+      if(g.phase!=="jukePick"||(idx!==g.juker&&!host))return;
+      g.passes=g.passes||{};g.passes[g.juker]=true;g.juker=null;g.jukePick=null;openJukeWindow();
+      break;
+    case "skip":
+      if(g.phase!=="guess"||!mine||g.players[idx].tokens<COST.skip)return;
+      g.players[idx].tokens-=COST.skip;await pauseMusic();
+      if(await drawNext()){g.phase="guess";try{await playCurrent()}catch(e){S.error=e.message}}
+      break;
+    case "pause":if(ctl)await pauseMusic();break;
+    case "resumeSong":if(ctl)try{await resumeMusic()}catch(e){S.error=e.message}break;
+    case "replay":if(ctl)try{await playCurrent()}catch(e){S.error=e.message}break;
+    case "peek":if(ctl&&g.phase!=="reveal")g.peek=!g.peek;break;
+    case "named":if(g.phase==="reveal"&&!g.suspense&&ctl)A.named();break;
+    case "next":if(g.phase==="reveal"&&!g.suspense&&ctl)A.next();break;
+  }
+  render();
+}
+
+/* ---- clients: join as a player or as the TV board ---- */
+async function joinRoom(code,name,role){
+  code=String(code||"").trim().toUpperCase();
+  if(!/^[A-Z]{4}$/.test(code))throw new Error(t("noRoom"));
+  if(role==="player"&&!name)throw new Error(t("needName"));
+  S.busy=t("connecting");render();
+  await fbInit();
+  const meta=(await fb.m.get(R(`rooms/${code}/meta`))).val();
+  if(!meta){S.busy=null;throw new Error(t("noRoom"))}
+  if(role==="player")await fb.m.set(R(`rooms/${code}/players/${fb.uid}`),{name,t:Date.now()});
+  unsubAll();
+  const r=S.room={code,role,mode:meta.mode,pub:null,cards:{},players:{},unsub:[],ver:0,armed:role!=="board",joined:role==="player",lastFx:null};
+  ls.set(K.join,{code,name,role});
+  r.unsub.push(fb.m.onValue(R(`rooms/${code}/state`),s=>{r.pub=normPub(s.val());r.ver++;render()}));
+  r.unsub.push(fb.m.onValue(R(`rooms/${code}/cards`),s=>{r.cards=s.val()||{};r.ver++;render()}));
+  r.unsub.push(fb.m.onValue(R(`rooms/${code}/players`),s=>{
+    r.players=s.val()||{};
+    if(r.players[fb.uid])r.seenSelf=true;
+    else if(r.role==="player"&&r.joined&&r.seenSelf&&!r.pub)r.removed=true;
+    r.ver++;render();
+  }));
+  r.unsub.push(fb.m.onValue(R(`rooms/${code}/meta`),s=>{if(!s.exists()){r.closed=true;render()}}));
+  if(role==="board"){
+    r.unsub.push(fb.m.onValue(R(`rooms/${code}/fx`),s=>{
+      const v=s.val();if(!v)return;
+      if(r.lastFx===null){r.lastFx=v.n;return}
+      if(v.n!==r.lastFx){r.lastFx=v.n;if(r.armed&&SFX_RAW[v.name])SFX_RAW[v.name](...toArr(v.args))}
+    }));
+  }
+  loadQR();S.busy=null;S.screen="room";
+}
+function sendAction(type,d){
+  if(isHost())return hostHandle(fb.uid,type,d||{});
+  if(!S.room||!fb)return;
+  return fb.m.push(R(`rooms/${S.room.code}/actions`),clean({uid:fb.uid,type,d:d||{},t:Date.now()}));
+}
 
 /* =====================================================================
    Views
@@ -1083,7 +1504,7 @@ const ICON={
 };
 function topbar(){
   return `<div class="top">
-    <button class="brand" data-act="home" aria-label="${t("mainMenu")}"><img src="${JB}" alt="">Juke it!</button>
+    ${isClient()?`<span class="brand"><img src="${JB}" alt="">Juke it!</span>`:`<button class="brand" data-act="home" aria-label="${t("mainMenu")}"><img src="${JB}" alt="">Juke it!</button>`}
     <span class="sp"></span>
     <button class="iconbtn" data-act="rules" aria-label="${t("howTo")}">${ICON.help}</button>
     ${S.me?`<button class="iconbtn" data-act="settings" aria-label="${t("settings")}">${ICON.gear}</button>`:""}
@@ -1108,6 +1529,7 @@ function vConnect(){
       <input class="field" id="cid" value="${esc(cfg.clientId)}" placeholder="${t("cidPh")}" autocomplete="off" spellcheck="false">
     </div>
     <button class="btn btn-primary wide" data-act="login">${t("loginBtn")}</button>
+    <button class="btn wide" data-act="toJoin" style="margin-top:1rem">${t("joinLink")}</button>
     <p class="hint">${t("loginHint")}</p>
   </div>`;
 }
@@ -1120,6 +1542,7 @@ function vHome(){
       ${can?`<button class="btn btn-primary" data-act="resume">${t("resume")}</button>`:""}
       <button class="btn ${can?"":"btn-primary"}" data-act="toSetup">${t("newGame")}</button>
       <button class="btn btn-sun" data-act="rules">${t("howTo")}</button>
+      <button class="btn" data-act="toJoin">${t("joinLink")}</button>
     </div>
     ${langPicker()}
     <p class="fine">${t("playingThrough",esc((S.me&&(S.me.display_name||S.me.id))||"Spotify"),cfg.deviceName?esc(cfg.deviceName):null)}</p>
@@ -1183,9 +1606,14 @@ function vSetup(){
   const goals=[5,7,10,15].map(n=>`<button class="opt center" data-act="goal" data-v="${n}" aria-pressed="${cfg.goal===n}"><b>${n}</b><span>${t("cards")}</span></button>`).join("");
   return `${topbar()}
     <h1 class="page-title">${t("setupTitle")}</h1>
-    <div class="panel sticker"><h2>${t("players")}</h2>${players}
+    <div class="panel sticker"><h2>${t("playHow")}</h2><div class="opts cols3">
+      ${[["local",t("pLocal"),t("pLocalD")],["phones",t("pPhones"),t("pPhonesD")],["tv",t("pTv"),t("pTvD")]].map(([v,n,d])=>`<button class="opt" data-act="playMode" data-v="${v}" aria-pressed="${(cfg.play||"local")===v}"><b>${n}</b><span>${d}</span></button>`).join("")}
+    </div></div>
+    ${(cfg.play||"local")==="local"?`<div class="panel sticker"><h2>${t("players")}</h2>${players}
       ${st.players.length<8?`<button class="btn btn-small" data-act="addPlayer">${t("addPlayer")}</button>`:`<p class="muted" style="margin:.4rem 0 0">${t("maxPlayers")}</p>`}
-    </div>
+    </div>`:`<div class="panel sticker"><h2>${t("yourName")}</h2>
+      <input class="field" data-myname="1" value="${esc(cfg.myName||"")}" placeholder="${t("namePh")}" maxlength="16" autocomplete="off">
+      <p class="hint">${t("yourNameHint")}</p></div>`}
     <div class="panel sticker"><h2>Playlists</h2>
       <p class="muted" style="margin:0 0 .9rem">${t("plP")}</p>
       <div class="plist">${plHtml}</div>
@@ -1200,7 +1628,7 @@ function vSetup(){
 function scoreboard(){
   const g=G(),ps=g.suspense?snapPlayers():g.players;
   return `<div class="board" aria-label="${t("scores")}">${ps.map((p,i)=>`<div class="chip ${i===g.turn?"on":""}" style="--pc:${p.color}">
-      <span class="nm"><i></i>${esc(p.name)}</span><span class="st">${t("cardsOf",p.timeline.length,g.goal)}</span>
+      <span class="nm"><i></i>${esc(p.name)}${S.room&&fb&&p.uid===fb.uid?` <em class="me">${t("you")}</em>`:""}</span><span class="st">${t("cardsOf",p.timeline.length,g.goal)}</span>
       <span class="meter"><b style="width:${Math.min(100,p.timeline.length/g.goal*100)}%"></b></span>
       <span class="st">${coins(p.tokens)}<span class="sr">${t("tokensN",p.tokens)}</span></span></div>`).join("")}</div>`;
 }
@@ -1213,14 +1641,14 @@ function slotLabel(tl,i){if(!tl.length)return t("placeHere");if(i===0)return t("
 function timeline(mode){
   const g=G(),P=g.players[g.turn],tl=mode==="suspense"?snapPlayers()[g.turn].timeline:P.timeline;let h='<div class="tl">';
   const slot=i=>{
-    if(mode==="guess"){const sel=g.pick===i;return `<button class="slot ${sel?"sel":""}" data-act="pick" data-i="${i}" aria-pressed="${sel}" aria-label="${slotLabel(tl,i)}">${sel?`<span class="mini-vinyl"></span>${t("guessOf",esc(P.name))}`:slotLabel(tl,i)}</button>`}
+    if(mode==="guess"){const sel=g.pick===i;return `<button class="slot ${sel?"sel":""}" ${S.room?M("pick"):'data-act="pick"'} data-i="${i}" aria-pressed="${sel}" aria-label="${slotLabel(tl,i)}">${sel?`<span class="mini-vinyl"></span>${t("guessOf",esc(P.name))}`:slotLabel(tl,i)}</button>`}
     if(mode==="jukePick"){
       if(i===g.pick)return `<div class="slot lock">${t("guessOf",esc(P.name))}</div>`;
       const sel=g.jukePick===i,J=g.players[g.juker];
-      return `<button class="slot juke ${sel?"sel":""}" data-act="pick" data-i="${i}" aria-pressed="${sel}" aria-label="${slotLabel(tl,i)}">${sel?`<span class="mini-vinyl"></span>${t("jukeOf",esc(J.name))}`:slotLabel(tl,i)}</button>`;
+      return `<button class="slot juke ${sel?"sel":""}" ${S.room?M("pick"):'data-act="pick"'} data-i="${i}" aria-pressed="${sel}" aria-label="${slotLabel(tl,i)}">${sel?`<span class="mini-vinyl"></span>${t("jukeOf",esc(J.name))}`:slotLabel(tl,i)}</button>`;
     }
-    if((mode==="juke"||mode==="suspense")&&i===g.pick)return `<div class="slot lock">${t("guessOf",esc(P.name))}</div>`;
-    if(mode==="suspense"&&g.juker!==null&&i===g.jukePick)return `<div class="slot lock juke">${t("jukeOf",esc(g.players[g.juker].name))}</div>`;
+    if((mode==="juke"||mode==="suspense"||mode==="watch")&&i===g.pick)return `<div class="slot lock">${t("guessOf",esc(P.name))}</div>`;
+    if((mode==="suspense"||mode==="watch")&&g.juker!==null&&i===g.jukePick)return `<div class="slot lock juke">${t("jukeOf",esc(g.players[g.juker].name))}</div>`;
     return "";
   };
   if(mode==="reveal"){
@@ -1236,15 +1664,16 @@ function timeline(mode){
 function cabinet(){
   const g=G(),P=g.players[g.turn],s=g.songs[g.current],sus=g.phase==="reveal"&&!!g.suspense,rev=g.phase==="reveal"&&!sus,y=yearOf(g.current);
   let tools="";
-  if(!rev&&!sus){
+  const act=n=>S.room?M(n):`data-act="${n}"`,me=S.room?myIndex():-1,canCtl=!S.room||(S.room.role!=="board"&&(me===g.turn||isHost())),canSkip=!S.room||me===g.turn;
+  if(!rev&&!sus&&canCtl){
     tools=`<div class="cab-tools">
-      ${g.playing?`<button class="btn btn-ghost btn-small" data-act="pause">${t("pause")}</button>`:`<button class="btn btn-sun btn-small" data-act="resumeSong">${t("play")}</button>`}
-      <button class="btn btn-ghost btn-small" data-act="replay">${t("restart")}</button>
-      <button class="btn btn-ghost btn-small" data-act="peek" aria-pressed="${!!g.peek}">${g.peek?t("hideTitle"):t("showTitle")}</button>
-      ${g.phase==="guess"?`<button class="btn btn-ghost btn-small" data-act="skip" ${P.tokens<COST.skip?"disabled":""}>${t("skipSong")} <span class="coinrow" aria-label="${t("costs1")}"><i></i></span></button>`:""}
+      ${g.playing?`<button class="btn btn-ghost btn-small" ${act("pause")}>${t("pause")}</button>`:`<button class="btn btn-sun btn-small" ${act("resumeSong")}>${t("play")}</button>`}
+      <button class="btn btn-ghost btn-small" ${act("replay")}>${t("restart")}</button>
+      <button class="btn btn-ghost btn-small" ${act("peek")} aria-pressed="${!!g.peek}">${g.peek?t("hideTitle"):t("showTitle")}</button>
+      ${g.phase==="guess"&&canSkip?`<button class="btn btn-ghost btn-small" ${act("skip")} ${P.tokens<COST.skip?"disabled":""}>${t("skipSong")} <span class="coinrow" aria-label="${t("costs1")}"><i></i></span></button>`:""}
     </div>`;
   }
-  const src=years[g.current]&&years[g.current].src;
+  const src=isClient()?null:years[g.current]&&years[g.current].src;
   const from=rev&&s.src&&s.src.length?`<p class="from">${t("fromPl",s.src.map(x=>`“${esc(x.n)}”`+(x.o?` (${esc(x.o)})`:"")).join(` ${t("and")} `))}</p>`:"";
   return `<div class="cab ${rev||(!g.playing&&!sus)?"":"spinning"}" style="--pc:${P.color}">
     <div class="cab-row">
@@ -1341,21 +1770,150 @@ function recap(){
   return `<h3>${t("recapH")}</h3><p class="recap-sub">${t("songsPlayed",st.played.length)}</p>
     <div class="awards">${cards.map(([c,h,v],i)=>`<div class="award sticker" style="--ac:${c}"><span class="aw-h">${h}</span><p>${v}</p></div>`).join("")}</div>`;
 }
-function vWin(){
+function vWin(board){
   const g=G(),W=g.players[g.winner],wn=esc(W.name);
   const order=g.players.map((p,i)=>({p,i})).sort((a,b)=>b.p.timeline.length-a.p.timeline.length||b.p.tokens-a.p.tokens);
   const why=g.endReason==="deck"?t("whyDeck",wn):t("whyGoal",g.goal);
-  return `${topbar()}<div class="win" style="--pc:${W.color}">
+  return `${board?"":topbar()}<div class="win" style="--pc:${W.color}">
     <div class="trophy" aria-hidden="true"><svg viewBox="0 0 24 24" width="64" height="64" fill="#fff" stroke="#1C1848" stroke-width="1.6" stroke-linejoin="round"><path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5z"/><circle cx="12" cy="15" r="1.6" fill="#F2437F"/></svg></div>
     <h1>${t("wins",wn)}</h1><p class="why">${why}</p>
-    <ol class="standings sticker" style="list-style:none">${order.map((o,k)=>`<li style="--pc:${o.p.color}"><span class="pl">${k+1}</span><span class="n"><i></i>${esc(o.p.name)}</span><span>${t("cardsN",o.p.timeline.length)}</span></li>`).join("")}</ol>
+    <ol class="standings sticker" style="list-style:none">${order.map((o,k)=>`<li style="--pc:${o.p.color}"><span class="rank">${k+1}</span><span class="n"><i></i>${esc(o.p.name)}</span><span>${t("cardsN",o.p.timeline.length)}</span></li>`).join("")}</ol>
     ${recap()}
     <h3>${t("winningTl",wn)}</h3>
     <div class="tl">${W.timeline.map(id=>cardRow(id)).join("")}</div>
-    <div class="acts"><button class="btn btn-primary" data-act="rematch">${t("rematch")}</button><button class="btn" data-act="quit">${t("mainMenu")}</button></div>
+    ${board?"":isClient()?`<p class="sub" style="text-align:center">${t("winWait")}</p><p style="text-align:center"><button class="link" data-act="leave">${t("leave")}</button></p>`:`<div class="acts"><button class="btn btn-primary" data-act="rematch">${t("rematch")}</button><button class="btn" data-act="quit">${t("mainMenu")}</button></div>`}
   </div>`;
 }
 function vLoading(){return `<div class="busy"><div><div class="vinyl"></div><p>${t("loading")}</p></div></div>`}
+
+/* ---- multiplayer views ---- */
+function playerList(players,hostUid,kick){
+  const list=Object.entries(players||{}).sort((a,b)=>(a[1].t||0)-(b[1].t||0));
+  return `<div class="plchips">${list.map(([uid,p],i)=>`<span class="plchip" style="--pc:${PCOL[i%PCOL.length]}"><i></i>${esc(p.name)}${uid===hostUid?` <em>${t("hostTag")}</em>`:""}${fb&&uid===fb.uid&&!kick?` <em>${t("you")}</em>`:""}${kick&&uid!==hostUid?`<button class="kick" data-act="kick" data-uid="${esc(uid)}" aria-label="${t("remove")} ${esc(p.name)}">×</button>`:""}</span>`).join("")}</div>`;
+}
+function vJoin(){
+  const j=S.joinPrefill||{};
+  return `${topbar()}<div class="center-col">
+    <img class="logo" src="${LOGO}" alt="Juke it!">
+    ${langPicker()}
+    <div class="form sticker">
+      <h2>${t("joinH")}</h2>
+      <p>${t("joinP")}</p>
+      <input class="field code-in" id="jcode" value="${esc(j.code||"")}" placeholder="${t("codePh")}" maxlength="4" autocomplete="off" autocapitalize="characters" spellcheck="false">
+      <input class="field" id="jname" value="${esc(j.name||"")}" placeholder="${t("namePh")}" maxlength="16" autocomplete="off" style="margin-top:.7rem">
+    </div>
+    <button class="btn btn-primary wide" data-act="join">${t("joinBtn")}</button>
+    <p style="margin-top:1rem"><button class="link" data-act="joinBoard">${t("asBoard")}</button></p>
+    ${S.me?"":`<p class="hint"><button class="link" data-act="toConnect">${t("hostInstead")}</button></p>`}
+  </div>`;
+}
+function vLobbyHost(){
+  const r=S.room,n=Object.keys(r.players||{}).length,url=roomUrl("join",r.code);
+  return `${topbar()}
+    <h1 class="page-title">${t("lobbyH")}</h1>
+    <div class="panel sticker lobby-join">
+      <div class="qr">${qrSvg(url)}</div>
+      <div><p class="muted" style="margin:0">${t("joinCode")}</p><div class="bigcode">${r.code}</div><p class="hint">${t("scanJoin")}</p></div>
+    </div>
+    ${r.mode==="tv"?`<div class="panel sticker"><h2>${t("boardH")}</h2><p class="muted" style="margin:0 0 .7rem">${t("boardP")}</p>
+      <div class="codebox"><code>${esc(roomUrl("board",r.code))}</code><button class="btn btn-small" data-act="copyBoard">${S.copied?t("copied"):t("copy")}</button></div>
+      <p class="hint">${t("boardAlt",r.code)}</p></div>`:""}
+    <div class="panel sticker"><h2>${t("inLobby",n)}</h2>${playerList(r.players,fb&&fb.uid,true)}</div>
+    <button class="btn btn-primary wide" data-act="lobbyStart" ${n>=2?"":"disabled"}>${n>=2?t("startGame"):t("need2")}</button>
+    <p style="text-align:center;margin-top:1rem"><button class="link" data-act="endRoom">${t("endGame")}</button></p>`;
+}
+function vRoom(){
+  const r=S.room;
+  if(r.closed)return `${topbar()}<div class="center-col"><h2>${t("roomClosed")}</h2><button class="btn btn-primary" data-act="leave" style="margin-top:1.4rem">${t("mainMenu")}</button></div>`;
+  if(r.role==="board")return vBoard();
+  if(r.removed)return `${topbar()}<div class="center-col"><h2>${t("removed")}</h2><button class="btn btn-primary" data-act="leave" style="margin-top:1.4rem">${t("mainMenu")}</button></div>`;
+  const g=G();
+  if(!g){
+    const me=r.players&&fb?r.players[fb.uid]:null;
+    return `${topbar()}<div class="center-col">
+      <div class="turn sticker" style="--pc:var(--mint);text-align:left"><h2>${t("youreIn",esc(me?me.name:""))}</h2><p>${t("waitStart")}</p></div>
+      ${playerList(r.players,null,false)}
+      <p style="margin-top:1.4rem"><button class="link" data-act="leave">${t("leave")}</button></p></div>`;
+  }
+  if(g.screen==="win")return vWin();
+  if(myIndex()<0)return vCtrl(true);
+  return vCtrl(false);
+}
+function vCtrl(spectator){
+  const g=G(),me=myIndex(),host=isHost(),P=g.players[g.turn],pn=esc(P.name),myTurn=me===g.turn&&me>=0,ctl=myTurn||host;
+  let body=spectator?`<p class="spect">${t("spectating")}</p>`:"";
+  if(g.phase==="intro"){
+    body+=`<div class="turn sticker" style="--pc:${P.color}">
+      <h2>${myTurn?t("yourTurn"):t("turnOf",pn)}</h2>
+      <p>${myTurn?t("turnInfo",P.timeline.length,g.goal,P.tokens,g.deck.length):t("waitDraw",pn)}</p>
+      ${ctl?`<div class="acts"><button class="btn ${myTurn?"btn-primary":""}" ${M("draw")}>${myTurn?t("draw"):t("drawFor",pn)}</button></div>`:""}
+    </div><p class="say">${t("timelineOf",pn)}</p>${timeline("view")}`;
+  }else if(g.phase==="guess"){
+    body+=cabinet();
+    body+=myTurn?`<p class="say">${t("whereFit",pn)}</p><p class="sub">${t("guessSub")}</p>${timeline("guess")}
+      <div class="sticky-act"><button class="btn btn-primary" ${M("lock")} ${g.pick===null?"disabled":""}>${t("lock")}</button></div>`
+      :`<p class="say">${t("placing",pn)}</p>${timeline("watch")}`;
+  }else if(g.phase==="juke"){
+    const passed=!!(g.passes&&g.passes[me]),canJ=me>=0&&!myTurn&&g.players[me].tokens>=COST.juke&&!passed;
+    body+=cabinet()+`<div class="juke sticker"><h2>${t("jukeH")} <span class="jcount">${g.jukeLeft||0}</span></h2>
+      ${canJ?`<p>${t("jukePm",pn)}</p><div class="jukers"><button class="btn btn-primary" ${M("juke")}>${t("jukeBtn")}</button><button class="btn" ${M("pass")}>${t("passBtn")}</button></div>`
+            :`<p>${myTurn?t("waitJukes"):passed?t("passed"):me<0?t("waitJukes"):t("noTokJuke")}</p>`}
+    </div>${timeline("juke")}`;
+  }else if(g.phase==="jukePick"){
+    const J=g.players[g.juker];
+    body+=cabinet()+(me===g.juker?`<p class="say">${t("whereReally",esc(J.name))}</p><p class="sub">${t("diffGap",pn)}</p>${timeline("jukePick")}
+      <div class="sticky-act"><button class="btn" ${M("cancelJuke")}>${t("cancelJuke")}</button><button class="btn btn-primary" ${M("lockJuke")} ${g.jukePick===null?"disabled":""}>${t("lockJuke")}</button></div>`
+      :`<p class="say">${t("jukePicking",esc(J.name))}</p>${timeline("watch")}`);
+  }else if(g.phase==="reveal"&&g.suspense){
+    body+=`${cabinet()}<div class="drumbox sticker" aria-hidden="true"><span class="sticks"><i></i><i></i></span><b>${t("drumroll")}</b></div>
+      <p class="say">${t("timelineOf",pn)}</p>${timeline("suspense")}`;
+  }else if(g.phase==="reveal"&&g.result){
+    const v=verdict(),full=P.tokens>=MAX_TOKENS,nextName=g.players[(g.turn+1)%g.players.length].name;
+    body+=`${cabinet()}
+      <div class="verdict sticker ${v.kind}"><span class="ico" aria-hidden="true">${v.ico}</span>
+        <div><h2>${esc(v.title)}</h2><p>${esc(v.body)}</p>
+          <div class="bonus">${g.named?`<span class="muted">${t("namedDone")}</span>`:full?`<span class="muted">${t("pouchFull",pn)}</span>`:ctl?`<button class="btn btn-small btn-sun" ${M("named")}>${t("namedBtn",pn)}</button>`:""}</div>
+          ${host?(g.fixing?`<div class="fix"><label for="fixy">${t("realYear")}</label><input id="fixy" inputmode="numeric" maxlength="4" value="${yearOf(g.current)}"><button class="btn btn-small" data-act="fixSave">${t("saveRecheck")}</button><button class="link" data-act="fixCancel">${t("cancel")}</button></div>`
+                     :`<p class="yr-src"><button class="link" style="padding:0" data-act="fixOpen">${t("yearWrong")}</button></p>`):""}
+        </div></div>
+      <p class="say">${t("timelineOf",pn)}</p>${timeline("reveal")}
+      ${ctl?`<div class="sticky-act"><button class="btn btn-primary" ${M("next")}>${g.winner!==null?t("seeWinner"):t("nextTurn",esc(nextName))}</button></div>`:`<p class="sub">${t("waitNext",pn)}</p>`}`;
+  }
+  return topbar()+scoreboard()+body+(host?hostPanel():isClient()?`<p style="text-align:center;margin-top:2rem"><button class="link" data-act="leave">${t("leave")}</button></p>`:"");
+}
+function hostPanel(){
+  const r=S.room;
+  return `<div class="panel sticker hostpanel"><h2>${t("hostH")}</h2>
+    <p class="muted" style="margin:0 0 .8rem">${t("joinCode")}: <b class="code-inline">${r.code}</b>${r.mode==="tv"?`. ${t("boardLink")}: <code>${esc(roomUrl("board",r.code))}</code>`:""}</p>
+    <div class="row-gap"><button class="btn btn-small" data-act="settings">${t("settings")}</button><button class="btn btn-small" data-act="endRoom">${t("endGame")}</button></div></div>`;
+}
+function vBoard(){
+  const r=S.room,g=G();
+  if(!r.armed)return `<div class="center-col board-start"><img class="logo" src="${LOGO}" alt="Juke it!">${langPicker()}
+    <button class="btn btn-primary wide" data-act="arm" style="margin-top:1.6rem">${t("startBoard")}</button><p class="hint">${t("startBoardHint")}</p></div>`;
+  const url=roomUrl("join",r.code);
+  if(!g){
+    return `<div class="bview blobby"><img class="logo" src="${LOGO}" alt="Juke it!">
+      <div class="bjoin sticker"><div class="qr">${qrSvg(url)}</div><div><p>${t("joinAt")}</p><div class="bigcode">${r.code}</div><p class="burl">${esc(url.replace(/^https?:\/\//,""))}</p></div></div>
+      ${playerList(r.players,null,false)}<p class="bwait">${t("waitStart")}</p></div>`;
+  }
+  if(g.screen==="win")return `<div class="bview bwin">${vWin(true)}</div>`;
+  const P=g.players[g.turn],pn=esc(P.name);
+  let status="",mode="view",extra="";
+  if(g.phase==="intro")status=t("waitDraw",pn);
+  else if(g.phase==="guess"){status=t("placing",pn);mode="watch"}
+  else if(g.phase==="juke"){status=`${t("jukeH")} <span class="jcount">${g.jukeLeft||0}</span>`;mode="juke"}
+  else if(g.phase==="jukePick"){status=t("jukePicking",esc(g.players[g.juker].name));mode="watch"}
+  else if(g.phase==="reveal"&&g.suspense){status=t("drumroll");mode="suspense"}
+  else if(g.phase==="reveal"&&g.result){const v=verdict();status=esc(v.title);mode="reveal";extra=`<p class="bverdict">${esc(v.body)}</p>`}
+  return `<div class="bview bgame">
+    <aside class="bside">${scoreboard()}<div class="bcode-mini">${t("code")} <b>${r.code}</b></div></aside>
+    <main class="bmain">
+      <h1 class="bstatus" style="--pc:${P.color}">${status}</h1>
+      ${g.phase==="intro"?"":cabinet()}${extra}
+      <p class="say">${t("timelineOf",pn)}</p>${timeline(mode)}
+    </main></div>`;
+}
 
 /* =====================================================================
    Rules sheet + confetti
@@ -1390,12 +1948,17 @@ function render(){
   document.documentElement.lang=cfg.lang;
   const g=G();
   if((S.screen==="game"||S.screen==="win")&&!g)S.screen=S.me?"home":"connect";
-  const v={connect:vConnect,home:vHome,settings:vSettings,setup:vSetup,game:vGame,win:vWin,loading:vLoading}[S.screen]||vHome;
+  if(S.screen==="room"&&!S.room)S.screen=S.me?"home":"connect";
+  const gameView=()=>isHost()?vCtrl(false):vGame();
+  const v={connect:vConnect,home:vHome,settings:vSettings,setup:vSetup,game:gameView,win:()=>vWin(),loading:vLoading,join:vJoin,lobby:vLobbyHost,room:vRoom}[S.screen]||vHome;
+  document.body.classList.toggle("boardmode",!!(S.room&&S.room.role==="board"&&S.screen==="room"));
   app.innerHTML=v()+(S.busy?`<div class="busy" role="status"><div><div class="vinyl"></div><p>${esc(S.busy)}</p></div></div>`:"");
-  const key=S.screen+"|"+(g?g.turn+":"+g.phase:"");
-  if(key!==lastKey){window.scrollTo({top:0});if(S.screen==="win")confetti()}
+  const won=S.screen==="win"||(S.screen==="room"&&g&&g.screen==="win");
+  const key=S.screen+"|"+(g?g.turn+":"+g.phase+":"+(g.screen||""):"");
+  if(key!==lastKey){window.scrollTo({top:0});if(won)confetti()}
   lastKey=key;
-  if(g)saveGame();else ls.set(K.setup,S.setup);
+  if(g&&!isClient())saveGame();else if(!g)ls.set(K.setup,S.setup);
+  if(isHost()&&S.room.started)schedulePublish();
 }
 let running=false;
 app.addEventListener("click",async e=>{
@@ -1417,6 +1980,7 @@ app.addEventListener("input",e=>{
     const sb=document.getElementById("startbtn");if(sb){const sl=startLabel();sb.textContent=sl.text;sb.disabled=!sl.on}
     ls.set(K.setup,S.setup);return;
   }
+  if(el.dataset.myname){cfg.myName=el.value;saveCfg();return}
   const i=el.dataset.name;if(i===undefined)return;S.setup.players[+i].name=el.value;ls.set(K.setup,S.setup);
 });
 
