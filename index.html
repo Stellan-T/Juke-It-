@@ -360,6 +360,26 @@ input.pct:focus-visible{outline:3px solid var(--sky);outline-offset:4px}
 .lp{border:0;background:transparent;padding:.55rem 1.1rem;font-family:var(--display);font-weight:600;font-size:1rem;cursor:pointer;min-height:44px;color:var(--text)}
 .lp+.lp{border-left:3px solid var(--line)}
 .lp[aria-pressed="true"]{background:var(--sun);color:var(--ink)}
+/* playlist source, suspense, recap */
+.cab .from{display:inline-block;margin:.9rem 0 0;padding:.3rem .8rem;border-radius:999px;background:#2A2466;border:2px solid #3D3585;color:#FFD86B;font-weight:600;font-size:.92rem}
+.drumbox{display:flex;align-items:center;justify-content:center;gap:1rem;padding:1.4rem 1rem;margin:0 0 1.6rem}
+.drumbox b{font-family:var(--display);font-weight:700;font-size:clamp(1.6rem,6vw,2.1rem)}
+.sticks{display:inline-flex;gap:6px}
+.sticks i{width:10px;height:38px;border-radius:5px;background:var(--sun);border:3px solid var(--line);transform-origin:50% 90%}
+@media (prefers-reduced-motion:no-preference){
+  .sticks i{animation:stick .12s ease-in-out infinite alternate}
+  .sticks i:nth-child(2){animation-delay:.06s}
+  .year-badge.drum{animation:drum .09s linear infinite alternate}
+}
+@keyframes stick{from{transform:rotate(-18deg)}to{transform:rotate(12deg)}}
+@keyframes drum{from{transform:rotate(3deg) translateY(0)}to{transform:rotate(7deg) translateY(-3px)}}
+.recap-sub{text-align:left;color:var(--muted);margin:-.4rem 0 1rem}
+.awards{display:grid;grid-template-columns:1fr 1fr;gap:1.3rem;margin:0 0 2.2rem;text-align:left}
+@media (max-width:460px){.awards{grid-template-columns:1fr}}
+.award{padding:.9rem 1rem 1rem;position:relative;overflow:hidden}
+.award::before{content:"";position:absolute;inset:0 0 auto 0;height:8px;background:var(--ac);border-bottom:3px solid var(--line)}
+.aw-h{display:inline-block;margin-top:.5rem;font-family:var(--display);font-weight:700;font-size:1.1rem}
+.award p{margin:.25rem 0 0;color:var(--muted);font-size:.95rem}
 
 </style>
 </head>
@@ -461,6 +481,14 @@ en:{
   realYear:"Real year",saveRecheck:"Save and re-check",cancel:"Cancel",yearWrong:"Year wrong? Fix it",seeWinner:"See who won",nextTurn:n=>`Next turn: ${n}`,
   whyDeck:n=>`The deck ran out, and ${n} had the longest timeline.`,whyGoal:g=>`First to ${g} cards.`,wins:n=>`${n} wins!`,cardsN:n=>`${n} card${n===1?"":"s"}`,
   winningTl:n=>`${n}'s winning timeline`,rematch:"Rematch",loading:"Loading",gotIt:"Got it",
+  fromPl:l=>`From ${l}`,and:"and",drumroll:"Drumroll…",recapH:"Game recap",songsPlayed:n=>`${n} song${n===1?"":"s"} played tonight.`,
+  aStreak:"Longest streak",aStreakV:(n,v)=>`${n}: ${v} in a row.`,
+  aAcc:"Most accurate",aAccV:(n,p,o,a)=>`${n}: ${p}% right (${o} of ${a}).`,
+  aEar:"Sharpest ear",aEarV:(n,v)=>`${n} named ${v} song${v===1?"":"s"}.`,
+  aJuke:"Juke master",aJukeV:(n,v,s)=>`${n} juked ${v} time${v===1?"":"s"} and stole ${s} card${s===1?"":"s"}.`,
+  aMiss:"Biggest miss",aMissV:(n,off,ti,y)=>`${n} was ${off} year${off===1?"":"s"} off with ${ti} (${y}).`,
+  aOld:"Oldest song",aOldV:(ti,a,y)=>`${ti} by ${a}, from ${y}.`,
+  aPl:"Most played playlist",aPlV:(l,n)=>`${l}, with ${n} song${n===1?"":"s"}.`,
   rules:[
     "Everyone starts with <b>one song card</b> face up and <b>2 tokens</b>.",
     "On your turn, tap Draw a song and <b>put the phone face-down</b>. The song starts playing, and nobody can see what it is.",
@@ -528,6 +556,14 @@ nl:{
   realYear:"Echt jaartal",saveRecheck:"Opslaan en opnieuw checken",cancel:"Annuleren",yearWrong:"Jaartal fout? Pas het aan",seeWinner:"Bekijk wie er won",nextTurn:n=>`Volgende beurt: ${n}`,
   whyDeck:n=>`De stapel is op, en ${n} had de langste tijdlijn.`,whyGoal:g=>`Als eerste ${g} kaarten.`,wins:n=>`${n} wint!`,cardsN:n=>`${n} kaart${n===1?"":"en"}`,
   winningTl:n=>`De winnende tijdlijn van ${n}`,rematch:"Revanche",loading:"Laden",gotIt:"Begrepen",
+  fromPl:l=>`Uit ${l}`,and:"en",drumroll:"Tromgeroffel…",recapH:"Terugblik",songsPlayed:n=>`Vanavond ${n} nummer${n===1?"":"s"} gespeeld.`,
+  aStreak:"Langste reeks",aStreakV:(n,v)=>`${n}: ${v} op rij.`,
+  aAcc:"Meest trefzeker",aAccV:(n,p,o,a)=>`${n}: ${p}% goed (${o} van ${a}).`,
+  aEar:"Scherpste oor",aEarV:(n,v)=>`${n} noemde ${v} nummer${v===1?"":"s"}.`,
+  aJuke:"Jukemeester",aJukeV:(n,v,s)=>`${n} jukete ${v} keer en stal ${s} kaart${s===1?"":"en"}.`,
+  aMiss:"Grootste misser",aMissV:(n,off,ti,y)=>`${n} zat ${off} jaar ernaast met ${ti} (${y}).`,
+  aOld:"Oudste nummer",aOldV:(ti,a,y)=>`${ti} van ${a}, uit ${y}.`,
+  aPl:"Meest gespeelde playlist",aPlV:(l,n)=>`${l}, met ${n} nummer${n===1?"":"s"}.`,
   rules:[
     "Iedereen begint met <b>één nummerkaart</b> open en <b>2 tokens</b>.",
     "Tik in jouw beurt op Trek een nummer en <b>leg de telefoon op z'n scherm</b>. Het nummer begint te spelen en niemand kan zien wat het is.",
@@ -624,7 +660,7 @@ async function loadPlaylists(){
       if(!p)return;
       const own=!!(p.owner&&S.me&&p.owner.id===S.me.id);
       const total=(p.items&&typeof p.items.total==="number")?p.items.total:(p.tracks&&typeof p.tracks.total==="number")?p.tracks.total:null;
-      out.push({id:p.id,name:p.name,total,readable:own||!!p.collaborative,own,img:p.images&&p.images.length?p.images[p.images.length-1].url:null});
+      out.push({id:p.id,name:p.name,owner:p.owner?(p.owner.display_name||p.owner.id):null,total,readable:own||!!p.collaborative,own,img:p.images&&p.images.length?p.images[p.images.length-1].url:null});
     });
     url=j.next;
   }
@@ -792,8 +828,36 @@ const SFX={
   bad:()=>tones([[196,0,.25,"sawtooth",.07],[147,.16,.4,"sawtooth",.07]]),
   coin:()=>tones([[988,0,.08,"square",.06],[1319,.07,.22,"square",.06]]),
   juke:()=>tones([[392,0,.1,"square",.07],[523,.08,.1,"square",.07],[392,.16,.1,"square",.07],[659,.24,.25,"square",.07]]),
-  win:()=>tones([[523,0,.15],[659,.13,.15],[784,.26,.15],[1047,.39,.5],[784,.55,.12],[1047,.66,.6]])
+  win:()=>tones([[523,0,.15],[659,.13,.15],[784,.26,.15],[1047,.39,.5],[784,.55,.12],[1047,.66,.6]]),
+  drumroll:ms=>drumroll(ms),crash:()=>crash(),airhorn:()=>airhorn()
 };
+function audio(){if(cfg.muted)return null;try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();if(ac.state==="suspended")ac.resume();return ac}catch(e){return null}}
+let noiseBuf=null;
+function noise(a){if(noiseBuf)return noiseBuf;noiseBuf=a.createBuffer(1,a.sampleRate,a.sampleRate);const d=noiseBuf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;return noiseBuf}
+function hit(a,at,vol,freq,dur,type){
+  const s=a.createBufferSource(),f=a.createBiquadFilter(),g=a.createGain();
+  s.buffer=noise(a);f.type=type||"bandpass";f.frequency.value=freq;f.Q.value=.8;
+  g.gain.setValueAtTime(.0001,at);g.gain.exponentialRampToValueAtTime(vol,at+.005);g.gain.exponentialRampToValueAtTime(.0001,at+dur);
+  s.connect(f).connect(g).connect(a.destination);s.start(at,Math.random()*.5);s.stop(at+dur+.05);
+}
+function drumroll(ms){
+  const a=audio();if(!a)return;const t0=a.currentTime,end=t0+ms/1000;let tt=t0,k=0;
+  while(tt<end){const p=(tt-t0)/(ms/1000);hit(a,tt,.05+.2*p,1800,.07);tt+=.085-.05*p;k++;if(k>200)break}
+}
+function crash(){const a=audio();if(!a)return;const t0=a.currentTime;hit(a,t0,.3,6000,1.3,"highpass");hit(a,t0,.25,120,.35,"lowpass")}
+function airhorn(){
+  const a=audio();if(!a)return;const t0=a.currentTime;
+  [[0,.16],[.22,.16],[.44,.7]].forEach(([st,d])=>{
+    [466,469,932].forEach((fq,i)=>{
+      const o=a.createOscillator(),f=a.createBiquadFilter(),g=a.createGain();
+      o.type="sawtooth";o.frequency.setValueAtTime(fq,t0+st);o.frequency.linearRampToValueAtTime(fq*.94,t0+st+d);
+      f.type="lowpass";f.frequency.value=2400;
+      const v=i===2?.03:.07;
+      g.gain.setValueAtTime(.0001,t0+st);g.gain.exponentialRampToValueAtTime(v,t0+st+.02);g.gain.setValueAtTime(v,t0+st+d-.04);g.gain.exponentialRampToValueAtTime(.0001,t0+st+d);
+      o.connect(f).connect(g).connect(a.destination);o.start(t0+st);o.stop(t0+st+d+.05);
+    });
+  });
+}
 
 /* =====================================================================
    Game rules
@@ -826,7 +890,7 @@ function startLabel(){
 function mixOut(p){return t("mixOut",pctOf(p),estOf(p),p.total)}
 async function buildSongs(){
   const ids=Object.keys(S.setup.picked).filter(id=>pctOf(S.setup.picked[id])>0);
-  const songs={},seen=new Set();
+  const songs={},seen={};
   for(let i=0;i<ids.length;i++){
     const pl=S.setup.picked[ids[i]];
     S.busy=t("reading",pl.name,i+1,ids.length);render();
@@ -834,21 +898,24 @@ async function buildSongs(){
     (await readTracks(ids[i])).forEach(t=>{if(t.sy&&!own[t.id])own[t.id]=t});
     const all=shuffle(Object.values(own));
     const take=all.slice(0,Math.max(1,Math.round(all.length*pctOf(pl)/100)));
+    const src={n:pl.name,o:pl.owner||null};
     take.forEach(t=>{
-      if(songs[t.id])return;
-      const k=norm(cleanTitle(t.t))+"|"+norm(t.a1);if(seen.has(k))return;
-      seen.add(k);songs[t.id]=t;
+      const k=norm(cleanTitle(t.t))+"|"+norm(t.a1);
+      const have=songs[t.id]||(seen[k]&&songs[seen[k]]);
+      if(have){if(!have.src.some(x=>x.n===src.n))have.src.push(src);return}
+      seen[k]=t.id;t.src=[src];songs[t.id]=t;
     });
   }
   return songs;
 }
+function newStats(n){const z=()=>Array(n).fill(0);return{att:z(),ok:z(),streak:z(),best:z(),jukes:z(),steals:z(),named:z(),miss:null,played:[]}}
 async function newGame(songs,playersIn){
   const players=playersIn.map((p,i)=>({name:(p.name||"").trim()||t("player",i+1),color:PCOL[i%PCOL.length],timeline:[],tokens:START_TOKENS}));
   const deck=shuffle(Object.keys(songs));
   const need=players.length+10;
   if(deck.length<need)throw new Error(t("onlyFound",deck.length,need,players.length));
   S.game={songs,players,deck,turn:Math.floor(Math.random()*players.length),goal:cfg.goal,
-    phase:"intro",current:null,pick:null,juker:null,jukePick:null,result:null,named:false,note:null,winner:null,endReason:null,playing:false,count:0,fixing:false,snap:null};
+    phase:"intro",current:null,pick:null,juker:null,jukePick:null,result:null,named:false,note:null,winner:null,endReason:null,playing:false,count:0,fixing:false,snap:null,suspense:false,stats:newStats(players.length)};
   const g=S.game;
   for(let i=0;i<players.length;i++){
     S.busy=t("checkingYears",i+1,players.length);render();
@@ -872,18 +939,36 @@ function endByDeck(){
 }
 function resolve(){
   const g=G(),P=g.players[g.turn],y=yearOf(g.current);
-  g.snap=JSON.stringify(g.players);
-  const ok=fits(P.timeline,g.pick,y);
+  if(!g.stats)g.stats=newStats(g.players.length);
+  g.snap=JSON.stringify({players:g.players,stats:g.stats});
+  const st=g.stats,tl=P.timeline,ok=fits(tl,g.pick,y);
   const r={ok,jukeOk:false,ghostAt:null};
-  if(ok)P.timeline.splice(g.pick,0,g.current);
+  st.att[g.turn]++;st.played.push(g.current);
+  if(ok){P.timeline.splice(g.pick,0,g.current);st.ok[g.turn]++;st.streak[g.turn]++;st.best[g.turn]=Math.max(st.best[g.turn],st.streak[g.turn])}
   else{
-    r.ghostAt=sortedIndex(P.timeline,y);
-    if(g.juker!==null&&fits(P.timeline,g.jukePick,y)){r.jukeOk=true;insertSorted(g.players[g.juker].timeline,g.current)}
+    st.streak[g.turn]=0;
+    const L=tl[g.pick-1],R=tl[g.pick],ly=L!==undefined?yearOf(L):-Infinity,ry=R!==undefined?yearOf(R):Infinity;
+    const off=y<ly?ly-y:y-ry;
+    if(off>0&&(!st.miss||off>st.miss.off))st.miss={p:g.turn,id:g.current,off};
+    r.ghostAt=sortedIndex(tl,y);
+    if(g.juker!==null&&fits(tl,g.jukePick,y)){r.jukeOk=true;insertSorted(g.players[g.juker].timeline,g.current)}
   }
+  if(g.juker!==null){st.jukes[g.juker]++;if(r.jukeOk)st.steals[g.juker]++}
   g.result=r;g.phase="reveal";g.named=false;g.fixing=false;
   const w=g.players.findIndex(p=>p.timeline.length>=g.goal);
   g.winner=w>=0?w:null;g.endReason=w>=0?"goal":null;
-  say(verdict().title);
+}
+function snapPlayers(){const g=G();try{return JSON.parse(g.snap).players}catch(e){return g.players}}
+let susTimer=null;
+function startReveal(){
+  const g=G();resolve();g.suspense=true;SFX.drumroll(1700);
+  clearTimeout(susTimer);
+  susTimer=setTimeout(()=>{
+    const g2=G();if(!g2)return;g2.suspense=false;
+    SFX.crash();const r=g2.result;
+    setTimeout(()=>{if(r.ok)SFX.good();else if(r.jukeOk)SFX.juke();else SFX.bad()},120);
+    say(verdict().title);render();
+  },1700);
 }
 function verdict(){
   const g=G(),P=g.players[g.turn],r=g.result,s=g.songs[g.current],y=yearOf(g.current),J=g.juker!==null?g.players[g.juker]:null,ti=cleanTitle(s.t);
@@ -921,7 +1006,7 @@ const A={
   },
   addPlayer(){if(S.setup.players.length<8)S.setup.players.push({name:""})},
   rmPlayer(d){if(S.setup.players.length>2)S.setup.players.splice(+d.i,1)},
-  togglePl(d){const p=(S.playlists||[]).find(x=>x.id===d.id)||S.setup.picked[d.id];if(!p)return;if(S.setup.picked[d.id])delete S.setup.picked[d.id];else S.setup.picked[d.id]={id:p.id,name:p.name,total:p.total,pct:100}},
+  togglePl(d){const p=(S.playlists||[]).find(x=>x.id===d.id)||S.setup.picked[d.id];if(!p)return;if(S.setup.picked[d.id])delete S.setup.picked[d.id];else S.setup.picked[d.id]={id:p.id,name:p.name,owner:p.owner||null,total:p.total,pct:100}},
   async addLink(){
     const inp=document.getElementById("pllink"),id=parsePlaylistId(inp&&inp.value);
     if(!id){S.error=t("pasteLink");return}
@@ -931,7 +1016,7 @@ const A={
       const own=p.owner&&S.me&&p.owner.id===S.me.id;
       if(!own&&!p.collaborative)throw new Error(t("notYours",p.name));
       const total=(p.items&&p.items.total)||(p.tracks&&p.tracks.total)||null;
-      S.setup.picked[id]={id,name:p.name,total,pct:100};
+      S.setup.picked[id]={id,name:p.name,owner:p.owner?(p.owner.display_name||p.owner.id):null,total,pct:100};
       if(S.playlists&&!S.playlists.some(x=>x.id===id))S.playlists.unshift({id,name:p.name,total,readable:true,img:p.images&&p.images.length?p.images[p.images.length-1].url:null});
     }finally{S.busy=null}
   },
@@ -962,11 +1047,11 @@ const A={
   },
   pick(d){const g=G();if(g.phase==="guess")g.pick=+d.i;else if(g.phase==="jukePick")g.jukePick=+d.i},
   lock(){const g=G();if(g.pick===null)return;if(g.players.some((p,i)=>i!==g.turn&&p.tokens>=COST.juke))g.phase="juke";else A.reveal()},
-  jukeBy(d){const g=G();g.juker=+d.i;g.jukePick=null;g.phase="jukePick"},
+  jukeBy(d){const g=G();g.juker=+d.i;g.jukePick=null;g.phase="jukePick";SFX.airhorn()},
   cancelJuke(){const g=G();g.juker=null;g.jukePick=null;g.phase="juke"},
   lockJuke(){const g=G();if(g.jukePick===null)return;g.players[g.juker].tokens-=COST.juke;A.reveal()},
-  reveal(){resolve();const r=G().result;if(r.ok)SFX.good();else if(r.jukeOk)SFX.juke();else SFX.bad()},
-  named(){const g=G(),P=g.players[g.turn];if(g.named||P.tokens>=MAX_TOKENS)return;P.tokens++;g.named=true;SFX.coin()},
+  reveal(){startReveal()},
+  named(){const g=G(),P=g.players[g.turn];if(g.named||P.tokens>=MAX_TOKENS)return;P.tokens++;g.named=true;if(!g.stats)g.stats=newStats(g.players.length);g.stats.named[g.turn]++;SFX.coin()},
   fixOpen(){G().fixing=true},
   fixCancel(){G().fixing=false},
   peek(){G().peek=!G().peek},
@@ -974,7 +1059,7 @@ const A={
     const g=G(),v=parseInt(document.getElementById("fixy").value,10),now=new Date().getFullYear();
     if(!(v>=1900&&v<=now)){S.error=t("yearRange",now);return}
     years[g.current]={y:v,src:"you"};ls.set(K.years,years);
-    g.players=JSON.parse(g.snap);resolve();
+    const sn=JSON.parse(g.snap);g.players=sn.players||sn;if(sn.stats)g.stats=sn.stats;resolve();say(verdict().title);
   },
   next(){
     const g=G();pauseMusic();
@@ -1113,8 +1198,8 @@ function vSetup(){
     <button class="btn btn-primary wide" id="startbtn" data-act="start" ${sl.on?"":"disabled"}>${sl.text}</button>`;
 }
 function scoreboard(){
-  const g=G();
-  return `<div class="board" aria-label="${t("scores")}">${g.players.map((p,i)=>`<div class="chip ${i===g.turn?"on":""}" style="--pc:${p.color}">
+  const g=G(),ps=g.suspense?snapPlayers():g.players;
+  return `<div class="board" aria-label="${t("scores")}">${ps.map((p,i)=>`<div class="chip ${i===g.turn?"on":""}" style="--pc:${p.color}">
       <span class="nm"><i></i>${esc(p.name)}</span><span class="st">${t("cardsOf",p.timeline.length,g.goal)}</span>
       <span class="meter"><b style="width:${Math.min(100,p.timeline.length/g.goal*100)}%"></b></span>
       <span class="st">${coins(p.tokens)}<span class="sr">${t("tokensN",p.tokens)}</span></span></div>`).join("")}</div>`;
@@ -1126,7 +1211,7 @@ function cardRow(id,cls,tag){
 }
 function slotLabel(tl,i){if(!tl.length)return t("placeHere");if(i===0)return t("before",yearOf(tl[0]));if(i===tl.length)return t("after",yearOf(tl[tl.length-1]));return t("between",yearOf(tl[i-1]),yearOf(tl[i]))}
 function timeline(mode){
-  const g=G(),P=g.players[g.turn],tl=P.timeline;let h='<div class="tl">';
+  const g=G(),P=g.players[g.turn],tl=mode==="suspense"?snapPlayers()[g.turn].timeline:P.timeline;let h='<div class="tl">';
   const slot=i=>{
     if(mode==="guess"){const sel=g.pick===i;return `<button class="slot ${sel?"sel":""}" data-act="pick" data-i="${i}" aria-pressed="${sel}" aria-label="${slotLabel(tl,i)}">${sel?`<span class="mini-vinyl"></span>${t("guessOf",esc(P.name))}`:slotLabel(tl,i)}</button>`}
     if(mode==="jukePick"){
@@ -1134,7 +1219,8 @@ function timeline(mode){
       const sel=g.jukePick===i,J=g.players[g.juker];
       return `<button class="slot juke ${sel?"sel":""}" data-act="pick" data-i="${i}" aria-pressed="${sel}" aria-label="${slotLabel(tl,i)}">${sel?`<span class="mini-vinyl"></span>${t("jukeOf",esc(J.name))}`:slotLabel(tl,i)}</button>`;
     }
-    if(mode==="juke"&&i===g.pick)return `<div class="slot lock">${t("guessOf",esc(P.name))}</div>`;
+    if((mode==="juke"||mode==="suspense")&&i===g.pick)return `<div class="slot lock">${t("guessOf",esc(P.name))}</div>`;
+    if(mode==="suspense"&&g.juker!==null&&i===g.jukePick)return `<div class="slot lock juke">${t("jukeOf",esc(g.players[g.juker].name))}</div>`;
     return "";
   };
   if(mode==="reveal"){
@@ -1148,9 +1234,9 @@ function timeline(mode){
   return h+"</div>";
 }
 function cabinet(){
-  const g=G(),P=g.players[g.turn],s=g.songs[g.current],rev=g.phase==="reveal",y=yearOf(g.current);
+  const g=G(),P=g.players[g.turn],s=g.songs[g.current],sus=g.phase==="reveal"&&!!g.suspense,rev=g.phase==="reveal"&&!sus,y=yearOf(g.current);
   let tools="";
-  if(!rev){
+  if(!rev&&!sus){
     tools=`<div class="cab-tools">
       ${g.playing?`<button class="btn btn-ghost btn-small" data-act="pause">${t("pause")}</button>`:`<button class="btn btn-sun btn-small" data-act="resumeSong">${t("play")}</button>`}
       <button class="btn btn-ghost btn-small" data-act="replay">${t("restart")}</button>
@@ -1159,16 +1245,17 @@ function cabinet(){
     </div>`;
   }
   const src=years[g.current]&&years[g.current].src;
-  return `<div class="cab ${rev||!g.playing?"":"spinning"}" style="--pc:${P.color}">
+  const from=rev&&s.src&&s.src.length?`<p class="from">${t("fromPl",s.src.map(x=>`“${esc(x.n)}”`+(x.o?` (${esc(x.o)})`:"")).join(` ${t("and")} `))}</p>`:"";
+  return `<div class="cab ${rev||(!g.playing&&!sus)?"":"spinning"}" style="--pc:${P.color}">
     <div class="cab-row">
       ${rev&&s.img?`<img class="art" src="${esc(s.img)}" alt="">`:`<div class="vinyl" aria-hidden="true"></div>`}
       <div class="cab-info">
-        <div class="cab-label"><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>${rev?t("revealed"):g.playing?t("nowPlaying"):t("paused")}</div>
+        <div class="cab-label"><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>${sus?t("drumroll"):rev?t("revealed"):g.playing?t("nowPlaying"):t("paused")}</div>
         ${rev?`<div class="cab-title">${esc(cleanTitle(s.t))}</div><div class="cab-artist">${esc(s.a)}</div><a class="sp" href="https://open.spotify.com/track/${esc(s.id)}" target="_blank" rel="noopener">${t("openSp")}</a>`
              :g.peek?`<div class="cab-title">${esc(cleanTitle(s.t))}</div><div class="cab-artist">${esc(s.a)}</div>`:`<div class="hidden-song">${t("mystery")}</div><div class="cab-artist">${t("hiddenTA")}</div>`}
       </div>
-      <div class="year-badge ${rev?"pop":""}">${rev?y:"?"}</div>
-    </div>${tools}
+      <div class="year-badge ${rev?"pop":sus?"drum":""}">${rev?y:"?"}</div>
+    </div>${from}${tools}
     ${rev&&src==="musicbrainz"?`<p class="dj-note">${t("mbNote",s.sy)}</p>`:""}
   </div>`;
 }
@@ -1215,6 +1302,10 @@ function vGame(){
       <p class="say">${t("whereReally",esc(J.name))}</p><p class="sub">${t("diffGap",pn)}</p>
       ${timeline("jukePick")}
       <div class="sticky-act"><button class="btn" data-act="cancelJuke">${t("cancelJuke")}</button><button class="btn btn-primary" data-act="lockJuke" ${g.jukePick===null?"disabled":""}>${t("lockJuke")}</button></div>`;
+  }else if(g.phase==="reveal"&&g.suspense){
+    body=`${cabinet()}
+      <div class="drumbox sticker" aria-hidden="true"><span class="sticks"><i></i><i></i></span><b>${t("drumroll")}</b></div>
+      <p class="say">${t("timelineOf",pn)}</p>${timeline("suspense")}`;
   }else if(g.phase==="reveal"){
     const v=verdict(),full=P.tokens>=MAX_TOKENS,nextName=g.players[(g.turn+1)%g.players.length].name;
     body=`${cabinet()}
@@ -1229,6 +1320,27 @@ function vGame(){
   }
   return topbar()+scoreboard()+body;
 }
+function recap(){
+  const g=G(),st=g.stats;if(!st||!st.played.length)return "";
+  const nm=i=>esc(g.players[i].name);
+  const top=arr=>{const m=Math.max(...arr);if(!(m>0))return null;return{v:m,who:arr.map((v,i)=>v===m?i:-1).filter(i=>i>=0)}};
+  const names=ix=>ix.map(nm).join(" & ");
+  const cards=[];
+  const s1=top(st.best);if(s1&&s1.v>=2)cards.push(["var(--blaze)",t("aStreak"),t("aStreakV",names(s1.who),s1.v)]);
+  const acc=st.att.map((a,i)=>a>=3?Math.round(st.ok[i]/a*100):0),s2=top(acc);
+  if(s2)cards.push(["var(--mint)",t("aAcc"),t("aAccV",names(s2.who),s2.v,st.ok[s2.who[0]],st.att[s2.who[0]])]);
+  const s3=top(st.named);if(s3)cards.push(["var(--sky)",t("aEar"),t("aEarV",names(s3.who),s3.v)]);
+  const s4=top(st.jukes);if(s4)cards.push(["var(--bubble)",t("aJuke"),t("aJukeV",names(s4.who),s4.v,st.steals[s4.who[0]])]);
+  if(st.miss){const s=g.songs[st.miss.id];if(s)cards.push(["var(--grape)",t("aMiss"),t("aMissV",nm(st.miss.p),st.miss.off,esc(cleanTitle(s.t)),yearOf(st.miss.id))])}
+  const old=st.played.filter(id=>g.songs[id]).sort((a,b)=>yearOf(a)-yearOf(b))[0];
+  if(old){const s=g.songs[old];cards.push(["var(--sun)",t("aOld"),t("aOldV",esc(cleanTitle(s.t)),esc(s.a),yearOf(old))])}
+  const cnt={};st.played.forEach(id=>{const s=g.songs[id];(s&&s.src||[]).forEach(x=>{const k=x.n+"\u0001"+(x.o||"");cnt[k]=(cnt[k]||0)+1})});
+  const ks=Object.keys(cnt);
+  if(ks.length>=2){const k=ks.sort((a,b)=>cnt[b]-cnt[a])[0],[n,o]=k.split("\u0001");cards.push(["var(--indigo)",t("aPl"),t("aPlV",`“${esc(n)}”`+(o?` (${esc(o)})`:""),cnt[k])])}
+  if(!cards.length)return "";
+  return `<h3>${t("recapH")}</h3><p class="recap-sub">${t("songsPlayed",st.played.length)}</p>
+    <div class="awards">${cards.map(([c,h,v],i)=>`<div class="award sticker" style="--ac:${c}"><span class="aw-h">${h}</span><p>${v}</p></div>`).join("")}</div>`;
+}
 function vWin(){
   const g=G(),W=g.players[g.winner],wn=esc(W.name);
   const order=g.players.map((p,i)=>({p,i})).sort((a,b)=>b.p.timeline.length-a.p.timeline.length||b.p.tokens-a.p.tokens);
@@ -1237,6 +1349,7 @@ function vWin(){
     <div class="trophy" aria-hidden="true"><svg viewBox="0 0 24 24" width="64" height="64" fill="#fff" stroke="#1C1848" stroke-width="1.6" stroke-linejoin="round"><path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5z"/><circle cx="12" cy="15" r="1.6" fill="#F2437F"/></svg></div>
     <h1>${t("wins",wn)}</h1><p class="why">${why}</p>
     <ol class="standings sticker" style="list-style:none">${order.map((o,k)=>`<li style="--pc:${o.p.color}"><span class="pl">${k+1}</span><span class="n"><i></i>${esc(o.p.name)}</span><span>${t("cardsN",o.p.timeline.length)}</span></li>`).join("")}</ol>
+    ${recap()}
     <h3>${t("winningTl",wn)}</h3>
     <div class="tl">${W.timeline.map(id=>cardRow(id)).join("")}</div>
     <div class="acts"><button class="btn btn-primary" data-act="rematch">${t("rematch")}</button><button class="btn" data-act="quit">${t("mainMenu")}</button></div>
@@ -1307,6 +1420,7 @@ app.addEventListener("input",e=>{
   const i=el.dataset.name;if(i===undefined)return;S.setup.players[+i].name=el.value;ls.set(K.setup,S.setup);
 });
 
+if(S.game&&S.game.suspense)S.game.suspense=false;
 (async function init(){
   render();
   try{await handleRedirect();await A.boot()}
