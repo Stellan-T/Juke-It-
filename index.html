@@ -439,6 +439,15 @@ body.boardmode .app{max-width:none;padding:0 clamp(1rem,3vw,3rem) 2rem}
 @media (max-width:900px){.bgame{grid-template-columns:1fr}.bside .board{flex-direction:row;overflow-x:auto}}
 
 .bmain .cab a.sp{display:none}
+/* playlist guessing */
+.plguess{padding:1rem 1.1rem 1.1rem;margin:0 0 1.6rem}
+.plguess h3{font-size:1.25rem}
+.plguess p{margin:.2rem 0 .8rem;font-size:.92rem}
+.plopts{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+@media (max-width:360px){.plopts{grid-template-columns:1fr}}
+.plopts .opt b{font-size:1rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.plres{margin:.5rem 0 0;font-weight:600;color:var(--grape)}
+.bmain .plres{font-size:1.3rem;margin:-.4rem 0 1.2rem}
 
 </style>
 </head>
@@ -464,7 +473,7 @@ const API="https://api.spotify.com/v1", ACC="https://accounts.spotify.com";
 const SCOPES="user-read-private playlist-read-private playlist-read-collaborative user-read-playback-state user-modify-playback-state";
 const K={cfg:"jk-cfg",tok:"jk-tok",ver:"jk-pkce",state:"jk-state",game:"jk-game",years:"jk-years",setup:"jk-setup",room:"jk-room",join:"jk-join"};
 const PCOL=["var(--sky)","var(--bubble)","var(--grape)","var(--blaze)","var(--mint)","var(--indigo)","var(--sun)","var(--lime)"];
-const MAX_TOKENS=5, START_TOKENS=2, COST={skip:1,juke:1};
+const MAX_TOKENS=5, START_TOKENS=2, COST={skip:2,juke:1};
 const REDIRECT=location.origin+location.pathname;
 
 const ls={
@@ -526,7 +535,7 @@ en:{
   friendHint:"To use a friend's playlist, they invite you as a collaborator, or you copy its songs into a playlist of your own.",
   pastePh:"Paste a playlist link",add:"Add",cardsToWin:"Cards to win",scores:"Scores",cardsOf:(n,g)=>`${n}/${g} cards`,tokensN:n=>`${n} tokens`,
   placeHere:"Place here",before:y=>`Before ${y}`,after:y=>`After ${y}`,between:(a,b)=>`Between ${a} and ${b}`,guessOf:n=>`${n}'s guess`,jukeOf:n=>`${n}'s Juke`,
-  stolen:"Stolen",out:"Out",newTag:"New",pause:"Pause",play:"Play",restart:"Restart song",hideTitle:"Hide title",showTitle:"Show title",skipSong:"Skip song",costs1:"costs 1 token",
+  stolen:"Stolen",out:"Out",newTag:"New",pause:"Pause",play:"Play",restart:"Restart song",hideTitle:"Hide title",showTitle:"Show title",skipSong:"Skip song",costs1:"costs 2 tokens",
   revealed:"Revealed",nowPlaying:"Now playing",paused:"Paused",openSp:"Open in Spotify",mystery:"Mystery song",hiddenTA:"Title and artist hidden",
   mbNote:y=>`Year from MusicBrainz. Spotify listed ${y}, which is probably a re-release.`,
   turnOf:n=>`${n}'s turn`,turnInfo:(c,g,t,d)=>`${c} of ${g} cards, ${t} token${t===1?"":"s"}. ${d} songs left in the deck.`,draw:"Draw a song",timelineOf:n=>`${n}'s timeline`,
@@ -564,12 +573,15 @@ en:{
   winWait:"The host can start a rematch.",roomGone:"That game has ended, so it can't be resumed.",joinLink:"Join a friend's game",
   playHow:"How are you playing?",pLocal:"One phone",pLocalD:"Pass it around the table",pPhones:"Own phones",pPhonesD:"Everyone plays on their own phone",
   pTv:"TV + phones",pTvD:"The board on the TV, everyone plays on their phone",yourName:"Your name",yourNameHint:"The others join once you open the lobby.",openRoom:"Open the lobby",
+  plH:"Whose playlist is it?",plP:"Tap the playlist you think this song is from.",plRight:n=>`Guessed the playlist: ${n}.`,plNone:"Nobody guessed the playlist.",
+  plCount:(a,b)=>`${a} of ${b} guessed whose playlist it is`,aDet:"Playlist detective",aDetV:(n,v)=>`${n} guessed ${v} playlist${v===1?"":"s"} right.`,
+  hostGives:"Named the artist and title? The host can give you +1 token.",lastCall:"Last chance to guess the playlist",leaveP:"You leave this game on this phone. You can join again with the code.",
   rules:[
     "Everyone starts with <b>one song card</b> face up and <b>2 tokens</b>.",
     "On your turn, tap Draw a song and <b>put the phone face-down</b>. The song starts playing, and nobody can see what it is.",
     "Pick the phone up again and place the song on your timeline: before, between or after your cards. <b>Right spot, you keep it.</b> Wrong spot, it's out.",
     "Name the artist and title out loud for <b>+1 token</b>. You can hold up to 5.",
-    "<b>Skip</b> (1 token): swap the song for a new one.",
+    "<b>Skip</b> (2 tokens): swap the song for a new one.",
     "<b>Juke</b> (1 token): after someone locks in, another player can pick a different spot. If the placer is wrong and the juker is right, the juker steals the card.",
     "Songs from the same year fit on either side of each other. The year is when the song first came out, not the remaster.",
     "First to the target number of cards wins."
@@ -617,7 +629,7 @@ nl:{
   friendHint:"Wil je de playlist van een vriend gebruiken? Laat je uitnodigen als samenwerker, of kopieer de nummers naar een eigen playlist.",
   pastePh:"Plak een playlistlink",add:"Toevoegen",cardsToWin:"Kaarten om te winnen",scores:"Scores",cardsOf:(n,g)=>`${n}/${g} kaarten`,tokensN:n=>`${n} tokens`,
   placeHere:"Leg hier",before:y=>`Vóór ${y}`,after:y=>`Na ${y}`,between:(a,b)=>`Tussen ${a} en ${b}`,guessOf:n=>`Gok van ${n}`,jukeOf:n=>`Juke van ${n}`,
-  stolen:"Gestolen",out:"Uit",newTag:"Nieuw",pause:"Pauze",play:"Afspelen",restart:"Opnieuw starten",hideTitle:"Titel verbergen",showTitle:"Titel tonen",skipSong:"Nummer overslaan",costs1:"kost 1 token",
+  stolen:"Gestolen",out:"Uit",newTag:"Nieuw",pause:"Pauze",play:"Afspelen",restart:"Opnieuw starten",hideTitle:"Titel verbergen",showTitle:"Titel tonen",skipSong:"Nummer overslaan",costs1:"kost 2 tokens",
   revealed:"Onthuld",nowPlaying:"Speelt nu",paused:"Gepauzeerd",openSp:"Open in Spotify",mystery:"Mysterienummer",hiddenTA:"Titel en artiest verborgen",
   mbNote:y=>`Jaartal van MusicBrainz. Spotify gaf ${y}, waarschijnlijk een heruitgave.`,
   turnOf:n=>`${n} is aan de beurt`,turnInfo:(c,g,t,d)=>`${c} van ${g} kaarten, ${t} token${t===1?"":"s"}. Nog ${d} nummers in de stapel.`,draw:"Trek een nummer",timelineOf:n=>`Tijdlijn van ${n}`,
@@ -655,12 +667,15 @@ nl:{
   winWait:"De host kan een revanche starten.",roomGone:"Dat spel is afgelopen, dus je kunt het niet hervatten.",joinLink:"Meedoen met een vriend",
   playHow:"Hoe spelen jullie?",pLocal:"Eén telefoon",pLocalD:"Geef 'm door aan tafel",pPhones:"Eigen telefoons",pPhonesD:"Iedereen speelt op z'n eigen telefoon",
   pTv:"Tv + telefoons",pTvD:"Het bord op de tv, iedereen speelt op z'n telefoon",yourName:"Jouw naam",yourNameHint:"De anderen doen mee zodra je de lobby opent.",openRoom:"Open de lobby",
+  plH:"Uit wiens playlist komt 'ie?",plP:"Tik op de playlist waar je denkt dat dit nummer uit komt.",plRight:n=>`Playlist goed geraden: ${n}.`,plNone:"Niemand raadde de playlist.",
+  plCount:(a,b)=>`${a} van ${b} gokten uit wiens playlist 'ie komt`,aDet:"Playlistdetective",aDetV:(n,v)=>`${n} raadde ${v} playlist${v===1?"":"s"} goed.`,
+  hostGives:"Artiest en titel genoemd? De host kan je +1 token geven.",lastCall:"Laatste kans om de playlist te raden",leaveP:"Je verlaat dit spel op deze telefoon. Met de code kun je weer meedoen.",
   rules:[
     "Iedereen begint met <b>één nummerkaart</b> open en <b>2 tokens</b>.",
     "Tik in jouw beurt op Trek een nummer en <b>leg de telefoon op z'n scherm</b>. Het nummer begint te spelen en niemand kan zien wat het is.",
     "Pak de telefoon weer op en leg het nummer in je tijdlijn: ervoor, ertussen of erna. <b>Goede plek? Dan houd je 'm.</b> Verkeerde plek? Dan ligt 'ie eruit.",
     "Noem de artiest en titel hardop voor <b>+1 token</b>. Je kunt er maximaal 5 hebben.",
-    "<b>Overslaan</b> (1 token): ruil het nummer in voor een nieuw nummer.",
+    "<b>Overslaan</b> (2 tokens): ruil het nummer in voor een nieuw nummer.",
     "<b>Juke</b> (1 token): als iemand zijn plek heeft vastgezet, mag een andere speler een andere plek kiezen. Zit de speler fout en de juker goed, dan steelt de juker de kaart.",
     "Nummers uit hetzelfde jaar passen aan beide kanten van elkaar. Het jaartal is wanneer het nummer voor het eerst uitkwam, niet de remaster.",
     "Wie als eerste het doelaantal kaarten heeft, wint."
@@ -1001,14 +1016,16 @@ async function buildSongs(){
   }
   return songs;
 }
-function newStats(n){const z=()=>Array(n).fill(0);return{att:z(),ok:z(),streak:z(),best:z(),jukes:z(),steals:z(),named:z(),miss:null,played:[]}}
+function deckPlaylists(songs){const seen={},out=[];Object.values(songs).forEach(s=>(s.src||[]).forEach(x=>{const k=x.n+"\u0001"+(x.o||"");if(!seen[k]){seen[k]=1;out.push({n:x.n,o:x.o||null})}}));return out}
+function plLabel(x){return `“${esc(x.n)}”`+(x.o?` (${esc(x.o)})`:"")}
+function newStats(n){const z=()=>Array(n).fill(0);return{att:z(),ok:z(),streak:z(),best:z(),jukes:z(),steals:z(),named:z(),plRight:z(),miss:null,played:[]}}
 async function newGame(songs,playersIn){
   const players=playersIn.map((p,i)=>({uid:p.uid||null,name:(p.name||"").trim()||t("player",i+1),color:PCOL[i%PCOL.length],timeline:[],tokens:START_TOKENS}));
   const deck=shuffle(Object.keys(songs));
   const need=players.length+10;
   if(deck.length<need)throw new Error(t("onlyFound",deck.length,need,players.length));
   S.game={songs,players,deck,turn:Math.floor(Math.random()*players.length),goal:cfg.goal,
-    phase:"intro",current:null,pick:null,juker:null,jukePick:null,result:null,named:false,note:null,winner:null,endReason:null,playing:false,count:0,fixing:false,snap:null,suspense:false,stats:newStats(players.length)};
+    phase:"intro",current:null,pick:null,juker:null,jukePick:null,result:null,named:false,note:null,winner:null,endReason:null,playing:false,count:0,fixing:false,snap:null,suspense:false,stats:newStats(players.length),pls:deckPlaylists(songs),plGuess:{}};
   const g=S.game;
   for(let i=0;i<players.length;i++){
     S.busy=t("checkingYears",i+1,players.length);render();
@@ -1022,7 +1039,7 @@ async function drawNext(){
   const id=g.deck[g.deck.length-1];
   if(!years[id]){S.busy=t("checkingYear");render();await checkYear(g.songs[id]);S.busy=null}
   g.deck.pop();
-  Object.assign(g,{current:id,pick:null,juker:null,jukePick:null,result:null,named:false,playing:false,count:0,fixing:false,snap:null,peek:false});
+  Object.assign(g,{current:id,pick:null,juker:null,jukePick:null,result:null,named:false,playing:false,count:0,fixing:false,snap:null,peek:false,plGuess:{}});
   prefetch();return true;
 }
 function endByDeck(){
@@ -1047,6 +1064,12 @@ function resolve(){
     if(g.juker!==null&&fits(tl,g.jukePick,y)){r.jukeOk=true;insertSorted(g.players[g.juker].timeline,g.current)}
   }
   if(g.juker!==null){st.jukes[g.juker]++;if(r.jukeOk)st.steals[g.juker]++}
+  if(g.pls&&g.pls.length>1){
+    const src=(g.songs[g.current].src||[]),right=[];let n=0;
+    if(!st.plRight)st.plRight=Array(g.players.length).fill(0);
+    Object.keys(g.plGuess||{}).forEach(k=>{const i=+k,x=g.pls[g.plGuess[k]];n++;if(x&&src.some(s=>s.n===x.n&&(s.o||null)===(x.o||null))){right.push(i);st.plRight[i]++}});
+    r.pl={right,n};
+  }
   g.result=r;g.phase="reveal";g.named=false;g.fixing=false;
   const w=g.players.findIndex(p=>p.timeline.length>=g.goal);
   g.winner=w>=0?w:null;g.endReason=w>=0?"goal":null;
@@ -1180,7 +1203,7 @@ const A={
     const g=G();pauseMusic();
     if(g.winner!==null){S.screen="win";SFX.win();return}
     g.turn=(g.turn+1)%g.players.length;
-    Object.assign(g,{phase:"intro",current:null,pick:null,juker:null,jukePick:null,result:null,note:null,playing:false,count:0,fixing:false,snap:null,peek:false,passes:{},jukeLeft:0});
+    Object.assign(g,{phase:"intro",current:null,pick:null,juker:null,jukePick:null,result:null,note:null,playing:false,count:0,fixing:false,snap:null,peek:false,passes:{},jukeLeft:0,plGuess:{}});
   },
   async rematch(){
     const g=G();
@@ -1207,6 +1230,7 @@ const A={
     try{await joinRoom(code,null,"board")}finally{S.busy=null}
   },
   arm(){S.room.armed=true;audio();wake()},
+  clientSettings(){S.room.showSettings=!S.room.showSettings},
   async leave(){
     const r=S.room;
     if(r&&fb&&r.role==="player"&&!r.pub&&!r.removed){try{await fb.m.remove(R(`rooms/${r.code}/players/${fb.uid}`))}catch(e){}}
@@ -1277,9 +1301,10 @@ function qrSvg(text){
 function normPub(p){
   if(!p)return null;
   const o=Object.assign({pick:null,juker:null,jukePick:null,result:null,winner:null,endReason:null,cur:null,peek:null,passes:{},jukeLeft:0,
-    playing:false,named:false,suspense:false,deckLeft:0,screen:"game",stats:null},p);
+    playing:false,named:false,suspense:false,deckLeft:0,screen:"game",stats:null,pls:[],plGuess:{}},p);
+  o.pls=toArr(o.pls);
   o.players=toArr(o.players).map(pl=>Object.assign({tokens:0,name:"?",color:"var(--sky)"},pl,{timeline:toArr(pl.timeline)}));
-  if(o.stats){const n=o.players.length;["att","ok","streak","best","jukes","steals","named"].forEach(k=>{const a=toArr(o.stats[k]);while(a.length<n)a.push(0);o.stats[k]=a});o.stats.played=toArr(o.stats.played)}
+  if(o.stats){const n=o.players.length;["att","ok","streak","best","jukes","steals","named","plRight"].forEach(k=>{const a=toArr(o.stats[k]);while(a.length<n)a.push(0);o.stats[k]=a});o.stats.played=toArr(o.stats.played)}
   return o;
 }
 function clientG(){
@@ -1305,7 +1330,7 @@ function pubState(){
     result:sus?null:g.result,winner:sus?null:g.winner,endReason:sus?null:g.endReason,
     cur:g.current?(g.phase==="reveal"&&!sus?g.current:"_cur"):null,
     peek:g.peek&&s&&g.phase!=="reveal"?{t:cleanTitle(s.t),a:s.a}:null,
-    playing:!!g.playing,named:!!g.named,passes:g.passes||{},jukeLeft:g.jukeLeft||0,
+    playing:!!g.playing,named:!!g.named,passes:g.passes||{},jukeLeft:g.jukeLeft||0,pls:g.pls||[],plGuess:g.plGuess||{},
     stats:(snap&&snap.stats)||g.stats||null,players
   };
 }
@@ -1396,7 +1421,7 @@ let jukeTimer=null;
 function openJukeWindow(){
   const g=S.game;clearInterval(jukeTimer);
   const any=g.players.some((p,i)=>i!==g.turn&&p.tokens>=COST.juke);
-  if(!any){startReveal();return}
+  if(!any&&!plPending(g)){startReveal();return}
   g.phase="juke";g.passes={};g.juker=null;g.jukePick=null;g.jukeLeft=JUKE_SECS;
   jukeTimer=setInterval(()=>{
     const g2=S.game;if(!g2||g2.phase!=="juke"){clearInterval(jukeTimer);return}
@@ -1405,7 +1430,8 @@ function openJukeWindow(){
     render();
   },1000);
 }
-function allPassed(g){return g.players.every((p,i)=>i===g.turn||p.tokens<COST.juke||(g.passes&&g.passes[i]))}
+function plPending(g){return !!(g.pls&&g.pls.length>1&&g.players.some((p,i)=>!(g.plGuess&&g.plGuess[i]!==undefined&&g.plGuess[i]!==null)))}
+function allPassed(g){return g.players.every((p,i)=>i===g.turn||p.tokens<COST.juke||(g.passes&&g.passes[i]))&&!plPending(g)}
 
 /* ---- host: handle an action from any player (or from the host) ---- */
 async function hostHandle(uid,type,d){
@@ -1450,7 +1476,8 @@ async function hostHandle(uid,type,d){
     case "resumeSong":if(ctl)try{await resumeMusic()}catch(e){S.error=e.message}break;
     case "replay":if(ctl)try{await playCurrent()}catch(e){S.error=e.message}break;
     case "peek":if(ctl&&g.phase!=="reveal")g.peek=!g.peek;break;
-    case "named":if(g.phase==="reveal"&&!g.suspense&&ctl)A.named();break;
+    case "named":if(g.phase==="reveal"&&!g.suspense&&host)A.named();break;
+    case "plGuess":if(["guess","juke","jukePick"].includes(g.phase)&&idx>=0&&g.pls&&g.pls[+d.i]){g.plGuess=g.plGuess||{};g.plGuess[idx]=+d.i;if(g.phase==="juke"&&allPassed(g)){clearInterval(jukeTimer);startReveal()}}break;
     case "next":if(g.phase==="reveal"&&!g.suspense&&ctl)A.next();break;
   }
   render();
@@ -1507,7 +1534,7 @@ function topbar(){
     ${isClient()?`<span class="brand"><img src="${JB}" alt="">Juke it!</span>`:`<button class="brand" data-act="home" aria-label="${t("mainMenu")}"><img src="${JB}" alt="">Juke it!</button>`}
     <span class="sp"></span>
     <button class="iconbtn" data-act="rules" aria-label="${t("howTo")}">${ICON.help}</button>
-    ${S.me?`<button class="iconbtn" data-act="settings" aria-label="${t("settings")}">${ICON.gear}</button>`:""}
+    ${isClient()&&S.room.role==="player"?`<button class="iconbtn" data-act="clientSettings" aria-label="${t("settings")}">${ICON.gear}</button>`:S.me?`<button class="iconbtn" data-act="settings" aria-label="${t("settings")}">${ICON.gear}</button>`:""}
     <button class="iconbtn" data-act="mute" aria-label="${cfg.muted?t("soundOn"):t("soundOff")}">${cfg.muted?ICON.muted:ICON.sound}</button>
   </div>${S.error?`<div class="err" role="alert"><p>${esc(S.error)}</p><button data-act="dismiss">${t("ok")}</button></div>`:""}`;
 }
@@ -1670,7 +1697,7 @@ function cabinet(){
       ${g.playing?`<button class="btn btn-ghost btn-small" ${act("pause")}>${t("pause")}</button>`:`<button class="btn btn-sun btn-small" ${act("resumeSong")}>${t("play")}</button>`}
       <button class="btn btn-ghost btn-small" ${act("replay")}>${t("restart")}</button>
       <button class="btn btn-ghost btn-small" ${act("peek")} aria-pressed="${!!g.peek}">${g.peek?t("hideTitle"):t("showTitle")}</button>
-      ${g.phase==="guess"&&canSkip?`<button class="btn btn-ghost btn-small" ${act("skip")} ${P.tokens<COST.skip?"disabled":""}>${t("skipSong")} <span class="coinrow" aria-label="${t("costs1")}"><i></i></span></button>`:""}
+      ${g.phase==="guess"&&canSkip?`<button class="btn btn-ghost btn-small" ${act("skip")} ${P.tokens<COST.skip?"disabled":""}>${t("skipSong")} <span class="coinrow" aria-label="${t("costs1")}"><i></i><i></i></span></button>`:""}
     </div>`;
   }
   const src=isClient()?null:years[g.current]&&years[g.current].src;
@@ -1759,6 +1786,7 @@ function recap(){
   const acc=st.att.map((a,i)=>a>=3?Math.round(st.ok[i]/a*100):0),s2=top(acc);
   if(s2)cards.push(["var(--mint)",t("aAcc"),t("aAccV",names(s2.who),s2.v,st.ok[s2.who[0]],st.att[s2.who[0]])]);
   const s3=top(st.named);if(s3)cards.push(["var(--sky)",t("aEar"),t("aEarV",names(s3.who),s3.v)]);
+  const s5=top(st.plRight||[]);if(s5)cards.push(["var(--lime)",t("aDet"),t("aDetV",names(s5.who),s5.v)]);
   const s4=top(st.jukes);if(s4)cards.push(["var(--bubble)",t("aJuke"),t("aJukeV",names(s4.who),s4.v,st.steals[s4.who[0]])]);
   if(st.miss){const s=g.songs[st.miss.id];if(s)cards.push(["var(--grape)",t("aMiss"),t("aMissV",nm(st.miss.p),st.miss.off,esc(cleanTitle(s.t)),yearOf(st.miss.id))])}
   const old=st.played.filter(id=>g.songs[id]).sort((a,b)=>yearOf(a)-yearOf(b))[0];
@@ -1781,7 +1809,7 @@ function vWin(board){
     ${recap()}
     <h3>${t("winningTl",wn)}</h3>
     <div class="tl">${W.timeline.map(id=>cardRow(id)).join("")}</div>
-    ${board?"":isClient()?`<p class="sub" style="text-align:center">${t("winWait")}</p><p style="text-align:center"><button class="link" data-act="leave">${t("leave")}</button></p>`:`<div class="acts"><button class="btn btn-primary" data-act="rematch">${t("rematch")}</button><button class="btn" data-act="quit">${t("mainMenu")}</button></div>`}
+    ${board?"":isClient()?`<p class="sub" style="text-align:center">${t("winWait")}</p>`:`<div class="acts"><button class="btn btn-primary" data-act="rematch">${t("rematch")}</button><button class="btn" data-act="quit">${t("mainMenu")}</button></div>`}
   </div>`;
 }
 function vLoading(){return `<div class="busy"><div><div class="vinyl"></div><p>${t("loading")}</p></div></div>`}
@@ -1826,18 +1854,34 @@ function vRoom(){
   const r=S.room;
   if(r.closed)return `${topbar()}<div class="center-col"><h2>${t("roomClosed")}</h2><button class="btn btn-primary" data-act="leave" style="margin-top:1.4rem">${t("mainMenu")}</button></div>`;
   if(r.role==="board")return vBoard();
+  if(r.showSettings)return `${topbar()}<h1 class="page-title">${t("settings")}</h1>
+    <div class="panel sticker"><h2>${t("language")}</h2>${langPicker()}</div>
+    <div class="panel sticker"><h2>${t("leave")}</h2><p class="muted" style="margin:0 0 .9rem">${t("leaveP")}</p><button class="btn btn-small" data-act="leave">${t("leave")}</button></div>
+    <button class="btn btn-primary wide" data-act="clientSettings">${t("done")}</button>`;
   if(r.removed)return `${topbar()}<div class="center-col"><h2>${t("removed")}</h2><button class="btn btn-primary" data-act="leave" style="margin-top:1.4rem">${t("mainMenu")}</button></div>`;
   const g=G();
   if(!g){
     const me=r.players&&fb?r.players[fb.uid]:null;
     return `${topbar()}<div class="center-col">
       <div class="turn sticker" style="--pc:var(--mint);text-align:left"><h2>${t("youreIn",esc(me?me.name:""))}</h2><p>${t("waitStart")}</p></div>
-      ${playerList(r.players,null,false)}
-      <p style="margin-top:1.4rem"><button class="link" data-act="leave">${t("leave")}</button></p></div>`;
+      ${playerList(r.players,null,false)}</div>`;
   }
   if(g.screen==="win")return vWin();
   if(myIndex()<0)return vCtrl(true);
   return vCtrl(false);
+}
+function plPanel(){
+  const g=G(),me=myIndex();
+  if(me<0||!g.pls||g.pls.length<2)return "";
+  const mine=g.plGuess&&g.plGuess[me]!==undefined&&g.plGuess[me]!==null?+g.plGuess[me]:null;
+  return `<div class="plguess sticker"><h3>${t("plH")}</h3><p class="muted">${t("plP")}</p>
+    <div class="plopts">${g.pls.map((x,k)=>`<button class="opt" ${M("plGuess",` data-i="${k}"`)} aria-pressed="${mine===k}"><b>${esc(x.n)}</b>${x.o?`<span>${esc(x.o)}</span>`:""}</button>`).join("")}</div></div>`;
+}
+function plResult(){
+  const g=G(),r=g.result;
+  if(!r||!r.pl||!g.pls||g.pls.length<2)return "";
+  const right=toArr(r.pl.right).map(i=>g.players[i]&&esc(g.players[i].name)).filter(Boolean);
+  return `<p class="plres">${right.length?t("plRight",right.join(", ")):t("plNone")}</p>`;
 }
 function vCtrl(spectator){
   const g=G(),me=myIndex(),host=isHost(),P=g.players[g.turn],pn=esc(P.name),myTurn=me===g.turn&&me>=0,ctl=myTurn||host;
@@ -1850,20 +1894,21 @@ function vCtrl(spectator){
     </div><p class="say">${t("timelineOf",pn)}</p>${timeline("view")}`;
   }else if(g.phase==="guess"){
     body+=cabinet();
-    body+=myTurn?`<p class="say">${t("whereFit",pn)}</p><p class="sub">${t("guessSub")}</p>${timeline("guess")}
+    body+=myTurn?`<p class="say">${t("whereFit",pn)}</p><p class="sub">${t("guessSub")}</p>${timeline("guess")}${plPanel()}
       <div class="sticky-act"><button class="btn btn-primary" ${M("lock")} ${g.pick===null?"disabled":""}>${t("lock")}</button></div>`
-      :`<p class="say">${t("placing",pn)}</p>${timeline("watch")}`;
+      :`${plPanel()}<p class="say">${t("placing",pn)}</p>${timeline("watch")}`;
   }else if(g.phase==="juke"){
     const passed=!!(g.passes&&g.passes[me]),canJ=me>=0&&!myTurn&&g.players[me].tokens>=COST.juke&&!passed;
-    body+=cabinet()+`<div class="juke sticker"><h2>${t("jukeH")} <span class="jcount">${g.jukeLeft||0}</span></h2>
+    const anyJ=g.players.some((p,i)=>i!==g.turn&&p.tokens>=COST.juke);
+    body+=cabinet()+`<div class="juke sticker"><h2>${anyJ?t("jukeH"):t("lastCall")} <span class="jcount">${g.jukeLeft||0}</span></h2>
       ${canJ?`<p>${t("jukePm",pn)}</p><div class="jukers"><button class="btn btn-primary" ${M("juke")}>${t("jukeBtn")}</button><button class="btn" ${M("pass")}>${t("passBtn")}</button></div>`
             :`<p>${myTurn?t("waitJukes"):passed?t("passed"):me<0?t("waitJukes"):t("noTokJuke")}</p>`}
-    </div>${timeline("juke")}`;
+    </div>${plPanel()}${timeline("juke")}`;
   }else if(g.phase==="jukePick"){
     const J=g.players[g.juker];
     body+=cabinet()+(me===g.juker?`<p class="say">${t("whereReally",esc(J.name))}</p><p class="sub">${t("diffGap",pn)}</p>${timeline("jukePick")}
       <div class="sticky-act"><button class="btn" ${M("cancelJuke")}>${t("cancelJuke")}</button><button class="btn btn-primary" ${M("lockJuke")} ${g.jukePick===null?"disabled":""}>${t("lockJuke")}</button></div>`
-      :`<p class="say">${t("jukePicking",esc(J.name))}</p>${timeline("watch")}`);
+      :`${plPanel()}<p class="say">${t("jukePicking",esc(J.name))}</p>${timeline("watch")}`);
   }else if(g.phase==="reveal"&&g.suspense){
     body+=`${cabinet()}<div class="drumbox sticker" aria-hidden="true"><span class="sticks"><i></i><i></i></span><b>${t("drumroll")}</b></div>
       <p class="say">${t("timelineOf",pn)}</p>${timeline("suspense")}`;
@@ -1872,14 +1917,15 @@ function vCtrl(spectator){
     body+=`${cabinet()}
       <div class="verdict sticker ${v.kind}"><span class="ico" aria-hidden="true">${v.ico}</span>
         <div><h2>${esc(v.title)}</h2><p>${esc(v.body)}</p>
-          <div class="bonus">${g.named?`<span class="muted">${t("namedDone")}</span>`:full?`<span class="muted">${t("pouchFull",pn)}</span>`:ctl?`<button class="btn btn-small btn-sun" ${M("named")}>${t("namedBtn",pn)}</button>`:""}</div>
+          ${plResult()}
+          <div class="bonus">${g.named?`<span class="muted">${t("namedDone")}</span>`:full?`<span class="muted">${t("pouchFull",pn)}</span>`:host?`<button class="btn btn-small btn-sun" ${M("named")}>${t("namedBtn",pn)}</button>`:myTurn?`<span class="muted">${t("hostGives")}</span>`:""}</div>
           ${host?(g.fixing?`<div class="fix"><label for="fixy">${t("realYear")}</label><input id="fixy" inputmode="numeric" maxlength="4" value="${yearOf(g.current)}"><button class="btn btn-small" data-act="fixSave">${t("saveRecheck")}</button><button class="link" data-act="fixCancel">${t("cancel")}</button></div>`
                      :`<p class="yr-src"><button class="link" style="padding:0" data-act="fixOpen">${t("yearWrong")}</button></p>`):""}
         </div></div>
       <p class="say">${t("timelineOf",pn)}</p>${timeline("reveal")}
       ${ctl?`<div class="sticky-act"><button class="btn btn-primary" ${M("next")}>${g.winner!==null?t("seeWinner"):t("nextTurn",esc(nextName))}</button></div>`:`<p class="sub">${t("waitNext",pn)}</p>`}`;
   }
-  return topbar()+scoreboard()+body+(host?hostPanel():isClient()?`<p style="text-align:center;margin-top:2rem"><button class="link" data-act="leave">${t("leave")}</button></p>`:"");
+  return topbar()+scoreboard()+body+(host?hostPanel():"");
 }
 function hostPanel(){
   const r=S.room;
@@ -1902,10 +1948,11 @@ function vBoard(){
   let status="",mode="view",extra="";
   if(g.phase==="intro")status=t("waitDraw",pn);
   else if(g.phase==="guess"){status=t("placing",pn);mode="watch"}
-  else if(g.phase==="juke"){status=`${t("jukeH")} <span class="jcount">${g.jukeLeft||0}</span>`;mode="juke"}
+  else if(g.phase==="juke"){status=`${g.players.some((p,i)=>i!==g.turn&&p.tokens>=COST.juke)?t("jukeH"):t("lastCall")} <span class="jcount">${g.jukeLeft||0}</span>`;mode="juke"}
   else if(g.phase==="jukePick"){status=t("jukePicking",esc(g.players[g.juker].name));mode="watch"}
   else if(g.phase==="reveal"&&g.suspense){status=t("drumroll");mode="suspense"}
-  else if(g.phase==="reveal"&&g.result){const v=verdict();status=esc(v.title);mode="reveal";extra=`<p class="bverdict">${esc(v.body)}</p>`}
+  else if(g.phase==="reveal"&&g.result){const v=verdict();status=esc(v.title);mode="reveal";extra=`<p class="bverdict">${esc(v.body)}</p>${plResult()}`}
+  if(["guess","juke","jukePick"].includes(g.phase)&&g.pls&&g.pls.length>1){const n=Object.values(g.plGuess||{}).filter(v=>v!==null&&v!==undefined).length;extra=`<p class="plres">${t("plCount",n,g.players.length)}</p>`}
   return `<div class="bview bgame">
     <aside class="bside">${scoreboard()}<div class="bcode-mini">${t("code")} <b>${r.code}</b></div></aside>
     <main class="bmain">
