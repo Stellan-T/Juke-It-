@@ -698,10 +698,12 @@ en:{
   noneYet:"Nobody has joined yet.",noPlYet:"No playlist picked",claimH:"Which playlists are yours?",claimP:"Tap your own playlists, so the others can guess whose song is playing.",
   ownerH:"Whose playlist is it?",ownerP:"Guess right for +1 token. If it's in more than one player's playlist, each of them counts.",
   ownerWas:n=>`It's in ${n}'s playlist.`,ownerRight:n=>`+1 token for guessing right: ${n}.`,ownerNone:"Nobody guessed whose playlist it was.",
-  ownerCount:(a,b)=>`${a} of ${b} guessed whose playlist it is`,yourTimeline:"Your timeline",fmPlaceSub:"You did the task and earned a token. Now place the song on your timeline.",playersH:"Players",
+  ownerCount:(a,b)=>`${a} of ${b} guessed whose playlist it is`,yourTimeline:"Your timeline",fmPlaceSub:"Task done! Now place the song on your timeline.",playersH:"Players",
   pScreen:"Host screen",pScreenD:"This screen is the TV. The host runs the game and doesn't play, everyone plays on their phone",
   gameModeH:"Game mode",modeClassic:"Classic",modeClassicD:"Take turns placing songs on your timeline",modeFm:"Flying mic",modeFmD:"Free for all: catch the mic, do the task, win the song",
   aTask:"Mic master",aTaskV:(n,v)=>`${n} completed ${v} task${v===1?"":"s"}.`,aThief:"Song thief",aThiefV:(n,v)=>`${n} stole ${v} song${v===1?"":"s"}.`,
+  whoCaught:"Who caught the mic?",caughtBy:n=>`${n} caught the mic!`,youCaught:"You caught the mic!",taskFor:n=>`Task for ${n}`,
+  fmCorrectBtn:n=>`Correct: +1 token for ${n}`,fmFailBtn:"Failed: mic goes to someone else",stolenByBtn:n=>`${n} stole it (−5)`,cardsOfName:n=>`${n}'s cards`,
   rules:[
     "Everyone starts with <b>one song card</b> face up and <b>2 tokens</b>.",
     "On your turn, tap Draw a song and <b>put the phone face-down</b>. The song starts playing, and nobody can see what it is.",
@@ -710,7 +712,7 @@ en:{
     "<b>Skip</b> (2 tokens): swap the song for a new one.",
     "<b>Juke</b> (1 token): after someone locks in, another player can pick a different spot. If the placer is wrong and the juker is right, the juker steals the card.",
     "<b>Steal the song</b> (5 tokens): take over someone else's song and place it on your own timeline. In Flying mic, you take over the task instead.",
-    "<b>Flying mic:</b> everyone plays at once. Grab the mic first, do the task that comes up, and earn a token plus the chance to place the song on your timeline.",
+    "<b>Flying mic:</b> everyone plays at once. Grab the mic first and the host picks you. Do the task that comes up: if you get it right, the host gives you a token and you place the song on your timeline.",
     "Songs from the same year fit on either side of each other. The year is when the song first came out, not the remaster.",
     "First to the target number of cards wins."
   ]
@@ -809,10 +811,12 @@ nl:{
   noneYet:"Er doet nog niemand mee.",noPlYet:"Geen playlist gekozen",claimH:"Welke playlists zijn van jou?",claimP:"Tik op je eigen playlists, dan kunnen de anderen raden van wie het nummer is.",
   ownerH:"Van wie is deze playlist?",ownerP:"Goed geraden is +1 token. Staat 'ie in de playlist van meerdere spelers, dan telt elk van hen.",
   ownerWas:n=>`Hij staat in de playlist van ${n}.`,ownerRight:n=>`+1 token voor goed raden: ${n}.`,ownerNone:"Niemand raadde van wie de playlist was.",
-  ownerCount:(a,b)=>`${a} van ${b} gokten van wie de playlist is`,yourTimeline:"Jouw tijdlijn",fmPlaceSub:"Je deed de opdracht en verdiende een token. Leg het nummer nu in je tijdlijn.",playersH:"Spelers",
+  ownerCount:(a,b)=>`${a} van ${b} gokten van wie de playlist is`,yourTimeline:"Jouw tijdlijn",fmPlaceSub:"Opdracht gelukt! Leg het nummer nu in je tijdlijn.",playersH:"Spelers",
   pScreen:"Hostscherm",pScreenD:"Dit scherm is de tv. De host leidt het spel en speelt niet mee, iedereen speelt op z'n telefoon",
   gameModeH:"Spelvorm",modeClassic:"Klassiek",modeClassicD:"Om de beurt nummers in je tijdlijn leggen",modeFm:"Vliegende microfoon",modeFmD:"Iedereen tegelijk: pak de microfoon, doe de opdracht, win het nummer",
   aTask:"Microfoonmeester",aTaskV:(n,v)=>`${n} voltooide ${v} opdracht${v===1?"":"en"}.`,aThief:"Nummerdief",aThiefV:(n,v)=>`${n} stal ${v} nummer${v===1?"":"s"}.`,
+  whoCaught:"Wie pakte de microfoon?",caughtBy:n=>`${n} pakte de microfoon!`,youCaught:"Jij pakte de microfoon!",taskFor:n=>`Opdracht voor ${n}`,
+  fmCorrectBtn:n=>`Goed: +1 token voor ${n}`,fmFailBtn:"Mislukt: microfoon naar iemand anders",stolenByBtn:n=>`${n} stal 'm (−5)`,cardsOfName:n=>`Kaarten van ${n}`,
   rules:[
     "Iedereen begint met <b>één nummerkaart</b> open en <b>2 tokens</b>.",
     "Tik in jouw beurt op Trek een nummer en <b>leg de telefoon op z'n scherm</b>. Het nummer begint te spelen en niemand kan zien wat het is.",
@@ -821,7 +825,7 @@ nl:{
     "<b>Overslaan</b> (2 tokens): ruil het nummer in voor een nieuw nummer.",
     "<b>Juke</b> (1 token): als iemand zijn plek heeft vastgezet, mag een andere speler een andere plek kiezen. Zit de speler fout en de juker goed, dan steelt de juker de kaart.",
     "<b>Steel het nummer</b> (5 tokens): neem het nummer van een ander over en leg het in je eigen tijdlijn. Bij de vliegende microfoon neem je in plaats daarvan de opdracht over.",
-    "<b>Vliegende microfoon:</b> iedereen speelt tegelijk. Pak als eerste de microfoon, doe de opdracht die verschijnt, en verdien een token plus de kans om het nummer in je tijdlijn te leggen.",
+    "<b>Vliegende microfoon:</b> iedereen speelt tegelijk. Pak als eerste de microfoon, dan kiest de host jou. Doe de opdracht die verschijnt: doe je het goed, dan geeft de host je een token en leg je het nummer in je tijdlijn.",
     "Nummers uit hetzelfde jaar passen aan beide kanten van elkaar. Het jaartal is wanneer het nummer voor het eerst uitkwam, niet de remaster.",
     "Wie als eerste het doelaantal kaarten heeft, wint."
   ]
@@ -1197,7 +1201,7 @@ function songOwners(g,id){
   return [...set].sort((a,b)=>a-b);
 }
 function newStats(n){const z=()=>Array(n).fill(0);return{att:z(),ok:z(),streak:z(),best:z(),jukes:z(),steals:z(),named:z(),plRight:z(),tasks:z(),stole:z(),miss:null,played:[]}}
-function freshSong(){return{current:null,pick:null,juker:null,jukePick:null,result:null,named:false,playing:false,count:0,fixing:false,snap:null,peek:false,plGuess:{},qAsk:false,passes:{},jukeLeft:0,stolen:false,stolenFrom:null,fm:{color:null,n:0,stealer:null,winner:null}}}
+function freshSong(){return{current:null,pick:null,juker:null,jukePick:null,result:null,named:false,playing:false,count:0,fixing:false,snap:null,peek:false,plGuess:{},qAsk:false,passes:{},jukeLeft:0,stolen:false,stolenFrom:null,fm:{color:null,n:0,stealer:null,winner:null,catcher:null}}}
 async function newGame(songs,playersIn){
   const players=playersIn.map((p,i)=>({uid:p.uid||null,name:(p.name||"").trim()||t("player",i+1),color:PCOL[i%PCOL.length],timeline:[],tokens:START_TOKENS}));
   const deck=shuffle(Object.keys(songs));
@@ -1271,15 +1275,22 @@ async function fmNext(){
   const g=S.game;if(g.phase!=="fmIntro")return;
   if(await drawNext()){g.phase="fmListen";try{await playCurrent()}catch(e){S.error=e.message}}
 }
+function fmCatch(i){
+  const g=S.game;if(g.phase!=="fmListen"||!g.players[i])return;
+  g.fm=g.fm||{};g.fm.catcher=i;g.fm.stealer=null;g.turn=i;fmSpin();
+}
+function fmFail(){
+  const g=S.game;if(g.phase!=="fmTask")return;
+  g.fm.catcher=null;g.fm.stealer=null;g.fm.color=null;g.phase="fmListen";SFX.bad();
+}
 function fmSpin(){
-  const g=S.game;if(!["fmListen","fmTask"].includes(g.phase))return;
-  g.fm=g.fm||{};g.fm.n=(g.fm.n||0)+1;g.fm.color=fmPick();g.fm.stealer=null;g.phase="fmSpin";SFX.spin();
+  const g=S.game;if(g.phase!=="fmListen"||g.fm.catcher===null||g.fm.catcher===undefined)return;
+  g.fm.n=(g.fm.n||0)+1;g.fm.color=fmPick();g.phase="fmSpin";SFX.spin();
   clearTimeout(fmTimer);
   fmTimer=setTimeout(()=>{const g2=S.game;if(g2&&g2.phase==="fmSpin"){g2.phase="fmTask";SFX.ding();render()}},2600);
 }
-function fmWin(i){
-  const g=S.game;if(g.phase!=="fmTask"||!g.players[i])return;
-  if(g.fm.stealer!==null&&g.fm.stealer!==undefined&&i!==g.fm.stealer)return;
+function fmWin(){
+  const g=S.game,i=g.fm&&g.fm.catcher;if(g.phase!=="fmTask"||i===null||i===undefined||!g.players[i])return;
   if(g.players[i].tokens<MAX_TOKENS)g.players[i].tokens++;
   if(g.stats&&g.stats.tasks)g.stats.tasks[i]++;
   g.fm.winner=i;g.turn=i;g.pick=null;g.phase="guess";SFX.coin();
@@ -1292,15 +1303,15 @@ function fmNone(){
   g.result={none:true};g.phase="reveal";g.suspense=false;g.winner=null;g.endReason=null;SFX.bad();
 }
 function fmStealBy(i){
-  const g=S.game;if(g.phase!=="fmTask"||!g.players[i]||(g.fm.stealer!==null&&g.fm.stealer!==undefined)||g.players[i].tokens<COST.steal)return;
-  g.players[i].tokens-=COST.steal;g.fm.stealer=i;if(g.stats&&g.stats.stole)g.stats.stole[i]++;SFX.airhorn();
+  const g=S.game;if(g.phase!=="fmTask"||!g.players[i]||i===g.fm.catcher||(g.fm.stealer!==null&&g.fm.stealer!==undefined)||g.players[i].tokens<COST.steal)return;
+  g.players[i].tokens-=COST.steal;g.fm.stealer=i;g.fm.catcher=i;g.turn=i;if(g.stats&&g.stats.stole)g.stats.stole[i]++;SFX.airhorn();
 }
 function nextSong(){
   const g=S.game;
   if(g.mode==="fm")g.phase="fmIntro";
   else{g.turn=((g.turnBase!==null&&g.turnBase!==undefined?g.turnBase:g.turn)+1)%g.players.length;g.phase="intro"}
   g.turnBase=null;
-  Object.assign(g,freshSong(),{note:null,fm:{color:null,n:(g.fm&&g.fm.n)||0,stealer:null,winner:null}});
+  Object.assign(g,freshSong(),{note:null,fm:{color:null,n:(g.fm&&g.fm.n)||0,stealer:null,winner:null,catcher:null}});
 }
 
 /* =====================================================================
@@ -1397,9 +1408,10 @@ const A={
   lock(){const g=G();if(g.pick===null)return;if(g.mode!=="fm"&&g.players.some((p,i)=>i!==g.turn&&p.tokens>=COST.juke))g.phase="juke";else A.reveal()},
   stealBy(d){doSteal(+d.i)},
   async fmNext(){await fmNext()},
-  fmSpin(){fmSpin()},
+  fmCatch(d){fmCatch(+d.i)},
+  fmFail(){fmFail()},
   fmNone(){fmNone()},
-  fmWin(d){fmWin(+d.i)},
+  fmWin(){fmWin()},
   fmStealBy(d){fmStealBy(+d.i)},
   gameMode(d){cfg.gameMode=d.v;saveCfg()},
   async claim(d){const r=S.room;if(!r||!fb)return;const k="p"+d.k,me=(r.players||{})[fb.uid]||{},has=me.pls&&me.pls[k];await fb.m.set(R(`rooms/${r.code}/players/${fb.uid}/pls/${k}`),has?null:true)},
@@ -1574,7 +1586,7 @@ async function endRoom(){
 let jukeTimer=null;
 /* ---- host: handle an action from any player (or from the host) ---- */
 /* ---- clients: join as a player or as the TV board ---- */
-function drawNextAssign(g,id){Object.assign(g,freshSong(),{current:id,fm:{color:null,n:(g.fm&&g.fm.n)||0,stealer:null,winner:null}})}
+function drawNextAssign(g,id){Object.assign(g,freshSong(),{current:id,fm:{color:null,n:(g.fm&&g.fm.n)||0,stealer:null,winner:null,catcher:null}})}
 function openJukeWindow(){
   const g=S.game;clearInterval(jukeTimer);
   g.qAsk=g.mode==="classic"&&songOwners(g,g.current).length>0;
@@ -1643,10 +1655,12 @@ async function hostHandle(uid,type,d){
     case "named":if(g.phase==="reveal"&&!g.suspense&&host&&!(g.result&&g.result.none))A.named();break;
     case "next":if(g.phase==="reveal"&&!g.suspense&&(ctl||(g.mode==="fm"&&host)))A.next();break;
     case "fmNext":if(host)await fmNext();break;
-    case "fmSpin":if(host)fmSpin();break;
+    case "fmCatch":if(host&&n!==null)fmCatch(n);break;
+    case "fmFail":if(host)fmFail();break;
     case "fmNone":if(host)fmNone();break;
-    case "fmWin":if(host&&n!==null)fmWin(n);break;
+    case "fmWin":if(host)fmWin();break;
     case "fmSteal":if(idx>=0)fmStealBy(idx);break;
+    case "fmStealBy":if(host&&n!==null)fmStealBy(n);break;
   }
   render();
 }
@@ -1661,7 +1675,7 @@ function pubState(){
     cur:g.current?(g.phase==="reveal"&&!sus?g.current:"_cur"):null,
     playing:!!g.playing,named:!!g.named,passes:g.passes||{},jukeLeft:g.jukeLeft||0,
     qAsk:!!g.qAsk,plGuess:g.plGuess||{},stolen:!!g.stolen,stolenFrom:g.stolenFrom,
-    fm:{color:g.phase==="fmTask"||g.phase==="guess"||g.phase==="reveal"?(g.fm&&g.fm.color):null,n:(g.fm&&g.fm.n)||0,stealer:g.fm?g.fm.stealer:null,winner:g.fm?g.fm.winner:null},
+    fm:{color:g.phase==="fmTask"||g.phase==="guess"||g.phase==="reveal"?(g.fm&&g.fm.color):null,n:(g.fm&&g.fm.n)||0,stealer:g.fm?g.fm.stealer:null,winner:g.fm?g.fm.winner:null,catcher:g.fm?g.fm.catcher:null},
     stats:(snap&&snap.stats)||g.stats||null,players
   };
 }
@@ -1669,7 +1683,7 @@ function normPub(p){
   if(!p)return null;
   const o=Object.assign({pick:null,juker:null,jukePick:null,result:null,winner:null,endReason:null,cur:null,peek:null,passes:{},jukeLeft:0,
     playing:false,named:false,suspense:false,deckLeft:0,screen:"game",stats:null,mode:"classic",qAsk:false,plGuess:{},stolen:false,stolenFrom:null},p);
-  o.fm=Object.assign({color:null,n:0,stealer:null,winner:null},p.fm||{});
+  o.fm=Object.assign({color:null,n:0,stealer:null,winner:null,catcher:null},p.fm||{});
   o.players=toArr(o.players).map(pl=>Object.assign({tokens:0,name:"?",color:"var(--sky)"},pl,{timeline:toArr(pl.timeline)}));
   if(o.result&&o.result.pl){o.result.pl.owners=toArr(o.result.pl.owners);o.result.pl.right=toArr(o.result.pl.right)}
   if(o.stats){const n=o.players.length;["att","ok","streak","best","jukes","steals","named","plRight","tasks","stole"].forEach(k=>{const a=toArr(o.stats[k]);while(a.length<n)a.push(0);o.stats[k]=a});o.stats.played=toArr(o.stats.played)}
@@ -2017,7 +2031,7 @@ function avatarSvg(i,color){
 }
 function miniCards(p,g){return p.timeline.map(id=>{const y=yearOf(id);return `<span class="mc" style="--dc:${decadeColor(y)}">${y}</span>`}).join("")}
 function stageActive(g){
-  if(g.mode==="fm"&&["fmIntro","fmListen","fmSpin","fmTask"].includes(g.phase))return g.fm&&g.fm.stealer!==null&&g.fm.stealer!==undefined?g.fm.stealer:-1;
+  if(g.mode==="fm"&&["fmIntro","fmListen","fmSpin","fmTask"].includes(g.phase))return g.fm&&g.fm.catcher!==null&&g.fm.catcher!==undefined?+g.fm.catcher:-1;
   if(g.phase==="reveal"&&g.result&&g.result.none)return -1;
   return g.turn;
 }
@@ -2032,8 +2046,9 @@ function stageStatus(g){
   if(g.mode==="fm"){
     if(ph==="fmIntro")return t("fmReady");
     if(ph==="fmListen")return t("catchMic");
-    if(ph==="fmSpin")return t("spinning");
-    if(ph==="fmTask")return g.fm.stealer!==null&&g.fm.stealer!==undefined?t("fmStoleBy",esc(g.players[g.fm.stealer].name)):t("fmDoTask");
+    const ca=g.fm&&g.fm.catcher!==null&&g.fm.catcher!==undefined?g.players[g.fm.catcher]:null;
+    if(ph==="fmSpin")return ca?t("caughtBy",esc(ca.name)):t("spinning");
+    if(ph==="fmTask")return g.fm.stealer!==null&&g.fm.stealer!==undefined?t("fmStoleBy",esc(g.players[g.fm.stealer].name)):ca?t("taskFor",esc(ca.name)):t("fmDoTask");
   }
   if(ph==="intro")return t("waitDraw",pn);
   if(ph==="guess")return g.stolen?t("stoleNow",pn):t("placing",pn);
@@ -2049,7 +2064,10 @@ function vStage(hostMode){
   const seats=(a,b)=>ps.slice(a,b).map((p,k)=>seat(p,a+k,g,a+k===act)).join("");
   const ph=g.phase,fmPh=g.mode==="fm"&&["fmIntro","fmListen","fmSpin","fmTask"].includes(ph);
   let center=`<h1 class="bstatus" style="--pc:${act>=0&&ps[act]?ps[act].color:"var(--grape)"}">${stageStatus(g)}</h1>`;
-  if(fmPh){center+=(ph!=="fmIntro"?cabinet():"")+fmPanel()}
+  if(fmPh){
+    center+=(ph!=="fmIntro"?cabinet():"")+fmPanel();
+    if((ph==="fmSpin"||ph==="fmTask")&&act>=0&&ps[act])center+=`<p class="say" style="text-align:center">${t("cardsOfName",esc(ps[act].name))}</p><div class="stage-tl">${timelineFor(act)}</div>`;
+  }
   else if(ph!=="intro"){
     const mode=ph==="guess"||ph==="jukePick"?"watch":ph==="juke"?"juke":ph==="reveal"&&g.suspense?"suspense":"reveal";
     center+=cabinet();
@@ -2108,24 +2126,26 @@ function fmPanel(){
   const g=G(),ph=g.phase,fm=g.fm||{};
   if(ph==="fmIntro")return "";
   if(ph==="fmListen")return `<div class="fmbox fm-listen"><div class="fmmic">${MIC_SVG}</div><h2>${t("catchMic")}</h2><p>${t("catchMicP")}</p></div>`;
-  if(ph==="fmSpin")return `<div class="fmbox fm-spin"><div class="fmmic">${MIC_SVG}</div><h2>${t("spinning")}</h2></div>`;
+  const ca=fm.catcher!==null&&fm.catcher!==undefined?g.players[fm.catcher]:null,me=S.room?myIndex():-2,mine=ca&&me===+fm.catcher;
+  if(ph==="fmSpin")return `<div class="fmbox fm-spin"><div class="fmmic">${MIC_SVG}</div><h2>${mine?t("youCaught"):ca?t("caughtBy",esc(ca.name)):t("spinning")}</h2><p>${t("spinning")}</p></div>`;
   if(ph==="fmTask"){
     const k=fm.color,sb=fm.stealer!==null&&fm.stealer!==undefined?g.players[fm.stealer]:null;
-    return `<div class="fmbox fm-task" style="--fc:${fmColor(k)}"><span class="fmtag">${t("fmTag_"+k)}</span><h2>${t("fmTask_"+k)}</h2>${sb?`<p class="fmsteal">${t("fmStoleBy",esc(sb.name))}</p>`:""}</div>`;
+    return `<div class="fmbox fm-task" style="--fc:${fmColor(k)}"><span class="fmtag">${t("fmTag_"+k)}</span><h2>${t("fmTask_"+k)}</h2>${sb?`<p class="fmsteal">${t("fmStoleBy",esc(sb.name))}</p>`:ca?`<p class="fmsteal">${mine?t("youCaught"):t("taskFor",esc(ca.name))}</p>`:""}</div>`;
   }
   return "";
 }
 function fmHostControls(){
-  const g=G(),ph=g.phase,act=(n,x)=>S.room?M(n,x):`data-act="${n}"${x||""}`;
+  const g=G(),ph=g.phase,act=(n,x)=>S.room?M(n,x):`data-act="${n}"${x||""}`,fm=g.fm||{};
+  const pbtn=(o,a,label)=>`<button class="btn btn-small jbtn" style="--pc:${o.p.color}" ${act(a,` data-i="${o.i}"`)}>${label||esc(o.p.name)}</button>`;
+  const all=g.players.map((p,i)=>({p,i}));
   if(ph==="fmIntro")return `<button class="btn btn-primary" ${act("fmNext")}>${t("fmNextBtn")}</button>`;
-  if(ph==="fmListen")return `<button class="btn btn-primary" ${act("fmSpin")}>${t("fmSpinBtn")}</button><button class="btn btn-small" ${act("fmNone")}>${t("fmNoneBtn")}</button>`;
+  if(ph==="fmListen")return `<span class="hc-label">${t("whoCaught")}</span><span class="hc-players">${all.map(o=>pbtn(o,"fmCatch")).join("")}</span><button class="btn btn-small" ${act("fmNone")}>${t("fmNoneBtn")}</button>`;
   if(ph==="fmTask"){
-    const st=g.fm.stealer,has=st!==null&&st!==undefined;
-    const list=g.players.map((p,i)=>({p,i})).filter(o=>!has||o.i===st);
-    const stealers=!S.room&&!has?g.players.map((p,i)=>({p,i})).filter(o=>o.p.tokens>=COST.steal):[];
-    return `<span class="hc-label">${t("whoDidIt")}</span><span class="hc-players">${list.map(o=>`<button class="btn btn-small jbtn" style="--pc:${o.p.color}" ${act("fmWin",` data-i="${o.i}"`)}>${esc(o.p.name)}</button>`).join("")}</span>
-      ${stealers.length?`<span class="hc-label">${t("stealLbl")}</span><span class="hc-players">${stealers.map(o=>`<button class="btn btn-small" ${act("fmStealBy",` data-i="${o.i}"`)}>${t("stealsBtn",esc(o.p.name))}</button>`).join("")}</span>`:""}
-      <span class="hc-row"><button class="btn btn-small" ${act("fmSpin")}>${t("fmAgainBtn")}</button><button class="btn btn-small" ${act("fmNone")}>${t("fmNoneBtn")}</button></span>`;
+    const ca=fm.catcher!==null&&fm.catcher!==undefined?g.players[fm.catcher]:null,hasSt=fm.stealer!==null&&fm.stealer!==undefined;
+    const thieves=hasSt?[]:all.filter(o=>o.i!==+fm.catcher&&o.p.tokens>=COST.steal);
+    return `${ca?`<button class="btn btn-primary" ${act("fmWin")}>${t("fmCorrectBtn",esc(ca.name))}</button>`:""}
+      ${thieves.length?`<span class="hc-label">${t("stealLbl")}</span><span class="hc-players">${thieves.map(o=>pbtn(o,"fmStealBy",t("stolenByBtn",esc(o.p.name)))).join("")}</span>`:""}
+      <span class="hc-row"><button class="btn btn-small" ${act("fmFail")}>${t("fmFailBtn")}</button><button class="btn btn-small" ${act("fmNone")}>${t("fmNoneBtn")}</button></span>`;
   }
   return "";
 }
@@ -2254,7 +2274,7 @@ function vCtrl(spectator){
   if(g.mode==="fm"&&["fmIntro","fmListen","fmSpin","fmTask"].includes(ph)){
     if(ph==="fmIntro")body+=`<div class="turn sticker" style="--pc:var(--grape)"><h2>${t("fmReady")}</h2><p>${host?t("fmReadyHost"):t("fmReadyP")}</p></div>`;
     else body+=cabinet()+fmPanel();
-    if(ph==="fmTask"&&me>=0&&(g.fm.stealer===null||g.fm.stealer===undefined)&&g.players[me].tokens>=COST.steal)body+=`<div class="acts center"><button class="btn btn-primary" ${M("fmSteal")}>${t("stealBtn")}</button></div>`;
+    if(ph==="fmTask"&&me>=0&&me!==+g.fm.catcher&&(g.fm.stealer===null||g.fm.stealer===undefined)&&g.players[me].tokens>=COST.steal)body+=`<div class="acts center"><button class="btn btn-primary" ${M("fmSteal")}>${t("stealBtn")}</button></div>`;
     if(host)body+=`<div class="hostctl sticker">${fmHostControls()}</div>`;
     body+=mineTl;
   }else if(ph==="intro"){
